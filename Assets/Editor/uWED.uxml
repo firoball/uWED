@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="menu" style="position: absolute; left: 0; top: 0; right: 0; flex-direction: row; height: 26px; padding-top: 1px; padding-bottom: 1px;">
+        <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-right: 2px; margin-left: 2px;" />
+        <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-right: 2px; margin-left: 2px;" />
+        <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" style="margin-right: 2px; margin-left: 2px;" />
+        <ui:VisualElement name="gridControl" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; align-self: auto; right: 0; top: 0; bottom: 0; align-items: flex-start;">
+            <ui:Toggle label="Grid" name="gridShow" value="true" focusable="true" style="width: 60px; justify-content: flex-end; -unity-text-align: upper-right; text-overflow: ellipsis; align-items: auto; align-self: center;" />
+            <ui:SliderInt high-value="10" low-value="1" show-input-field="false" page-size="1" name="gridScale" focusable="true" direction="Horizontal" style="width: 50px; flex-direction: row; margin-top: 4px; margin-bottom: 0; height: auto; align-self: flex-start; text-overflow: ellipsis; -unity-text-align: upper-right; justify-content: flex-end;" />
+            <ui:Label tabindex="-1" text="1024" parse-escape-sequences="true" display-tooltip-when-elided="true" name="scale" style="flex-direction: row; align-self: center; margin-top: 0; align-items: auto; width: 30px;" />
+            <ui:Toggle label="Snap" name="gridSnap" value="true" style="-unity-text-align: upper-right; text-overflow: ellipsis; width: 50px; justify-content: flex-end; align-items: auto; align-self: center;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="editor" style="flex-grow: 1; position: absolute; top: 28px; height: auto; width: auto; bottom: 100px; left: 4px; right: 4px; background-color: rgba(0, 0, 0, 0);" />
+    <ui:VisualElement name="inspector" style="flex-grow: 1; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; bottom: 0; height: 100px; position: absolute; width: auto; top: initial; right: 0; left: 0; background-color: rgba(0, 0, 0, 0);" />
+</ui:UXML>

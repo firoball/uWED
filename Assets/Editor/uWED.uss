@@ -1,0 +1,21 @@
+.custom-label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+GridBackground, FlexibleGridBackground {
+    --grid-background-color: rgba(32,32,32,1);
+    --line-color: rgba(255,255,255,0.1);
+    --thick-line-color: rgba(255,255,255,0.2);    
+    --spacing: 32;
+}
+
+.inspector {
+    background-color: blue;
+    bottom: 0px;
+    height: 100px;
+    left: 0px;
+    position: absolute;
+    right: 0px;
+}
