@@ -8,6 +8,7 @@ public class CursorInfo
     Vertex m_hoverVertex;
     Segment m_hoverSegment;
     bool m_nextSegmentIsValid;
+    bool m_vertexDragIsValid;
 
     public CursorInfo()
     {
@@ -17,6 +18,7 @@ public class CursorInfo
     public Vertex HoverVertex { get => m_hoverVertex; set => m_hoverVertex = value; }
     public Segment HoverSegment { get => m_hoverSegment; set => m_hoverSegment = value; }
     public bool NextSegmentIsValid { get => m_nextSegmentIsValid; set => m_nextSegmentIsValid = value; }
+    public bool VertexDragIsValid { get => m_vertexDragIsValid; set => m_vertexDragIsValid = value; }
 
     public void Clear()
     {
@@ -24,5 +26,6 @@ public class CursorInfo
         m_hoverVertex = null;
         m_hoverSegment = null;
         m_nextSegmentIsValid = true;
+        m_vertexDragIsValid = true;
     }
 }

@@ -135,9 +135,9 @@ public class Vertex
 public class Segment
 {
     [SerializeReference]
-    public Vertex m_vertex1;
+    private Vertex m_vertex1;
     [SerializeReference]
-    public Vertex m_vertex2;
+    private Vertex m_vertex2;
     public Segment(Vertex v1, Vertex v2)
     {
         m_vertex1 = v1;

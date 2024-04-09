@@ -65,6 +65,7 @@ public class EditorManipulator : MouseManipulator
         var t = target as EditorView;
         m_mouseLabel.transform.position = evt.localMousePosition + Vector2.up * 20;
         m_mouseLabel.text = t.ScreenToWorldSpace(evt.localMousePosition).ToString() + " " + m_constructMode;
+        //m_mouseLabel.text = t.ScreenToWorldSpace(evt.localMousePosition).ToString();
 
         m_drawer.SetLocalMousePosition(evt.localMousePosition);
 
@@ -95,7 +96,7 @@ public class EditorManipulator : MouseManipulator
         if (m_constructMode == EditorMode.Construct.Dragging) // finish drag mode
         {
             if (evt.button == 0) //left mousebutton
-                FinishDrag(mouseSnappedWorldPos);
+                FinishDrag(ci, mouseSnappedWorldPos);
             //TODO: Connect Vertices if dragged on each other
             m_constructMode = EditorMode.Construct.Idle;
         }
@@ -152,14 +153,14 @@ public class EditorManipulator : MouseManipulator
         }
     }
 
-    private void FinishDrag(Vector2 mouseSnappedWorldPos)
+    private void FinishDrag(CursorInfo ci, Vector2 mouseSnappedWorldPos)
     {     
-        if (m_current != null)
-        {        
+        if (m_current != null && ci.VertexDragIsValid)
             m_current.WorldPosition = mouseSnappedWorldPos;
-            m_drawer.SetDragMode(false, null);
-            m_current = null;
-        }
+        else
+            Debug.LogWarning("EditorManipulator.FinishDrag: Drag operation not possible.");
+        m_drawer.SetDragMode(false, null);
+        m_current = null;
     }
 
     private void StartConstruction(CursorInfo ci, Vector2 mouseSnappedWorldPos)
@@ -227,10 +228,7 @@ public class EditorManipulator : MouseManipulator
 
     private void FinishConstruction(Vertex final)
     {
-        //if (final != m_current) //exit construction mode by clicking last created vertex
-            ConstructNewSegment(m_current, final);
-        //if (!m_current.IsConnected()) //get rid of isolated vertices
-        //    m_mapData.Vertices.Remove(m_current); //TODO: can this break things? - it should not be referenced
+        ConstructNewSegment(m_current, final);
         m_mapData.RemoveVertex(m_current);
         m_constructMode = EditorMode.Construct.Idle;
         m_current = null;
