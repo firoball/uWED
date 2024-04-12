@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\EditorMode.cs" />
     <Compile Include="Assets\Editor\MapData.cs" />
+    <Compile Include="Assets\Editor\SegmentMode.cs" />
     <Compile Include="Assets\Editor\EditorView.cs" />
     <Compile Include="Assets\Editor\GridManipulator.cs" />
     <Compile Include="Assets\Editor\MapDrawer.cs" />

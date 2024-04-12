@@ -8,7 +8,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-class EditorView : GraphView
+public class EditorView : GraphView
 {
     const float m_pixelsPerUnit = 1f;
     const bool m_invertYPosition = true;
