@@ -83,15 +83,16 @@ public class MapDrawer : ImmediateModeElement
             end.x = Mathf.Max(m_selectionStart.x, m_selectionEnd.x);
             end.y = Mathf.Max(m_selectionStart.y, m_selectionEnd.y);
             Rect selection = new Rect(start, end - start);
-            foreach (Segment s in m_mapData.Segments)
-            {
-                if (selection.Contains(s.Vertex1.ScreenPosition) && selection.Contains(s.Vertex2.ScreenPosition))
-                    m_cursorInfo.SelectedSegments.Add(s);
-            }
             foreach (Vertex v in m_mapData.Vertices)
             {
-                if (selection.Contains(v.ScreenPosition))
+                if (!m_cursorInfo.SelectedVertices.Contains(v) && selection.Contains(v.ScreenPosition))
                     m_cursorInfo.SelectedVertices.Add(v);
+            }
+            m_cursorInfo.SelectedSegments.Clear();
+            foreach (Segment s in m_mapData.Segments)
+            {
+                if (m_cursorInfo.SelectedVertices.Contains(s.Vertex1) && m_cursorInfo.SelectedVertices.Contains(s.Vertex2))
+                    m_cursorInfo.SelectedSegments.Add(s);
             }
         }
         m_selecting = on;

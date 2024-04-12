@@ -86,6 +86,8 @@ public class EditorManipulator : MouseManipulator
                 }
                 else
                 {
+                    if (!evt.ctrlKey) // ctrl key allows multi select
+                        m_drawer.Unselect();
                     m_constructMode = EditorMode.Construct.Selecting;
                     m_drawer.SetSelectMode(true);
                 }
