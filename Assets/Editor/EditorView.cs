@@ -1,8 +1,6 @@
-﻿using Codice.Client.BaseCommands.BranchExplorer;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -13,12 +11,19 @@ public class EditorView : GraphView
     const float m_pixelsPerUnit = 1f;
     const bool m_invertYPosition = true;
 
-    private GridManipulator m_gridManipulator;
+    private readonly GridManipulator m_gridManipulator;
+    private readonly EditorManipulator m_editorManipulator;
+    private bool m_enableSnapping;
+
+    public GridManipulator GridManipulator => m_gridManipulator;
+    public EditorManipulator EditorManipulator => m_editorManipulator;
 
     public EditorView()
     {
+        m_enableSnapping = true;
         FlexibleGridBackground grid = new FlexibleGridBackground();
         m_gridManipulator = new GridManipulator(grid);
+        m_editorManipulator = new EditorManipulator();
         name = "EditorView";
         this.StretchToParentSize();
         //RegisterCallback<WheelEvent>(OnMouseWheel); //must be registered prior to Zoomer setup
@@ -27,7 +32,7 @@ public class EditorView : GraphView
         RegisterCallback<WheelEvent>(m_gridManipulator.OnWheelLate); //must be registered after Zoomer setup
         Add(grid);
         this.AddManipulator(new ContentDragger());
-        this.AddManipulator(new EditorManipulator());
+        this.AddManipulator(m_editorManipulator);
         //other things that might interest you
         //this.AddManipulator(new SelectionDragger());
         //this.AddManipulator(new RectangleSelector());
@@ -66,17 +71,36 @@ public class EditorView : GraphView
 
     public Vector2 SnapWorldPos(Vector2 pos)
     {
-        Vector2 fac = pos / m_gridManipulator.GridSpacing;
-        int snapX = (fac.x < 0) ? (int)(fac.x - 0.5f) : (int)(fac.x + 0.5f);
-        int snapY = (fac.y < 0) ? (int)(fac.y - 0.5f) : (int)(fac.y + 0.5f);
-        Vector2 intfac = new Vector2(snapX, snapY);
-        return intfac * m_gridManipulator.GridSpacing;
+        if (m_enableSnapping)
+        {
+            Vector2 fac = pos / m_gridManipulator.GridSpacing;
+            int snapX = (fac.x < 0) ? (int)(fac.x - 0.5f) : (int)(fac.x + 0.5f);
+            int snapY = (fac.y < 0) ? (int)(fac.y - 0.5f) : (int)(fac.y + 0.5f);
+            Vector2 intfac = new Vector2(snapX, snapY);
+            return intfac * m_gridManipulator.GridSpacing;
+        }
+        else
+        {
+            return pos;
+        }
     }
 
     public Vector2 SnapScreenPos(Vector2 pos)
     {
-        Vector2 worldPos = ScreenToWorldSpace(pos);
-        Vector2 snappedPos = SnapWorldPos(worldPos);
-        return WorldtoScreenSpace(snappedPos);
+        if (m_enableSnapping)
+        {
+            Vector2 worldPos = ScreenToWorldSpace(pos);
+            Vector2 snappedPos = SnapWorldPos(worldPos);
+            return WorldtoScreenSpace(snappedPos);
+        }
+        else
+        {
+            return pos;
+        }
+    }
+
+    public void OnToggleSnapping(ChangeEvent<bool> evt)
+    {
+        m_enableSnapping = evt.newValue;
     }
 }

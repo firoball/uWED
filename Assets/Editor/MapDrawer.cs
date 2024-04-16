@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UIElements;
 
 
@@ -226,6 +224,7 @@ public class MapDrawer : ImmediateModeElement
     }
     private bool DrawLines()
     {
+        Vector2 mouseVertexPos = GetMouseVertexPos();
         bool intersects = false;
         for (int i = 0; i < m_mapData.Segments.Count; i++)
         {
@@ -253,7 +252,7 @@ public class MapDrawer : ImmediateModeElement
 
             //intersection tests for construction mode preview
             if (m_constructing && m_focusedVertex != null && !intersects)
-                intersects = Geom2D.DoIntersect(m_focusedVertex.ScreenPosition, m_mouseSnappedPos, v1, v2);
+                intersects = Geom2D.DoIntersect(m_focusedVertex.ScreenPosition, mouseVertexPos, v1, v2);
         }
         return intersects;
     }
@@ -333,6 +332,20 @@ public class MapDrawer : ImmediateModeElement
                 return true;
         }
         return false;
+    }
+
+    private Vector2 GetMouseVertexPos()
+    {
+        Vector2 pos;
+
+        if (m_cursorInfo.HoverVertex != null)
+            pos = m_cursorInfo.HoverVertex.ScreenPosition;
+        else if (m_cursorInfo.NearVertex != null)
+            pos = m_cursorInfo.NearVertex.ScreenPosition;
+        else
+            pos = m_mouseSnappedPos;
+
+        return pos;
     }
 
     private void DrawLine(Vector2 start, Vector2 end, Color color)

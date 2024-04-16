@@ -9,7 +9,8 @@ public class EditorManipulator : MouseManipulator
     private MapDrawer m_drawer; //TODO: move to EditorView
     private Label m_mouseLabel;
     private EditorMode.Construct m_constructMode;
-    private SegmentMode m_segmentMode;
+    private EditorMode.Mode m_mode;
+    private List<IEditorMode> m_editorModes;
 
     public EditorManipulator()
     {
@@ -26,7 +27,17 @@ public class EditorManipulator : MouseManipulator
 
         m_drawer = new MapDrawer(m_mapData);
         m_mouseLabel = new Label { name = "mousePosition", text = "(0,0)" };
-        m_segmentMode = new SegmentMode(m_mapData, m_drawer);
+
+        m_editorModes = new List<IEditorMode>
+        {
+            new ObjectMode(m_mapData, m_drawer),
+            new SegmentMode(m_mapData, m_drawer),
+            new RegionMode(m_mapData, m_drawer),
+            new WayMode(m_mapData, m_drawer)
+        };
+
+        m_mode = EditorMode.Mode.Segments;
+
         m_constructMode = EditorMode.Construct.Idle;
 
         /*
@@ -82,7 +93,7 @@ public class EditorManipulator : MouseManipulator
             {
                 if (ci.HoverVertex != null || ci.HoverSegment != null)
                 {
-                    m_segmentMode.StartDrag(m_drawer.CursorInfo);
+                    m_editorModes[(int)m_mode].StartDrag(m_drawer.CursorInfo);
                 }
                 else
                 {
@@ -127,8 +138,8 @@ public class EditorManipulator : MouseManipulator
                             }
                             else if (!evt.ctrlKey) //ctrl triggers selection, don't start construction
                             {
-                                m_constructMode = EditorMode.Construct.Constructing;
-                                m_segmentMode.StartConstruction(ci, mouseSnappedWorldPos);
+                                if(!m_editorModes[(int)m_mode].StartConstruction(ci, mouseSnappedWorldPos))
+                                    m_constructMode = EditorMode.Construct.Constructing;
                             }
                             else
                             {
@@ -138,16 +149,16 @@ public class EditorManipulator : MouseManipulator
 
                         case 1: //right mousebutton
                             if (!evt.ctrlKey)
-                                m_segmentMode.EditObject(ci);
+                                m_editorModes[(int)m_mode].EditObject(ci);
                             else
-                                m_segmentMode.DeleteObject(ci);
+                                m_editorModes[(int)m_mode].DeleteObject(ci);
                             break;
 
                         case 2: //middle mousebutton
                             if (!evt.ctrlKey)
-                                m_segmentMode.TrySplitJoin(ci, mouseWorldPos, t);
+                                m_editorModes[(int)m_mode].ModifyObject(ci, mouseWorldPos, t);
                             else
-                                m_segmentMode.FlipSegment(ci);
+                                m_editorModes[(int)m_mode].ModifyObjectAlt(ci, mouseWorldPos, t);
                             break;
 
                         default:
@@ -159,18 +170,19 @@ public class EditorManipulator : MouseManipulator
             case EditorMode.Construct.Constructing: //in construction
                 if (evt.button == 0) //left mousebutton
                 {
-                    if (m_segmentMode.ProgressConstruction(ci, mouseSnappedWorldPos))
+                    if (m_editorModes[(int)m_mode].ProgressConstruction(ci, mouseSnappedWorldPos))
                         m_constructMode = EditorMode.Construct.Idle; // construction finished
                 }
                 else if (evt.button == 1) //right mousebutton
                 {
-                    m_segmentMode.RevertConstruction();
+                    if(m_editorModes[(int)m_mode].RevertConstruction())
+                        m_constructMode = EditorMode.Construct.Idle; // construction aborted
                 }
                 break;
 
             case EditorMode.Construct.Dragging: // finish drag mode
                 if (evt.button == 0) //left mousebutton
-                    m_segmentMode.FinishDrag(ci, mouseSnappedWorldPos);
+                    m_editorModes[(int)m_mode].FinishDrag(ci, mouseSnappedWorldPos);
                 m_constructMode = EditorMode.Construct.Idle;
                 break;
 
@@ -195,5 +207,29 @@ public class EditorManipulator : MouseManipulator
         target.CaptureMouse();
         m_drawer.MarkDirtyRepaint();
     }
+
+    public void OnSetMode(ChangeEvent<string> evt)
+    {
+        PopupField<string> field = evt.target as PopupField<string>;
+        if (field != null && field.index >= 0 && field.index < (int)EditorMode.Mode.Count)
+            m_mode = (EditorMode.Mode)field.index;
+        //TODO: proper mode transfer (esp. end ongoing constructions and drags)
+    }
+
+/*
+    private List<BaseField<string>> m_modeListeners = new List<BaseField<string>>();
+    public void AddModeListener(BaseField<string> strField)
+    {
+        if (strField != null)
+        {
+            m_modeListeners.Add(strField);
+            UpdateModeListeners();
+        }
+    }
+
+    private void UpdateModeListeners()
+    {
+    }*/
+
 
 }

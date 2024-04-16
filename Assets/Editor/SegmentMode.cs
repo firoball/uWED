@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SegmentMode
+public class SegmentMode : IEditorMode
 {
     private MapDrawer m_drawer;
     private MapData m_mapData;
@@ -38,7 +38,7 @@ public class SegmentMode
         m_current = null;
     }
 
-    public void StartConstruction(CursorInfo ci, Vector2 mouseSnappedWorldPos)
+    public bool StartConstruction(CursorInfo ci, Vector2 mouseSnappedWorldPos)
     {
         if (ci.HoverVertex != null) //start from hovered vertex
         {
@@ -56,9 +56,11 @@ public class SegmentMode
 
         m_newSegments.Clear();
         m_drawer.SetConstructionMode(true, m_current);
+
+        return false; //construction started and not yet finished
     }
 
-    public void RevertConstruction()
+    public bool RevertConstruction()
     {
         if (m_newSegments.Count > 0)
         {
@@ -73,7 +75,9 @@ public class SegmentMode
         if (m_newSegments.Count == 0) //only start Vertex has been picked - end construction
         {
             FinishConstruction(m_current);
+            return true;
         }
+        return false;
     }
 
     public bool ProgressConstruction(CursorInfo ci, Vector2 mouseSnappedWorldPos)
@@ -105,7 +109,7 @@ public class SegmentMode
     private void FinishConstruction(Vertex final)
     {
         ConstructNewSegment(m_current, final);
-        m_mapData.RemoveVertex(m_current);
+        m_mapData.RemoveVertex(m_current); //Vertex was added another time by ConstructNewSegment
         m_current = null;
         m_newSegments.Clear();
         m_drawer.SetConstructionMode(false, m_current);
@@ -154,7 +158,8 @@ public class SegmentMode
         m_mapData.RemoveVertex(v, true); //if there's still a connection, it's a broken one - force vertex deletion
     }
 
-    public void TrySplitJoin(CursorInfo ci, Vector2 mouseWorldPos, EditorView ev)
+//    public void TrySplitJoin(CursorInfo ci, Vector2 mouseWorldPos, EditorView ev)
+    public void ModifyObject(CursorInfo ci, Vector2 mouseWorldPos, EditorView ev)
     {
         if (ci.HoverVertex != null && ci.HoverVertex.Connections == 2) //Join two segments (vertex must not have other connections)
         {
@@ -255,7 +260,8 @@ public class SegmentMode
         }
     }
 
-    public void FlipSegment(CursorInfo ci)
+//    public void FlipSegment(CursorInfo ci)
+    public void ModifyObjectAlt(CursorInfo ci, Vector2 mouseWorldPos, EditorView ev)
     {
         if (ci.HoverSegment != null)
         {

@@ -31,13 +31,14 @@ public class UWed : EditorWindow
         VisualElement editor = containers.Where(x => x.name == "editor").FirstOrDefault();
         VisualElement inspector = containers.Where(x => x.name == "inspector").FirstOrDefault();
 
-        VisualElement editorView = new EditorView();
+        EditorView editorView = new EditorView();
         editorView.styleSheets.Add(m_StyleSheet);
         editor.Add(editorView);
 
         // VisualElements objects can contain other VisualElement following a tree hierarchy.
         VisualElement label = new Label("A wild uWED appears.");
-                inspector.Add(label);
+        inspector.Add(label);
 
-        }
+        MenuBinder binder = new MenuBinder(editorView, menu);
+    }
 }
