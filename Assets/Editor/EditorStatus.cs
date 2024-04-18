@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EditorMode
+public class EditorStatus
 {
     public enum Mode : int
     {
