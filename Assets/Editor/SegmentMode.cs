@@ -2,34 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SegmentMode : IEditorMode
+public class SegmentMode : BaseEditorMode
 {
-    private MapDrawer m_drawer;
-    private MapData m_mapData;
-
     private Vertex m_current;
     private List<Segment> m_newSegments;
 
 
-    public SegmentMode(MapData mapData, MapDrawer drawer)
+    public SegmentMode(MapData mapData, MapDrawer drawer) : base(mapData, drawer)
     {
-        m_drawer = drawer;
-        m_mapData = mapData;
         m_current = null;
         m_newSegments = new List<Segment>();
     }
 
-    public void StartDrag(CursorInfo ci)
+    public override bool StartDrag()
     {
+        CursorInfo ci = m_drawer.CursorInfo;
+        //if (ci.HoverVertex != null || ci.HoverSegment != null) //TODO: support segment drag
         if (ci.HoverVertex != null)
         {
             m_current = ci.HoverVertex;
             m_drawer.SetDragMode(true, m_current);
+            return true;
         }
+        return false;
     }
 
-    public void FinishDrag(CursorInfo ci, Vector2 mouseSnappedWorldPos)
+    public override void FinishDrag(Vector2 mouseSnappedWorldPos)
     {
+        CursorInfo ci = m_drawer.CursorInfo;
         if (m_current != null && ci.VertexDragIsValid)
             m_current.WorldPosition = mouseSnappedWorldPos;
         //else
@@ -38,8 +38,15 @@ public class SegmentMode : IEditorMode
         m_current = null;
     }
 
-    public bool StartConstruction(CursorInfo ci, Vector2 mouseSnappedWorldPos)
+    public override void AbortDrag()
     {
+        m_drawer.SetDragMode(false, null);
+        m_current = null;
+    }
+
+    public override bool StartConstruction(Vector2 mouseSnappedWorldPos)
+    {
+        CursorInfo ci = m_drawer.CursorInfo;
         if (ci.HoverVertex != null) //start from hovered vertex
         {
             m_current = ci.HoverVertex;
@@ -60,7 +67,7 @@ public class SegmentMode : IEditorMode
         return false; //construction started and not yet finished
     }
 
-    public bool RevertConstruction()
+    public override bool RevertConstruction()
     {
         if (m_newSegments.Count > 0)
         {
@@ -80,8 +87,9 @@ public class SegmentMode : IEditorMode
         return false;
     }
 
-    public bool ProgressConstruction(CursorInfo ci, Vector2 mouseSnappedWorldPos)
+    public override bool ProgressConstruction(Vector2 mouseSnappedWorldPos)
     {
+        CursorInfo ci = m_drawer.CursorInfo;
         if (ci.NextSegmentIsValid) //intersecting segments are not allowed
         {
             if (ci.HoverVertex != null) //existing vertex is hovered - finish
@@ -106,13 +114,19 @@ public class SegmentMode : IEditorMode
         return false;
     }
 
+    public override void AbortConstruction()
+    {
+        m_newSegments.Clear();
+        m_drawer.SetConstructionMode(false, null);
+    }
+
     private void FinishConstruction(Vertex final)
     {
         ConstructNewSegment(m_current, final);
         m_mapData.RemoveVertex(m_current); //Vertex was added another time by ConstructNewSegment
         m_current = null;
         m_newSegments.Clear();
-        m_drawer.SetConstructionMode(false, m_current);
+        m_drawer.SetConstructionMode(false, null);
     }
 
     private void ConstructNewSegment(Vertex v1, Vertex v2)
@@ -126,13 +140,15 @@ public class SegmentMode : IEditorMode
     }
 
     
-    public void EditObject(CursorInfo ci)
+    public override void EditObject()
     {
         //TODO: implement
     }
 
-    public void DeleteObject(CursorInfo ci)
+    public override void DeleteObject()
     {
+        CursorInfo ci = m_drawer.CursorInfo;
+
         if (ci.HoverVertex != null) //vertex is hovered - destroy it
         {
             DeleteVertex(ci.HoverVertex);
@@ -158,9 +174,11 @@ public class SegmentMode : IEditorMode
         m_mapData.RemoveVertex(v, true); //if there's still a connection, it's a broken one - force vertex deletion
     }
 
-//    public void TrySplitJoin(CursorInfo ci, Vector2 mouseWorldPos, EditorView ev)
-    public void ModifyObject(CursorInfo ci, Vector2 mouseWorldPos, EditorView ev)
+    public override void ModifyObject(Vector2 mouseWorldPos, EditorView ev)
     {
+        //Split or join segments, if feasible
+        CursorInfo ci = m_drawer.CursorInfo;
+
         if (ci.HoverVertex != null && ci.HoverVertex.Connections == 2) //Join two segments (vertex must not have other connections)
         {
             TryJoin(ci.HoverVertex);
@@ -260,9 +278,10 @@ public class SegmentMode : IEditorMode
         }
     }
 
-//    public void FlipSegment(CursorInfo ci)
-    public void ModifyObjectAlt(CursorInfo ci, Vector2 mouseWorldPos, EditorView ev)
+    public override void ModifyObjectAlt(Vector2 mouseWorldPos, EditorView ev)
     {
+        //Flip Segment
+        CursorInfo ci = m_drawer.CursorInfo;
         if (ci.HoverSegment != null)
         {
             ci.HoverSegment.Flip();

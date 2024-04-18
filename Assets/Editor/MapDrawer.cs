@@ -70,7 +70,7 @@ public class MapDrawer : ImmediateModeElement
         {
             if (!m_selecting) //off -> on
                 m_selectionStart = m_mousePos;
-            m_selectionEnd = m_mousePos;
+            UpdateSelector();
         }
         else
         {
@@ -143,6 +143,7 @@ public class MapDrawer : ImmediateModeElement
         m_mapData.Vertices.ForEach(x => x.ScreenPosition = editorView.WorldtoScreenSpace(x.WorldPosition));
 
         HoverTest();
+        UpdateSelector();
         DrawSelector();
         bool intersects = DrawLines();
         DrawVertices();
@@ -164,6 +165,12 @@ public class MapDrawer : ImmediateModeElement
 
         DrawPoint(m_mousePos, previewColor, 5);
         */
+    }
+
+    private void UpdateSelector()
+    {
+        if(m_selecting)
+            m_selectionEnd = m_mousePos;
     }
 
     private void HoverTest()
