@@ -13,10 +13,10 @@ public class EditorView : GraphView
 
     private readonly GridManipulator m_gridManipulator;
     private readonly EditorManipulator m_editorManipulator;
+    private readonly EditorInterface m_interface;
     private bool m_enableSnapping;
 
-    public GridManipulator GridManipulator => m_gridManipulator;
-    public EditorManipulator EditorManipulator => m_editorManipulator;
+    public EditorInterface Interface => m_interface;
 
     public EditorView()
     {
@@ -24,15 +24,18 @@ public class EditorView : GraphView
         FlexibleGridBackground grid = new FlexibleGridBackground();
         m_gridManipulator = new GridManipulator(grid);
         m_editorManipulator = new EditorManipulator();
+        m_interface = new EditorInterface(this, m_gridManipulator, m_editorManipulator);
         name = "EditorView";
         this.StretchToParentSize();
-        //RegisterCallback<WheelEvent>(OnMouseWheel); //must be registered prior to Zoomer setup
-        this.AddManipulator(m_gridManipulator);
+        this.AddManipulator(m_gridManipulator); //must be added before Zoomer setup
         SetupZoom(ContentZoomer.DefaultMinScale * 0.5f, ContentZoomer.DefaultMaxScale * 3.0f);
-        RegisterCallback<WheelEvent>(m_gridManipulator.OnWheelLate); //must be registered after Zoomer setup
+        m_gridManipulator.RegisterCallbacksLate();//must be registered after Zoomer setup
         Add(grid);
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(m_editorManipulator);
+        //pass defaults to all listeners
+        m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
+
         //other things that might interest you
         //this.AddManipulator(new SelectionDragger());
         //this.AddManipulator(new RectangleSelector());
@@ -99,8 +102,9 @@ public class EditorView : GraphView
         }
     }
 
-    public void OnToggleSnapping(ChangeEvent<bool> evt)
+    public void ToggleSnapping(bool enable)
     {
-        m_enableSnapping = evt.newValue;
+        m_enableSnapping = enable;
+        m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
     }
 }

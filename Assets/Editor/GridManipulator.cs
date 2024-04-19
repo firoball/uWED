@@ -13,11 +13,7 @@ public class GridManipulator : MouseManipulator
     private bool m_gridVisible = true;
     private bool m_gridEnabled = true;
 
-    private List<BaseField<bool>> m_toggleListeners;
-    private List<BaseField<int>> m_scaleListeners;
-
     public float GridSpacing { get => m_gridSpacing; set => m_gridSpacing = value; }
-
 
     const float c_minGridScale = 1f;
     const float c_maxGridScale = 10f;
@@ -25,12 +21,15 @@ public class GridManipulator : MouseManipulator
     public GridManipulator(FlexibleGridBackground grid)
     {
         m_grid = grid;
-        m_toggleListeners = new List<BaseField<bool>>();
-        m_scaleListeners = new List<BaseField<int>>();
     }
 
     protected override void RegisterCallbacksOnTarget()
     {
+        //pass defaults to all listeners
+        EditorView ev = target as EditorView;
+        ev.Interface.NotifyScaleGridListeners(m_gridScale);
+        ev.Interface.NotifyToggleGridListeners(m_gridEnabled);
+
         target.RegisterCallback<WheelEvent>(OnWheel);
     }
 
@@ -38,6 +37,11 @@ public class GridManipulator : MouseManipulator
     {
         target.UnregisterCallback<WheelEvent>(OnWheel);
         target.UnregisterCallback<WheelEvent>(OnWheelLate); //does this break things?
+    }
+
+    public void RegisterCallbacksLate()
+    {
+        target.RegisterCallback<WheelEvent>(OnWheelLate);
     }
 
     private void OnWheel(WheelEvent evt)
@@ -53,53 +57,28 @@ public class GridManipulator : MouseManipulator
         }
     }
 
-    public void AddScaleListener(BaseField<int> intField)
+    public void ToggleGrid(bool enable)
     {
-        if (intField != null)
-        {
-            m_scaleListeners.Add(intField);
-            UpdateScaleListeners();
-        }
-    }
-
-    public void AddToggleListener(BaseField<bool> boolField)
-    {
-        if (boolField != null)
-        {
-            m_toggleListeners.Add(boolField);
-            UpdateToggleListeners();
-        }
-    }
-    public void OnScaleGrid(ChangeEvent<int> evt)
-    {
-        ScaleGrid((float)evt.newValue);
-    }
-    public void OnToggleGrid(ChangeEvent<bool> evt)
-    {
-        m_gridEnabled = evt.newValue;
+        m_gridEnabled = enable;
+        EditorView ev = target as EditorView;
+        ev?.Interface.NotifyToggleGridListeners(m_gridEnabled);
         UpdateBackground();
     }
 
-    public void OnWheelLate(WheelEvent evt)
+    private void OnWheelLate(WheelEvent evt)
     {
         UpdateBackground();
     }
 
-    private void UpdateToggleListeners()
+    public void ScaleGrid(float scale)
     {
-        foreach (var listener in m_toggleListeners)
-            listener.value = m_gridEnabled;
-    }
-
-    private void UpdateScaleListeners()
-    {
-        foreach (var listener in m_scaleListeners)
-            listener.value = (int)m_gridScale;
-    }
-    private void ScaleGrid(float scale)
-    {
+        float oldScale = m_gridScale;
         m_gridScale = Mathf.Clamp(scale, c_minGridScale, c_maxGridScale);
-        UpdateScaleListeners();
+        if (m_gridScale != oldScale)
+        {
+            EditorView ev = target as EditorView;
+            ev?.Interface.NotifyScaleGridListeners(m_gridScale);
+        }
         float spacing = (1 << (int)m_gridScale);
         m_grid.spacing = spacing;
         m_gridSpacing = spacing;
@@ -128,14 +107,13 @@ public class GridManipulator : MouseManipulator
 
     private void UpdateBackground()
     {
-        UpdateToggleListeners();
         if (m_gridEnabled)
         {
             EditorView editorView = target as EditorView;
             Vector2 v1 = editorView.WorldtoScreenSpace(new Vector2(m_gridSpacing, 0));
             Vector2 v2 = editorView.WorldtoScreenSpace(new Vector2(0, 0));
 
-            if (((v1 - v2).x < 5f))
+            if ((v1 - v2).x < 5f)
             {
                 if (m_gridVisible)
                     HideBackground();

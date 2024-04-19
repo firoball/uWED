@@ -37,7 +37,6 @@ public class EditorManipulator : MouseManipulator
         };
 
         m_mode = EditorStatus.Mode.Segments;
-
         m_constructMode = EditorStatus.Construct.Idle;
 
         /*
@@ -48,8 +47,13 @@ public class EditorManipulator : MouseManipulator
     }
     protected override void RegisterCallbacksOnTarget()
     {
+        //pass defaults to all listeners
+        EditorView ev = target as EditorView;
+        ev.Interface.NotifySetModeListeners(m_mode);
+
         target.Add(m_drawer);
         target.Add(m_mouseLabel);
+
         target.RegisterCallback<MouseDownEvent>(OnMouseDown);
         target.RegisterCallback<MouseMoveEvent>(OnMouseMove);
         target.RegisterCallback<MouseCaptureOutEvent>(OnMouseOut);
@@ -227,13 +231,14 @@ public class EditorManipulator : MouseManipulator
         m_constructMode = EditorStatus.Construct.Idle;
     }
 
-    public void OnSetMode(ChangeEvent<string> evt)
+    public void SetMode(EditorStatus.Mode mode)
     {
-        PopupField<string> field = evt.target as PopupField<string>;
-        if (field != null && field.index >= 0 && field.index < (int)EditorStatus.Mode.Count && field.index != (int)m_mode)
+        if (mode != m_mode)
         {
             ResetMode();
-            m_mode = (EditorStatus.Mode)field.index;
+            m_mode = mode;
+            EditorView ev = target as EditorView;
+            ev.Interface.NotifySetModeListeners(m_mode);
         }
     }
 

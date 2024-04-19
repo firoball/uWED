@@ -357,7 +357,7 @@ public class MapDrawer : ImmediateModeElement
 
     private void DrawLine(Vector2 start, Vector2 end, Color color)
     {
-        if (contentRect.Contains(start) || contentRect.Contains(end))
+        if (contentRect.Contains(start) || contentRect.Contains(end)) //TODO: this can hide lines that are actually visible
         {
             GL.Begin(GL.LINES);
             GL.Color(color);

@@ -9,8 +9,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{307CC23E-B480-E75E-1383-C5CF7AF92BFF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -61,7 +60,6 @@
     <Analyzer Include="D:\Apps\2022.3.22f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Editor\EditorStatus.cs" />
     <Compile Include="Assets\Editor\MapData.cs" />
     <Compile Include="Assets\Editor\SegmentMode.cs" />
     <Compile Include="Assets\Editor\ObjectMode.cs" />
@@ -69,9 +67,11 @@
     <Compile Include="Assets\Editor\RegionMode.cs" />
     <Compile Include="Assets\Editor\BaseEditorMode.cs" />
     <Compile Include="Assets\Editor\GridManipulator.cs" />
+    <Compile Include="Assets\Editor\EditorInterface.cs" />
     <Compile Include="Assets\Editor\WayMode.cs" />
     <Compile Include="Assets\Editor\MapDrawer.cs" />
     <Compile Include="Assets\Editor\CursorInfo.cs" />
+    <Compile Include="Assets\Editor\EditorStatus.cs" />
     <Compile Include="Assets\Editor\MenuBinder.cs" />
     <Compile Include="Assets\Editor\UWed.cs" />
     <Compile Include="Assets\Editor\MapDataEditor.cs" />

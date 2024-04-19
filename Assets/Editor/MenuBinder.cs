@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -8,59 +7,55 @@ public class MenuBinder
     private Label m_gridSizeValue;
     public MenuBinder(EditorView ev, VisualElement menu)
     {
-        IEnumerable<VisualElement> containers = menu.Children();
+        BindEditorMode(ev, menu);
+        BindGridControl(ev, menu);
 
-        VisualElement editorMode = containers.Where(x => x.name == "editorMode").FirstOrDefault();
-        BindEditorMode(ev, editorMode);
-
-        VisualElement editorView = containers.Where(x => x.name == "editorView").FirstOrDefault();
-        VisualElement gridControl = containers.Where(x => x.name == "gridControl").FirstOrDefault();
-        BindGridControl(ev, gridControl);
-        
-        IEnumerable<VisualElement> manipulators = ev.Children();
-        VisualElement gridManipulator = manipulators.Where(x => x.name == "editorMode").FirstOrDefault();
-
+        //Update initial values of all controls
+        ev.Interface.RefreshListeners();
     }
 
-    private void BindEditorMode(EditorView ev, VisualElement editorMode)
+    private void BindEditorMode(EditorView ev, VisualElement menu)
     {
-        IEnumerable<VisualElement> controls = editorMode.Children();
-        DropdownField editorModes = controls.Where(x => x.name == "editorModes").FirstOrDefault() as DropdownField;
-        editorModes?.RegisterCallback<ChangeEvent<string>>(ev.EditorManipulator.OnSetMode);
-    }
-    private void BindGridControl(EditorView ev, VisualElement gridControl)
-    {
-        IEnumerable<VisualElement> controls = gridControl.Children();
-
-        Toggle gridShow = controls.Where(x => x.name == "gridShow").FirstOrDefault() as Toggle;
-        if (gridShow != null) 
+        DropdownField editorModes = menu.Q("editorModes") as DropdownField;
+        if (editorModes != null)
         {
-            ev.GridManipulator.AddToggleListener(gridShow);
-            gridShow.RegisterCallback<ChangeEvent<bool>>(ev.GridManipulator.OnToggleGrid);
+            ev.Interface.SetModeListeners.Add(editorModes);
+            editorModes.RegisterCallback<ChangeEvent<string>>(ev.Interface.OnSetMode);
         }
         else
-            Debug.Log("gridShow NULL");
+            Debug.LogError("Element 'editorModes' not found.");
+    }
+    private void BindGridControl(EditorView ev, VisualElement menu)
+    {
+        Toggle gridShow = menu.Q("gridShow") as Toggle;
+        if (gridShow != null) 
+        {
+            ev.Interface.ToggleGridListeners.Add(gridShow);
+            gridShow.RegisterCallback<ChangeEvent<bool>>(ev.Interface.OnToggleGrid);
+        }
+        else
+            Debug.LogError("Element 'gridShow' not found.");
 
-        SliderInt gridSize = controls.Where(x => x.name == "gridSize").FirstOrDefault() as SliderInt;
-        m_gridSizeValue = controls.Where(x => x.name == "gridSizeValue").FirstOrDefault() as Label;
-
+        SliderInt gridSize = menu.Q("gridSize") as SliderInt;
+        m_gridSizeValue = menu.Q("gridSizeValue") as Label;
         if (gridSize != null && m_gridSizeValue != null)
         {
-            ev.GridManipulator.AddScaleListener(gridSize);
+            ev.Interface.ScaleGridListeners.Add(gridSize);
             gridSize.RegisterCallback<ChangeEvent<int>>(OnGridSizeChange);
-            gridSize.RegisterCallback<ChangeEvent<int>>(ev.GridManipulator.OnScaleGrid);
+            gridSize.RegisterCallback<ChangeEvent<int>>(ev.Interface.OnScaleGrid);
             m_gridSizeValue.text = (1 << gridSize.value).ToString();
         }
         else
-            Debug.Log("gridSize or m_gridSizeValue NULL");
+            Debug.LogError("Element 'gridSize' or 'gridSizeValue' not found.");
 
-        Toggle gridSnap = controls.Where(x => x.name == "gridSnap").FirstOrDefault() as Toggle;
+        Toggle gridSnap = menu.Q("gridSnap") as Toggle;
         if (gridSnap != null) 
         {
-            gridSnap.RegisterCallback<ChangeEvent<bool>>(ev.OnToggleSnapping);
+            ev.Interface.ToggleSnappingListeners.Add(gridSnap);
+            gridSnap.RegisterCallback<ChangeEvent<bool>>(ev.Interface.OnToggleSnapping);
         }
         else
-            Debug.Log("gridShow NULL");
+            Debug.LogError("Element 'gridSnap' not found.");
     }
 
     private void OnGridSizeChange(ChangeEvent<int> evt)
