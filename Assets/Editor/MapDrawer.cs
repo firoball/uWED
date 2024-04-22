@@ -64,8 +64,48 @@ public class MapDrawer : ImmediateModeElement
         m_focusedVertex = reference;
     }
 
+    public void SetSingleSelect()
+    {
+        //TODO: handle segments and vertices separately - current handling is confusing
+        if (m_cursorInfo.HoverVertex != null)
+        {
+            Vertex v = m_cursorInfo.HoverVertex;
+            if (!m_cursorInfo.SelectedVertices.Contains(v))
+                m_cursorInfo.SelectedVertices.Add(v);
+            else
+                m_cursorInfo.SelectedVertices.Remove(v);
+
+            UpdateSelectedSegments();
+        }
+        else if (m_cursorInfo.HoverSegment != null)
+        {
+            Vertex v1 = m_cursorInfo.HoverSegment.Vertex1;
+            Vertex v2 = m_cursorInfo.HoverSegment.Vertex2;
+            if (m_cursorInfo.SelectedSegments.Contains(m_cursorInfo.HoverSegment))
+            {
+                m_cursorInfo.SelectedVertices.Remove(v1);
+                m_cursorInfo.SelectedVertices.Remove(v2);
+            }
+            else
+            {
+                if (!m_cursorInfo.SelectedVertices.Contains(v1))
+                    m_cursorInfo.SelectedVertices.Add(v1);
+
+                if (!m_cursorInfo.SelectedVertices.Contains(v2))
+                    m_cursorInfo.SelectedVertices.Add(v2);
+            }
+
+            UpdateSelectedSegments();
+        }
+        else
+        {
+            //nothing clicked
+        }
+    }
+
     public void SetSelectMode(bool on)
     {
+        //TODO: handle segments and vertices separately - current handling is confusing
         if (on)
         {
             if (!m_selecting) //off -> on
@@ -86,20 +126,25 @@ public class MapDrawer : ImmediateModeElement
                 if (!m_cursorInfo.SelectedVertices.Contains(v) && selection.Contains(v.ScreenPosition))
                     m_cursorInfo.SelectedVertices.Add(v);
             }
-            m_cursorInfo.SelectedSegments.Clear();
-            foreach (Segment s in m_mapData.Segments)
-            {
-                if (m_cursorInfo.SelectedVertices.Contains(s.Vertex1) && m_cursorInfo.SelectedVertices.Contains(s.Vertex2))
-                    m_cursorInfo.SelectedSegments.Add(s);
-            }
+            UpdateSelectedSegments();
         }
         m_selecting = on;
+    }
+
+    private void UpdateSelectedSegments()
+    {
+        m_cursorInfo.SelectedSegments.Clear();
+        foreach (Segment s in m_mapData.Segments)
+        {
+            if (m_cursorInfo.SelectedVertices.Contains(s.Vertex1) && m_cursorInfo.SelectedVertices.Contains(s.Vertex2))
+                m_cursorInfo.SelectedSegments.Add(s);
+        }
     }
 
     public void Unselect()
     {
         //don't unselect when hovering stuff
-        if (m_cursorInfo.HoverSegment == null && m_cursorInfo.HoverVertex == null)
+        //if (m_cursorInfo.HoverSegment == null && m_cursorInfo.HoverVertex == null)
         {
             m_cursorInfo.SelectedSegments.Clear();
             m_cursorInfo.SelectedVertices.Clear();

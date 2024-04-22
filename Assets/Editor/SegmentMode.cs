@@ -55,6 +55,11 @@ public class SegmentMode : BaseEditorMode
         {
             m_current = ci.NearVertex;
         }
+        else if (ci.HoverSegment != null)
+        {
+            //don't start construction - TODO? Auto split segment?
+            return true; //construction finished
+        }
         else //start from new vertex
         {
             m_current = new Vertex(mouseSnappedWorldPos);

@@ -129,18 +129,18 @@ public class EditorManipulator : MouseManipulator
                     switch (evt.button)
                     {
                         case 0: //left mousebutton
-                            if (m_editorModes[(int)m_mode].ClearSelection())
+                            if (!evt.ctrlKey) //ctrl triggers selection, don't start construction
                             {
-                                //nothing to do here
-                            }
-                            else if (!evt.ctrlKey) //ctrl triggers selection, don't start construction
-                            {
-                                if(!m_editorModes[(int)m_mode].StartConstruction(mouseSnappedWorldPos))
-                                    m_constructMode = EditorStatus.Construct.Constructing;
+                                if (!m_editorModes[(int)m_mode].ClearSelection()) //clear current selection
+                                {
+                                    if (!m_editorModes[(int)m_mode].StartConstruction(mouseSnappedWorldPos))
+                                        m_constructMode = EditorStatus.Construct.Constructing;
+                                }
                             }
                             else
                             {
-                                //TODO: select
+                                //select single element, add to current selection
+                                m_editorModes[(int)m_mode].SingleSelection();
                             }
                             break;
 

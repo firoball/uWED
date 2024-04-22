@@ -51,6 +51,11 @@ public abstract class BaseEditorMode
         m_drawer.SetSelectMode(false);
     }
 
+    public virtual void SingleSelection()
+    {
+        m_drawer.SetSingleSelect();
+    }
+
     public virtual void AbortSelection()
     {
         m_drawer.SetSelectMode(false);
