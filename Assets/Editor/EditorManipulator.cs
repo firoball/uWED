@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 public class EditorManipulator : MouseManipulator
 {
     private MapData m_mapData; //TODO: move to EditorView?
-    private MapDrawer m_drawer; //TODO: make individual for mode and move to specific mode
+    private SegmentDrawer m_drawer; //TODO: make individual for mode and move to specific mode
     private Label m_mouseLabel;
     private EditorStatus.Construct m_constructMode;
     private EditorStatus.Mode m_mode;
@@ -25,7 +25,7 @@ public class EditorManipulator : MouseManipulator
             //    m_mapData = new MapData();
         }
 
-        m_drawer = new MapDrawer(m_mapData);
+        m_drawer = new SegmentDrawer(m_mapData);
         m_mouseLabel = new Label { name = "mousePosition", text = "(0,0)" };
 
         m_editorModes = new List<BaseEditorMode>
@@ -38,13 +38,8 @@ public class EditorManipulator : MouseManipulator
 
         m_mode = EditorStatus.Mode.Segments;
         m_constructMode = EditorStatus.Construct.Idle;
-
-        /*
-        activators.Add(new ManipulatorActivationFilter { button = MouseButton.LeftMouse });
-        activators.Add(new ManipulatorActivationFilter { button = MouseButton.RightMouse });
-        activators.Add(new ManipulatorActivationFilter { button = MouseButton.RightMouse, modifiers = EventModifiers.Control });
-        */
     }
+
     protected override void RegisterCallbacksOnTarget()
     {
         //pass defaults to all listeners
@@ -115,7 +110,6 @@ public class EditorManipulator : MouseManipulator
 
     private void OnMouseUp(MouseUpEvent evt)
     {
-        //if (!CanStopManipulation(evt)) return;
         target.ReleaseMouse();
 
         var t = target as EditorView;
@@ -200,7 +194,6 @@ public class EditorManipulator : MouseManipulator
 
     private void OnMouseDown(MouseDownEvent evt)
     {
-        //if (!CanStartManipulation(evt)) return;
         target.CaptureMouse();
         //m_drawer.MarkDirtyRepaint();
     }
@@ -241,21 +234,5 @@ public class EditorManipulator : MouseManipulator
             ev.Interface.NotifySetModeListeners(m_mode);
         }
     }
-
-/*
-    private List<BaseField<string>> m_modeListeners = new List<BaseField<string>>();
-    public void AddModeListener(BaseField<string> strField)
-    {
-        if (strField != null)
-        {
-            m_modeListeners.Add(strField);
-            UpdateModeListeners();
-        }
-    }
-
-    private void UpdateModeListeners()
-    {
-    }*/
-
 
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectMode : BaseEditorMode
 {
-    public ObjectMode(MapData mapData, MapDrawer drawer) : base(mapData, drawer) 
+    public ObjectMode(MapData mapData, SegmentDrawer drawer) : base(mapData, drawer) 
     {
     }
 

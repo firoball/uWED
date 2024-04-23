@@ -1,24 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 
-public class MapDrawer : ImmediateModeElement
+public class SegmentDrawer : BaseEditorDrawer
 {
-    private Color c_vertexColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
-    private Color c_lineColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
-    private Color c_hoverColor = new Color(1.0f, 0.75f, 0.0f, 1.0f);
-    private Color c_selectColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);
     private Color c_vertexDragColor = new Color(0.0f, 0.45f, 0.0f, 1.0f);
     private Color c_lineDragColor = new Color(0.45f, 0.45f, 0.45f, 1.0f);
-    private Color c_validColor = new Color(0.3f, 0.3f, 1.0f, 1.0f);
-    private Color c_invalidColor = new Color(1.0f, 0.3f, 0.3f, 1.0f);
-    private int c_pointSize = 5;
-
-    private MapData m_mapData;
-    private Vector2 m_mousePos;
-    private Vector2 m_mouseSnappedPos;
 
     //Dragging mode
     private bool m_dragging;
@@ -30,41 +17,21 @@ public class MapDrawer : ImmediateModeElement
     private bool m_constructing;
     private Vertex m_focusedVertex;
 
-    //Select mode
-    private bool m_selecting;
-    private Vector2 m_selectionStart;
-    private Vector2 m_selectionEnd;
-
-    //Mouse cursor related information
-    private readonly CursorInfo m_cursorInfo;
-
-    public CursorInfo CursorInfo => m_cursorInfo;
-
-    public MapDrawer(MapData mapData) : base()
+    public SegmentDrawer(MapData mapData) : base(mapData)
     {
-        m_mapData = mapData;
         m_constructing = false;
         m_dragging = false;
-        m_cursorInfo = new CursorInfo();
         m_connectedVertices = new List<Vertex>();
         m_draggedSegments = new List<Segment>();
-        this.StretchToParentSize();
     }
 
-    public void SetLocalMousePosition(Vector2 localMousePosition)
-    {
-        EditorView editorView = parent as EditorView;
-        m_mousePos = localMousePosition;
-        m_mouseSnappedPos = editorView.SnapScreenPos(m_mousePos);
-    }
-
-    public void SetConstructionMode(bool on, Vertex reference)
+    public override void SetConstructionMode(bool on, Vertex reference)
     {
         m_constructing = on;
         m_focusedVertex = reference;
     }
 
-    public void SetSingleSelect()
+    public override void SetSelectSingle()
     {
         //TODO: handle segments and vertices separately - current handling is confusing
         if (m_cursorInfo.HoverVertex != null)
@@ -103,55 +70,13 @@ public class MapDrawer : ImmediateModeElement
         }
     }
 
-    public void SetSelectMode(bool on)
-    {
-        //TODO: handle segments and vertices separately - current handling is confusing
-        if (on)
-        {
-            if (!m_selecting) //off -> on
-                m_selectionStart = m_mousePos;
-            UpdateSelector();
-        }
-        else
-        {
-            Vector2 start;
-            start.x = Mathf.Min(m_selectionStart.x, m_selectionEnd.x);
-            start.y = Mathf.Min(m_selectionStart.y, m_selectionEnd.y);
-            Vector2 end;
-            end.x = Mathf.Max(m_selectionStart.x, m_selectionEnd.x);
-            end.y = Mathf.Max(m_selectionStart.y, m_selectionEnd.y);
-            Rect selection = new Rect(start, end - start);
-            foreach (Vertex v in m_mapData.Vertices)
-            {
-                if (!m_cursorInfo.SelectedVertices.Contains(v) && selection.Contains(v.ScreenPosition))
-                    m_cursorInfo.SelectedVertices.Add(v);
-            }
-            UpdateSelectedSegments();
-        }
-        m_selecting = on;
-    }
-
-    private void UpdateSelectedSegments()
+    public override void Unselect()
     {
         m_cursorInfo.SelectedSegments.Clear();
-        foreach (Segment s in m_mapData.Segments)
-        {
-            if (m_cursorInfo.SelectedVertices.Contains(s.Vertex1) && m_cursorInfo.SelectedVertices.Contains(s.Vertex2))
-                m_cursorInfo.SelectedSegments.Add(s);
-        }
+        m_cursorInfo.SelectedVertices.Clear();
     }
 
-    public void Unselect()
-    {
-        //don't unselect when hovering stuff
-        //if (m_cursorInfo.HoverSegment == null && m_cursorInfo.HoverVertex == null)
-        {
-            m_cursorInfo.SelectedSegments.Clear();
-            m_cursorInfo.SelectedVertices.Clear();
-        }
-    }
-
-    public void SetDragMode(bool on, Vertex reference)
+    public override void SetDragMode(bool on, Vertex reference)
     {
         m_dragging = on;
         m_draggedVertex = reference;
@@ -176,6 +101,46 @@ public class MapDrawer : ImmediateModeElement
         }
     }
 
+    protected override void SelectMultiple(Rect selection) 
+    {
+        foreach (Vertex v in m_mapData.Vertices)
+        {
+            if (!m_cursorInfo.SelectedVertices.Contains(v) && selection.Contains(v.ScreenPosition))
+                m_cursorInfo.SelectedVertices.Add(v);
+        }
+        UpdateSelectedSegments();
+    }
+
+    protected override Color SetSegmentColor(int i)
+    {
+        Color color;
+        if (m_dragging && m_draggedSegments.Contains(m_mapData.Segments[i]))
+            color = c_lineDragColor;
+        else if (!m_dragging && m_mapData.Segments[i] == m_cursorInfo.HoverSegment)
+            color = c_hoverColor;
+        else if (m_cursorInfo.SelectedSegments.Contains(m_mapData.Segments[i]))
+            color = c_selectColor;
+        else
+            color = base.SetSegmentColor(i);
+
+        return color;
+    }
+
+    protected override Color SetVertexColor(int i)
+    {
+        Color color;
+        if (m_dragging && m_mapData.Vertices[i] == m_draggedVertex)
+            color = c_vertexDragColor;
+        else if (!m_dragging && m_mapData.Vertices[i] == m_cursorInfo.HoverVertex)
+            color = c_hoverColor;
+        else if (m_cursorInfo.SelectedVertices.Contains(m_mapData.Vertices[i]))
+            color = c_selectColor;
+        else
+            color = base.SetVertexColor(i);
+
+        return color;
+    }
+
     protected override void ImmediateRepaint()
     {
         if (m_mapData.Vertices.Count == 0)
@@ -184,17 +149,12 @@ public class MapDrawer : ImmediateModeElement
             return;
         }
 
-        EditorView editorView = parent as EditorView;
-        m_mapData.Vertices.ForEach(x => x.ScreenPosition = editorView.WorldtoScreenSpace(x.WorldPosition));
-
+        base.ImmediateRepaint();
         HoverTest();
-        UpdateSelector();
-        DrawSelector();
-        bool intersects = DrawLines();
-        DrawVertices();
+
+        bool intersects = IntersectionTest();
         DrawModes(intersects);
 
-        //TODO: support single and rect select as well as unselect
         
         /* DO NOT DELETE - REQUIRED LATER
         Color previewColor;
@@ -212,10 +172,14 @@ public class MapDrawer : ImmediateModeElement
         */
     }
 
-    private void UpdateSelector()
+    private void UpdateSelectedSegments()
     {
-        if(m_selecting)
-            m_selectionEnd = m_mousePos;
+        m_cursorInfo.SelectedSegments.Clear();
+        foreach (Segment s in m_mapData.Segments)
+        {
+            if (m_cursorInfo.SelectedVertices.Contains(s.Vertex1) && m_cursorInfo.SelectedVertices.Contains(s.Vertex2))
+                m_cursorInfo.SelectedSegments.Add(s);
+        }
     }
 
     private void HoverTest()
@@ -260,72 +224,27 @@ public class MapDrawer : ImmediateModeElement
         m_cursorInfo.HoverSegment = segment;
     }
 
-    private void DrawSelector()
+    private bool IntersectionTest()
     {
-        if (m_selecting)
-        {
-            GL.Begin(GL.LINE_STRIP);
-            GL.Color(c_validColor);
-            GL.Vertex(m_selectionStart);
-            GL.Vertex(new Vector2 (m_selectionEnd.x, m_selectionStart.y));
-            GL.Vertex(m_selectionEnd);
-            GL.Vertex(new Vector2(m_selectionStart.x, m_selectionEnd.y));
-            GL.Vertex(m_selectionStart);
-            GL.End();
-        }
-    }
-    private bool DrawLines()
-    {
+        //TODO: intersection tests should be done in world coords -> SegmentMode.cs
         Vector2 mouseVertexPos = GetMouseVertexPos();
         bool intersects = false;
         for (int i = 0; i < m_mapData.Segments.Count; i++)
         {
-            Vector2 v1 = m_mapData.Segments[i].Vertex1.ScreenPosition;
-            Vector2 v2 = m_mapData.Segments[i].Vertex2.ScreenPosition;
-            Color lineColor;
-            if (m_dragging && m_draggedSegments.Contains(m_mapData.Segments[i]))
-                lineColor = c_lineDragColor;
-            else if (!m_dragging && m_mapData.Segments[i] == m_cursorInfo.HoverSegment)
-                lineColor = c_hoverColor;
-            else if (m_cursorInfo.SelectedSegments.Contains(m_mapData.Segments[i]))
-                lineColor = c_selectColor;
-            else
-                lineColor = c_lineColor;
-
-            DrawLine(v1, v2, lineColor);
-            Vector2 normalStart = Geom2D.SplitSegment(v1, v2);
-            Vector2 normalEnd = Geom2D.CalculateRightNormal(v1, v2, 5) + normalStart;
-            DrawLine(normalStart, normalEnd, lineColor);
-
-            //TODO: should intersection tests be done here!?
             //intersection tests for drag mode preview
             if (m_dragging && !intersects)
                 intersects = DragTest(m_mapData.Segments[i]);
 
             //intersection tests for construction mode preview
             if (m_constructing && m_focusedVertex != null && !intersects)
+            {
+                Vector2 v1 = m_mapData.Segments[i].Vertex1.ScreenPosition;
+                Vector2 v2 = m_mapData.Segments[i].Vertex2.ScreenPosition;
                 intersects = Geom2D.DoIntersect(m_focusedVertex.ScreenPosition, mouseVertexPos, v1, v2);
+            }
         }
         return intersects;
     }
-
-    private void DrawVertices()
-    {
-        for (int i = 0; i < m_mapData.Vertices.Count; i++)
-        {
-            Color vertexColor;
-            if (m_dragging && m_mapData.Vertices[i] == m_draggedVertex)
-                vertexColor = c_vertexDragColor;
-            else if (!m_dragging && m_mapData.Vertices[i] == m_cursorInfo.HoverVertex)
-                vertexColor = c_hoverColor;
-            else if (m_cursorInfo.SelectedVertices.Contains(m_mapData.Vertices[i]))
-                vertexColor = c_selectColor;
-            else
-                vertexColor = c_vertexColor;
-            DrawPoint(m_mapData.Vertices[i].ScreenPosition, vertexColor, c_pointSize);
-        }
-    }
-
     private void DrawModes(bool intersects)
     {
         //Draw mouse - drag mode
@@ -398,39 +317,6 @@ public class MapDrawer : ImmediateModeElement
             pos = m_mouseSnappedPos;
 
         return pos;
-    }
-
-    private void DrawLine(Vector2 start, Vector2 end, Color color)
-    {
-        if (contentRect.Contains(start) || contentRect.Contains(end)) //TODO: this can hide lines that are actually visible
-        {
-            GL.Begin(GL.LINES);
-            GL.Color(color);
-            GL.Vertex(start);
-            GL.Vertex(end);
-            GL.End();
-        }
-    }
-
-    private void DrawPoint(Vector2 point, Color color, int size)
-    {
-        if (contentRect.Contains(point))
-        {
-            int halfSize = 1 + ((size - 1) / 2);
-            Vector2 p0 = point + new Vector2(-halfSize, halfSize);
-            Vector2 p1 = point + new Vector2(halfSize, halfSize);
-            Vector2 p2 = point + new Vector2(halfSize, -halfSize);
-            Vector2 p3 = point + new Vector2(-halfSize, -halfSize);
-
-            GL.Begin(GL.QUADS);
-            GL.Color(color);
-            GL.Vertex(p0);
-            GL.Vertex(p1);
-            GL.Vertex(p2);
-            GL.Vertex(p3);
-            GL.End();
-        }
-
     }
 
 }

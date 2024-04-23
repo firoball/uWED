@@ -3,10 +3,10 @@ using UnityEngine;
 
 public abstract class BaseEditorMode
 {
-    protected MapDrawer m_drawer;
+    protected SegmentDrawer m_drawer;
     protected MapData m_mapData;
 
-    public BaseEditorMode(MapData mapData, MapDrawer drawer)
+    public BaseEditorMode(MapData mapData, SegmentDrawer drawer)
     {
         m_drawer = drawer;
         m_mapData = mapData;
@@ -53,7 +53,7 @@ public abstract class BaseEditorMode
 
     public virtual void SingleSelection()
     {
-        m_drawer.SetSingleSelect();
+        m_drawer.SetSelectSingle();
     }
 
     public virtual void AbortSelection()

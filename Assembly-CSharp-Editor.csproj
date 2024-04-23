@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\MapData.cs" />
     <Compile Include="Assets\Editor\SegmentMode.cs" />
+    <Compile Include="Assets\Editor\BaseEditorDrawer.cs" />
     <Compile Include="Assets\Editor\ObjectMode.cs" />
     <Compile Include="Assets\Editor\EditorView.cs" />
     <Compile Include="Assets\Editor\RegionMode.cs" />
@@ -69,7 +70,6 @@
     <Compile Include="Assets\Editor\GridManipulator.cs" />
     <Compile Include="Assets\Editor\EditorInterface.cs" />
     <Compile Include="Assets\Editor\WayMode.cs" />
-    <Compile Include="Assets\Editor\MapDrawer.cs" />
     <Compile Include="Assets\Editor\CursorInfo.cs" />
     <Compile Include="Assets\Editor\EditorStatus.cs" />
     <Compile Include="Assets\Editor\MenuBinder.cs" />
@@ -77,6 +77,7 @@
     <Compile Include="Assets\Editor\MapDataEditor.cs" />
     <Compile Include="Assets\Editor\EditorManipulator.cs" />
     <Compile Include="Assets\Editor\FlexibleGridBackground.cs" />
+    <Compile Include="Assets\Editor\SegmentDrawer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Editor\uWED.uss" />

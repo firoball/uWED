@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RegionMode : BaseEditorMode
 {
-    public RegionMode(MapData mapData, MapDrawer drawer) : base(mapData, drawer)
+    public RegionMode(MapData mapData, SegmentDrawer drawer) : base(mapData, drawer)
     {
     }
 

@@ -8,7 +8,7 @@ public class SegmentMode : BaseEditorMode
     private List<Segment> m_newSegments;
 
 
-    public SegmentMode(MapData mapData, MapDrawer drawer) : base(mapData, drawer)
+    public SegmentMode(MapData mapData, SegmentDrawer drawer) : base(mapData, drawer)
     {
         m_current = null;
         m_newSegments = new List<Segment>();

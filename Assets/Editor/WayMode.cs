@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WayMode : BaseEditorMode
 {
-    public WayMode(MapData mapData, MapDrawer drawer) : base(mapData, drawer)
+    public WayMode(MapData mapData, SegmentDrawer drawer) : base(mapData, drawer)
     {
     }
 

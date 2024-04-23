@@ -36,10 +36,6 @@ public class EditorView : GraphView
         //pass defaults to all listeners
         m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
 
-        //other things that might interest you
-        //this.AddManipulator(new SelectionDragger());
-        //this.AddManipulator(new RectangleSelector());
-        //this.AddManipulator(new ClickSelector());
         //this.generateVisualContent += Test; //TODO: use this hook for drawing textured regions
         contentViewContainer.Add(new Label { name = "origin", text = "(0,0)" });
         contentViewContainer.BringToFront();
