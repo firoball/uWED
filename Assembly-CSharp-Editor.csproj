@@ -69,8 +69,11 @@
     <Compile Include="Assets\Editor\BaseEditorMode.cs" />
     <Compile Include="Assets\Editor\GridManipulator.cs" />
     <Compile Include="Assets\Editor\EditorInterface.cs" />
+    <Compile Include="Assets\Editor\ObjectDrawer.cs" />
     <Compile Include="Assets\Editor\WayMode.cs" />
     <Compile Include="Assets\Editor\CursorInfo.cs" />
+    <Compile Include="Assets\Editor\WayDrawer.cs" />
+    <Compile Include="Assets\Editor\RegionDrawer.cs" />
     <Compile Include="Assets\Editor\EditorStatus.cs" />
     <Compile Include="Assets\Editor\MenuBinder.cs" />
     <Compile Include="Assets\Editor\UWed.cs" />

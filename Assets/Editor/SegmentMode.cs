@@ -8,7 +8,7 @@ public class SegmentMode : BaseEditorMode
     private List<Segment> m_newSegments;
 
 
-    public SegmentMode(MapData mapData, SegmentDrawer drawer) : base(mapData, drawer)
+    public SegmentMode(MapData mapData) : base(mapData, new SegmentDrawer(mapData))
     {
         m_current = null;
         m_newSegments = new List<Segment>();
@@ -154,7 +154,13 @@ public class SegmentMode : BaseEditorMode
     {
         CursorInfo ci = m_drawer.CursorInfo;
 
-        if (ci.HoverVertex != null) //vertex is hovered - destroy it
+        if (ci.SelectedVertices.Count > 0) 
+        {
+            foreach (Vertex v in ci.SelectedVertices)
+                DeleteVertex(v);
+            m_drawer.Unselect();
+        }
+        else if (ci.HoverVertex != null) //vertex is hovered - destroy it
         {
             DeleteVertex(ci.HoverVertex);
         }
@@ -211,7 +217,7 @@ public class SegmentMode : BaseEditorMode
         else
             n = segments[1].Vertex1;
 
-        //first segment foudn defines joined segment direction
+        //first segment found defines joined segment direction
         if (segments[0].Vertex1 == v)
         {
             n1 = n;

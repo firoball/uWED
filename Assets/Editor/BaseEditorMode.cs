@@ -1,13 +1,16 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public abstract class BaseEditorMode
 {
-    protected SegmentDrawer m_drawer;
+    protected readonly BaseEditorDrawer m_drawer;
     protected MapData m_mapData;
 
-    public BaseEditorMode(MapData mapData, SegmentDrawer drawer)
+    public BaseEditorDrawer Drawer => m_drawer;
+
+    public BaseEditorMode(MapData mapData, BaseEditorDrawer drawer)
     {
+        drawer.SetEnabled(false);
         m_drawer = drawer;
         m_mapData = mapData;
     }
@@ -43,26 +46,29 @@ public abstract class BaseEditorMode
 
     public virtual void StartSelection()
     {
-        m_drawer.SetSelectMode(true);
+        m_drawer?.SetSelectMode(true);
     }
 
     public virtual void FinishSelection()
     {
-        m_drawer.SetSelectMode(false);
+        m_drawer?.SetSelectMode(false);
     }
 
     public virtual void SingleSelection()
     {
-        m_drawer.SetSelectSingle();
+        m_drawer?.SetSelectSingle();
     }
 
     public virtual void AbortSelection()
     {
-        m_drawer.SetSelectMode(false);
+        m_drawer?.SetSelectMode(false);
     }
 
     public virtual bool ClearSelection()
     {
+        if (m_drawer == null)
+            return false; //there can't be any selection active
+
         bool selected = m_drawer.CursorInfo.SelectionIsActive;
         m_drawer.Unselect();
         return selected;

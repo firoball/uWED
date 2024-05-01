@@ -1,15 +1,30 @@
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UIElements;
 
 public abstract class BaseEditorDrawer : ImmediateModeElement
 {
+    protected Color c_wayColor = new Color(0.3f, 0.3f, 1.0f, 1.0f);
+    protected Color c_waypointColor = new Color(0.5f, 0.5f, 1.0f, 1.0f);
+    protected Color c_wayStartColor = new Color(0.9f, 0.9f, 1.0f, 1.0f); //TODO: meh!
     protected Color c_vertexColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
     protected Color c_lineColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
     protected Color c_hoverColor = new Color(1.0f, 0.75f, 0.0f, 1.0f);
     protected Color c_selectColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);
-    protected Color c_validColor = new Color(0.3f, 0.3f, 1.0f, 1.0f);
+    protected Color c_validColor = new Color(0.3f, 0.8f, 0.3f, 1.0f);
     protected Color c_invalidColor = new Color(1.0f, 0.3f, 0.3f, 1.0f);
+    protected Color c_centerColor = new Color(0.7f, 0.7f, 0.0f, 1.0f);
+
+    protected int c_centerLength = 64;
     protected int c_pointSize = 5;
+    protected int c_normalLength = 5;
+    protected int c_arrowLength = 5;
+
+    //option switches
+    protected bool m_enableWaypoints = false;
+    protected bool m_enableDirections = false;
+    protected bool m_enableVertices = false;
+    protected bool m_enableNormals = false;
 
     protected MapData m_mapData;
     protected Vector2 m_mousePos;
@@ -36,7 +51,8 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
     {
         EditorView editorView = parent as EditorView;
         m_mousePos = localMousePosition;
-        m_mouseSnappedPos = editorView.SnapScreenPos(m_mousePos);
+        if (editorView != null)
+            m_mouseSnappedPos = editorView.SnapScreenPos(m_mousePos);
     }
 
     public virtual void SetConstructionMode(bool on, Vertex reference) { }
@@ -69,6 +85,21 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
 
     protected virtual void SelectMultiple(Rect selection) { }
 
+    protected virtual bool CloseWay(Way w)
+    {
+        return true;
+    }
+
+    protected virtual Color SetWaypointColor(Way w, int p)
+    {
+        return c_waypointColor;
+    }
+
+    protected virtual Color SetWayColor(Way w)
+    {
+        return c_wayColor;
+    }
+
     protected virtual Color SetSegmentColor(int i)
     {
         return c_lineColor;
@@ -76,26 +107,41 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
 
     protected virtual Color SetVertexColor(int i)
     {
-            return c_vertexColor;
+        return c_vertexColor;
+    }
+
+    protected virtual void HoverTest()
+    {
+        //set CursorInfo contents here specific to editor mode.
+        //m_cursorInfo.Clear(); //nothing to set by default
     }
 
 
     protected override void ImmediateRepaint() 
     {
-        EditorView editorView = parent as EditorView;
-        m_mapData.Vertices.ForEach(x => x.ScreenPosition = editorView.WorldtoScreenSpace(x.WorldPosition));
+        if (!enabledSelf) return;
 
-        DrawLines();
-        DrawVertices();
-        UpdateSelector();
-        if (m_selecting)
-            DrawSelector(m_selectionStart, m_selectionEnd, c_validColor);
+        EditorView editorView = parent as EditorView;
+        if (editorView != null)
+        {
+            m_mapData.Vertices.ForEach(x => x.ScreenPosition = editorView.WorldtoScreenSpace(x.WorldPosition));
+            m_mapData.Ways.ForEach(w => w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldtoScreenSpace(p.WorldPosition)));
+
+            DrawCenter();
+            DrawWays();
+            DrawLines();
+            DrawVertices();
+            UpdateSelector();
+            DrawSelector();
+            HoverTest();
+        }
     }
 
 
     protected void DrawLine(Vector2 start, Vector2 end, Color color)
     {
-        if (contentRect.Contains(start) || contentRect.Contains(end)) //TODO: this can hide lines that are actually visible
+        if (contentRect.Contains(start) || contentRect.Contains(end) || 
+            contentRect.Contains(new Vector2(start.x, end.y)) || contentRect.Contains(new Vector2(end.x, start.y))) //TODO: this can hide lines that are actually visible
         {
             GL.Begin(GL.LINES);
             GL.Color(color);
@@ -125,16 +171,33 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         }
     }
 
-    protected void DrawSelector(Vector2 start, Vector2 end, Color color)
+    private void DrawCenter()
     {
-        GL.Begin(GL.LINE_STRIP);
-        GL.Color(color);
-        GL.Vertex(start);
-        GL.Vertex(new Vector2(end.x, start.y));
-        GL.Vertex(end);
-        GL.Vertex(new Vector2(start.x, end.y));
-        GL.Vertex(start);
-        GL.End();
+        EditorView editorView = parent as EditorView;
+        if (editorView != null)
+        {
+            Vector2 p0 = editorView.WorldtoScreenSpace(new Vector2(-c_centerLength, 0));
+            Vector2 p1 = editorView.WorldtoScreenSpace(new Vector2(c_centerLength, 0));
+            Vector2 p2 = editorView.WorldtoScreenSpace(new Vector2(0, -c_centerLength));
+            Vector2 p3 = editorView.WorldtoScreenSpace(new Vector2(0, c_centerLength));
+            DrawLine(p0, p1, c_centerColor);
+            DrawLine(p2, p3, c_centerColor);
+        }
+    }
+
+    private void DrawSelector()
+    {
+        if (m_selecting)
+        {
+            GL.Begin(GL.LINE_STRIP);
+            GL.Color(c_validColor);
+            GL.Vertex(m_selectionStart);
+            GL.Vertex(new Vector2(m_selectionEnd.x, m_selectionStart.y));
+            GL.Vertex(m_selectionEnd);
+            GL.Vertex(new Vector2(m_selectionStart.x, m_selectionEnd.y));
+            GL.Vertex(m_selectionStart);
+            GL.End();
+        }
     }
 
     private void UpdateSelector()
@@ -143,28 +206,83 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             m_selectionEnd = m_mousePos;
     }
 
-    private bool DrawLines()
+    private void DrawWays()
     {
-        bool intersects = false;
+        for (int i = 0; i < m_mapData.Ways.Count; i++)
+        {
+            Way w = m_mapData.Ways[i];
+            for (int p = 0; p < w.Positions.Count; p++)
+            {
+                Color wayColor = SetWayColor(w);
+                Color waypointColor = SetWaypointColor(w, p);
+
+                Vector2 current = w.Positions[p].ScreenPosition;
+                int np = (p + 1) % w.Positions.Count;
+                Vector2 next = w.Positions[np].ScreenPosition;
+                /*Vector2 direction = next - current;
+                int dashes = (int)(direction.magnitude / (10f + 5f));
+                direction.Normalize();
+                for (int d = 0; d < dashes; d++)
+                {
+                    Vector2 start = current + direction * d * (10f + 5f);
+                    Vector2 end = start + direction * 10;
+                    DrawLine(start, end, wayColor); //TODO: add direction marker
+                }
+                Vector2 last = current + direction * dashes * (10f + 5f);
+                DrawLine(last, next, wayColor); //TODO: add direction marker
+                */
+                if ((np != 0) || CloseWay(w))
+                {
+                    DrawLine(current, next, wayColor);
+                    if (m_enableDirections)
+                    {
+                        Vector2 arrowStart = Geom2D.SplitSegment(current, next);
+                        Vector2 direction = next - current;
+                        Vector2 normalStart = arrowStart - direction.normalized * c_arrowLength;
+                        Vector2 normalEnd = Geom2D.CalculateRightNormal(current, next, c_arrowLength);
+                        DrawLine(arrowStart, normalStart + normalEnd, wayColor);
+                        DrawLine(arrowStart, normalStart - normalEnd, wayColor);
+                    }
+                }
+
+                if (m_enableWaypoints)
+                {
+                    DrawPoint(current, waypointColor, c_pointSize);
+                    //TODO: this sucks.
+                    if (np == 0 && np != p)
+                        DrawPoint(next, c_wayStartColor, c_pointSize); //TODO: support cutom color
+                }
+            }
+        }
+
+    }
+
+    private void DrawLines()
+    {
         for (int i = 0; i < m_mapData.Segments.Count; i++)
         {
             Vector2 v1 = m_mapData.Segments[i].Vertex1.ScreenPosition;
             Vector2 v2 = m_mapData.Segments[i].Vertex2.ScreenPosition;
             Color lineColor = SetSegmentColor(i);
             DrawLine(v1, v2, lineColor);
-            Vector2 normalStart = Geom2D.SplitSegment(v1, v2);
-            Vector2 normalEnd = Geom2D.CalculateRightNormal(v1, v2, 5) + normalStart;
-            DrawLine(normalStart, normalEnd, lineColor);
+            if (m_enableNormals)
+            {
+                Vector2 normalStart = Geom2D.SplitSegment(v1, v2);
+                Vector2 normalEnd = Geom2D.CalculateRightNormal(v1, v2, c_normalLength) + normalStart;
+                DrawLine(normalStart, normalEnd, lineColor);
+            }
         }
-        return intersects;
     }
 
     private void DrawVertices()
     {
-        for (int i = 0; i < m_mapData.Vertices.Count; i++)
+        if (m_enableVertices)
         {
-            Color vertexColor = SetVertexColor(i);
-            DrawPoint(m_mapData.Vertices[i].ScreenPosition, vertexColor, c_pointSize);
+            for (int i = 0; i < m_mapData.Vertices.Count; i++)
+            {
+                Color vertexColor = SetVertexColor(i);
+                DrawPoint(m_mapData.Vertices[i].ScreenPosition, vertexColor, c_pointSize);
+            }
         }
     }
 

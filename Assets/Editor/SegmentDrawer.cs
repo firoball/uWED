@@ -19,6 +19,8 @@ public class SegmentDrawer : BaseEditorDrawer
 
     public SegmentDrawer(MapData mapData) : base(mapData)
     {
+        m_enableVertices = true;
+        m_enableNormals = true;
         m_constructing = false;
         m_dragging = false;
         m_connectedVertices = new List<Vertex>();
@@ -143,6 +145,8 @@ public class SegmentDrawer : BaseEditorDrawer
 
     protected override void ImmediateRepaint()
     {
+        if (!enabledSelf)
+            return;
         if (m_mapData.Vertices.Count == 0)
         {
             m_cursorInfo.Clear();
@@ -150,7 +154,6 @@ public class SegmentDrawer : BaseEditorDrawer
         }
 
         base.ImmediateRepaint();
-        HoverTest();
 
         bool intersects = IntersectionTest();
         DrawModes(intersects);
@@ -172,17 +175,7 @@ public class SegmentDrawer : BaseEditorDrawer
         */
     }
 
-    private void UpdateSelectedSegments()
-    {
-        m_cursorInfo.SelectedSegments.Clear();
-        foreach (Segment s in m_mapData.Segments)
-        {
-            if (m_cursorInfo.SelectedVertices.Contains(s.Vertex1) && m_cursorInfo.SelectedVertices.Contains(s.Vertex2))
-                m_cursorInfo.SelectedSegments.Add(s);
-        }
-    }
-
-    private void HoverTest()
+    protected override void HoverTest()
     {
         //Hover vertex
         int pointHoverSize = 9;
@@ -224,9 +217,18 @@ public class SegmentDrawer : BaseEditorDrawer
         m_cursorInfo.HoverSegment = segment;
     }
 
+    private void UpdateSelectedSegments()
+    {
+        m_cursorInfo.SelectedSegments.Clear();
+        foreach (Segment s in m_mapData.Segments)
+        {
+            if (m_cursorInfo.SelectedVertices.Contains(s.Vertex1) && m_cursorInfo.SelectedVertices.Contains(s.Vertex2))
+                m_cursorInfo.SelectedSegments.Add(s);
+        }
+    }
+
     private bool IntersectionTest()
     {
-        //TODO: intersection tests should be done in world coords -> SegmentMode.cs
         Vector2 mouseVertexPos = GetMouseVertexPos();
         bool intersects = false;
         for (int i = 0; i < m_mapData.Segments.Count; i++)

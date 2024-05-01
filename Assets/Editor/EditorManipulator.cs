@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 public class EditorManipulator : MouseManipulator
 {
     private MapData m_mapData; //TODO: move to EditorView?
-    private SegmentDrawer m_drawer; //TODO: make individual for mode and move to specific mode
     private Label m_mouseLabel;
     private EditorStatus.Construct m_constructMode;
     private EditorStatus.Mode m_mode;
@@ -25,15 +24,15 @@ public class EditorManipulator : MouseManipulator
             //    m_mapData = new MapData();
         }
 
-        m_drawer = new SegmentDrawer(m_mapData);
-        m_mouseLabel = new Label { name = "mousePosition", text = "(0,0)" };
+        m_mouseLabel = new Label { name = "mousePosition", text = "(0,0)", pickingMode = PickingMode.Ignore };
+
 
         m_editorModes = new List<BaseEditorMode>
         {
-            new ObjectMode(m_mapData, m_drawer),
-            new SegmentMode(m_mapData, m_drawer),
-            new RegionMode(m_mapData, m_drawer),
-            new WayMode(m_mapData, m_drawer)
+            new ObjectMode(m_mapData),
+            new SegmentMode(m_mapData),
+            new RegionMode(m_mapData),
+            new WayMode(m_mapData)
         };
 
         m_mode = EditorStatus.Mode.Segments;
@@ -44,9 +43,15 @@ public class EditorManipulator : MouseManipulator
     {
         //pass defaults to all listeners
         EditorView ev = target as EditorView;
-        ev.Interface.NotifySetModeListeners(m_mode);
+        m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
+        ev?.Interface.NotifySetModeListeners(m_mode);
 
-        target.Add(m_drawer);
+        //add all editor mode drawers as children
+        foreach (BaseEditorMode em in m_editorModes)
+        {
+            if (em.Drawer != null)
+                target.Add(em.Drawer);
+        }
         target.Add(m_mouseLabel);
 
         target.RegisterCallback<MouseDownEvent>(OnMouseDown);
@@ -75,15 +80,14 @@ public class EditorManipulator : MouseManipulator
         m_mouseLabel.text = t.ScreenToWorldSpace(evt.localMousePosition).ToString() + " " + m_constructMode;
         //m_mouseLabel.text = t.ScreenToWorldSpace(evt.localMousePosition).ToString();
 
-        m_drawer.SetLocalMousePosition(evt.localMousePosition);
+        m_editorModes[(int)m_mode].Drawer.SetLocalMousePosition(evt.localMousePosition);
 
         if (m_constructMode == EditorStatus.Construct.Idle)
         {
-            CursorInfo ci = m_drawer.CursorInfo;
             //middle mouse button pressed
             if ((evt.pressedButtons & 4) != 0) //Content Dragger is active
             {
-                    m_constructMode = EditorStatus.Construct.Dragging;
+                m_constructMode = EditorStatus.Construct.Moving;
             }
             //if left mouse is pressed 
             else if ((evt.pressedButtons & 1) != 0)
@@ -173,8 +177,15 @@ public class EditorManipulator : MouseManipulator
 
             case EditorStatus.Construct.Dragging: // finish drag mode
                 if (evt.button == 0) //left mousebutton
+                {
                     m_editorModes[(int)m_mode].FinishDrag(mouseSnappedWorldPos);
-                m_constructMode = EditorStatus.Construct.Idle;
+                    m_constructMode = EditorStatus.Construct.Idle;
+                }
+                else if (evt.button == 1) //right mousebutton
+                {
+                    m_editorModes[(int)m_mode].AbortDrag();
+                    //m_constructMode will be set to idle with release of left mousebutton only
+                }
                 break;
 
             case EditorStatus.Construct.Selecting: // finish selection mode
@@ -185,17 +196,21 @@ public class EditorManipulator : MouseManipulator
                 }
                 break;
 
+            case EditorStatus.Construct.Moving: // finish move mode
+                if (evt.button == 2) //middle mousebutton
+                {
+                    m_constructMode = EditorStatus.Construct.Idle;
+                }
+                break;
+
             default:
                 break;
         }
-
-        //m_drawer.MarkDirtyRepaint();
     }
 
     private void OnMouseDown(MouseDownEvent evt)
     {
         target.CaptureMouse();
-        //m_drawer.MarkDirtyRepaint();
     }
 
     private void ResetMode()
@@ -218,6 +233,9 @@ public class EditorManipulator : MouseManipulator
                 m_editorModes[(int)m_mode].AbortSelection();
                 break;
 
+            case EditorStatus.Construct.Moving:
+                break;
+
             default:
                 break;
         }
@@ -229,9 +247,11 @@ public class EditorManipulator : MouseManipulator
         if (mode != m_mode)
         {
             ResetMode();
+            m_editorModes[(int)m_mode].Drawer.SetEnabled(false);
             m_mode = mode;
             EditorView ev = target as EditorView;
-            ev.Interface.NotifySetModeListeners(m_mode);
+            ev?.Interface.NotifySetModeListeners(m_mode);
+            m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
         }
     }
 

@@ -1,31 +1,34 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 [Serializable]
 public class MapData : ScriptableObject
 {
     [SerializeReference]
-    private List<Vertex> m_vertices;
+    private  List<Way> m_ways;
     [SerializeReference]
-    private List<Segment> m_segments;
+    private  List<Vertex> m_vertices;
+    [SerializeReference]
+    private  List<Segment> m_segments;
 
     public MapData()
     {
+        m_ways = new List<Way>();
         m_vertices = new List<Vertex>();
         m_segments = new List<Segment>();
     }
 
     public void Clear()
     {
+        m_ways.Clear();
         m_segments.Clear();
         m_vertices.Clear();
     }
 
-    public List<Vertex> Vertices { get => m_vertices; }
-    public List<Segment> Segments { get => m_segments; }
+    public List<Way> Ways => m_ways;
+    public List<Vertex> Vertices => m_vertices; 
+    public List<Segment> Segments => m_segments; 
 
     /*public Vertex LastVertex()
     {
@@ -94,6 +97,20 @@ public class MapData : ScriptableObject
         }
         return null;
     }
+}
+
+[Serializable]
+public class Way
+{
+    [SerializeReference]
+    private List<Vertex> m_positions;
+
+    public Way()
+    {
+        m_positions = new List<Vertex>();
+    }
+
+    public List<Vertex> Positions => m_positions;
 }
 
 [Serializable]

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
+﻿using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -37,8 +33,8 @@ public class EditorView : GraphView
         m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
 
         //this.generateVisualContent += Test; //TODO: use this hook for drawing textured regions
-        contentViewContainer.Add(new Label { name = "origin", text = "(0,0)" });
         contentViewContainer.BringToFront();
+        //contentViewContainer.Add(new Label { name = "origin", text = "(0,0)" });
         schedule.Execute(() =>
         {
             contentViewContainer.transform.position = parent.worldBound.size / 2f;

@@ -18,7 +18,8 @@ public class EditorStatus
         Constructing = 1,
         Dragging = 2,
         Selecting = 3,
-        Count = 4,
+        Moving = 4,
+        Count = 5,
     }
 
     public enum View : int
