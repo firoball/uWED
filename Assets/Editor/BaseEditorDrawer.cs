@@ -6,9 +6,11 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
 {
     protected Color c_wayColor = new Color(0.3f, 0.3f, 1.0f, 1.0f);
     protected Color c_waypointColor = new Color(0.5f, 0.5f, 1.0f, 1.0f);
-    protected Color c_wayStartColor = new Color(0.9f, 0.9f, 1.0f, 1.0f); //TODO: meh!
+    protected Color c_wayStartColor = new Color(0.9f, 0.9f, 1.0f, 1.0f);
+
     protected Color c_vertexColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
     protected Color c_lineColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+
     protected Color c_hoverColor = new Color(1.0f, 0.75f, 0.0f, 1.0f);
     protected Color c_selectColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);
     protected Color c_validColor = new Color(0.3f, 0.8f, 0.3f, 1.0f);
@@ -92,10 +94,13 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
 
     protected virtual Color SetWaypointColor(Way w, int p)
     {
-        return c_waypointColor;
+        if (p == 0)
+            return c_wayStartColor;
+        else
+            return c_waypointColor;
     }
 
-    protected virtual Color SetWayColor(Way w)
+    protected virtual Color SetWaySegmentColor(Way w, int p)
     {
         return c_wayColor;
     }
@@ -213,7 +218,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             Way w = m_mapData.Ways[i];
             for (int p = 0; p < w.Positions.Count; p++)
             {
-                Color wayColor = SetWayColor(w);
+                Color wayColor = SetWaySegmentColor(w, p);
                 Color waypointColor = SetWaypointColor(w, p);
 
                 Vector2 current = w.Positions[p].ScreenPosition;
@@ -248,9 +253,12 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
                 if (m_enableWaypoints)
                 {
                     DrawPoint(current, waypointColor, c_pointSize);
-                    //TODO: this sucks.
+                    //Redraw first waypoint (last segment line drew over it)
                     if (np == 0 && np != p)
-                        DrawPoint(next, c_wayStartColor, c_pointSize); //TODO: support cutom color
+                    {
+                        Color color0 = SetWaypointColor(w, 0);
+                        DrawPoint(next, color0, c_pointSize); 
+                    }
                 }
             }
         }

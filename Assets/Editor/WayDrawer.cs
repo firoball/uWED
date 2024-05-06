@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class WayDrawer : BaseEditorDrawer
 {
-    private Color c_vertexDragColor = new Color(0.0f, 0.45f, 0.0f, 1.0f);
-    //private Color c_lineDragColor = new Color(0.45f, 0.45f, 0.45f, 1.0f);
+    private Color c_vertexDragColor = new Color(0.3f, 0.3f, 0.6f, 1.0f);
+    private Color c_lineDragColor = new Color(0.25f, 0.25f, 0.5f, 1.0f);
 
     //Dragging mode
     private bool m_dragging;
@@ -111,7 +111,7 @@ public class WayDrawer : BaseEditorDrawer
         if (w == null || w.Positions.Count <= p)
             color = base.SetWaypointColor(w, p);
         else if (m_dragging && w.Positions[p] == m_draggedVertex)
-            color = c_vertexDragColor; //TODO: own color
+            color = c_vertexDragColor;
         else if (!m_dragging && w.Positions[p] == m_cursorInfo.HoverVertex)
             color = c_hoverColor;
         else if (m_cursorInfo.SelectedVertices.Contains(w.Positions[p]))
@@ -122,13 +122,16 @@ public class WayDrawer : BaseEditorDrawer
         return color;
     }
 
-    protected override Color SetWayColor(Way w)
+    protected override Color SetWaySegmentColor(Way w, int p)
     {
         Color color;
-        if (m_cursorInfo.HoverVertex != null && w.Positions.Contains(m_cursorInfo.HoverVertex))
+        if (!m_dragging && m_cursorInfo.Waypoint != null && m_cursorInfo.Waypoint == w.Positions[p])
             color = c_hoverColor;
+        //segments are identified by their first Waypoint vertex
+        else if (w.Positions[(p + 1) % w.Positions.Count] == m_draggedVertex || w.Positions[p] == m_draggedVertex)
+            color = c_lineDragColor;
         else
-            color = c_wayColor;
+            color = base.SetWaySegmentColor(w, p);
         return color;
     }
 
@@ -155,25 +158,51 @@ public class WayDrawer : BaseEditorDrawer
         Vertex vertex = null;
         Vertex snappedVertex = null;
         int halfSize = (pointHoverSize - 1) / 2;
+
+        //Hover segment
+        float maxDist = 4.0f;
+        float minDist = float.MaxValue;
+        Vertex waypoint = null;
+
         for (int w = 0; w < m_mapData.Ways.Count && vertex == null; w++)
         {
             Way way = m_mapData.Ways[w];
             for (int p = 0; p < way.Positions.Count && vertex == null; p++)
             {
+                //Hover vertex
                 Vector2 pos = way.Positions[p].ScreenPosition;
                 Rect vertexRect = new Rect(pos.x - halfSize, pos.y - halfSize, pointHoverSize, pointHoverSize);
                 if (vertexRect.Contains(m_mousePos))
+                {
                     vertex = way.Positions[p];
-                if (vertexRect.Contains(m_mouseSnappedPos))
+                    waypoint = null;
+                }
+                else if (vertexRect.Contains(m_mouseSnappedPos))
+                {
                     snappedVertex = way.Positions[p];
+                    waypoint = null;
+                }
+                //Hover segment
+                else
+                {
+                    int p2 = (p + 1) % way.Positions.Count;
+                    Vector2 pos2 = way.Positions[p2].ScreenPosition;
+                    float sqrDist = Geom2D.PointToLineSqrDist(m_mousePos, pos, pos2);
+                    if (sqrDist < minDist && sqrDist < maxDist * maxDist)
+                    {
+                        minDist = sqrDist;
+                        waypoint = way.Positions[p];
+                    }
+                }
             }
         }
 
         m_cursorInfo.HoverVertex = vertex;
         m_cursorInfo.NearVertex = snappedVertex;
+        m_cursorInfo.Waypoint = waypoint;
     }
 
-    private bool IntersectionTest()//TODO
+    private bool IntersectionTest()
     {
         //TODO: intersection tests should be done in world coords -> WayMode.cs
         Vector2 mouseVertexPos = GetMouseVertexPos();
@@ -188,22 +217,19 @@ public class WayDrawer : BaseEditorDrawer
         }
 
         //intersection tests for construction mode preview
-        if (m_constructing && m_focusedVertex != null && !intersects) //TODO use screen positions
+        if (m_constructing && m_focusedVertex != null && !intersects)
         {
-            int idx = 0;
-            if (m_cursorInfo.HoverVertex != null)
-                idx = m_currentWay.Positions.IndexOf(m_cursorInfo.HoverVertex); //-1: not found
-            else if (m_cursorInfo.NearVertex != null)
-                idx = m_currentWay.Positions.IndexOf(m_cursorInfo.NearVertex); //-1: not found
-
-            if (idx != 0) //0: first Vertex of Way - allowed for closure of construction
+            //first vertex (p = 0) must stay allowed for connections (close way)
+            //any waypoint hovered - except first waypoint of current way
+            if ((m_cursorInfo.HoverVertex != null || m_cursorInfo.NearVertex != null) 
+                && m_currentWay.Positions[0].ScreenPosition != mouseVertexPos)
                 intersects = true;
         }
 
         return intersects;
     }
 
-    private void DrawModes(bool intersects)//TODO
+    private void DrawModes(bool intersects)
     {
         //Draw mouse - drag mode
         m_cursorInfo.VertexDragIsValid = true;
@@ -234,23 +260,22 @@ public class WayDrawer : BaseEditorDrawer
                 m_cursorInfo.NextSegmentIsValid = false;
             }
 
-            DrawLine(m_focusedVertex.ScreenPosition, m_mouseSnappedPos, previewColor);
-            DrawPoint(m_mouseSnappedPos, previewColor, c_pointSize);
+            Vector2 pos = GetMouseVertexPos();
+            DrawLine(m_focusedVertex.ScreenPosition, pos, previewColor);
+            DrawPoint(pos, previewColor, c_pointSize);
         }
 
     }
 
-    private bool DragTest(Way w) //TODO use screen positions
+    private bool DragTest(Way w)
     {
         foreach (Vertex v in w.Positions)
         {
             //exclude the vertex which is currently being dragged
             //layered vertex - don't allow (TODO: auto-merge support?)
-            //if (v != m_draggedVertex && v.ScreenPosition == m_mouseSnappedPos)
-            if (v != m_draggedVertex)
+            if (v != m_draggedVertex && v.ScreenPosition == m_mouseSnappedPos)
             {
-                if (v == m_cursorInfo.HoverVertex || v == m_cursorInfo.NearVertex)
-                    return true;
+                return true;
             }
         }
         return false;

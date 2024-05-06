@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Codice.Client.BaseCommands.Import.Commit;
 
 public class WayMode : BaseEditorMode
 {
@@ -134,6 +133,26 @@ public class WayMode : BaseEditorMode
         }
     }
 
+    public override void ModifyObject(Vector2 mouseWorldPos, EditorView ev)
+    {
+        //Split or join segments, if feasible
+        CursorInfo ci = m_drawer.CursorInfo;
+
+        if (ci.Waypoint != null) //insert waypoint
+        {
+            bool found = false;
+            for (int w = 0; w < m_mapData.Ways.Count && !found; w++)
+            {
+                int idx = m_mapData.Ways[w].Positions.IndexOf(ci.Waypoint);
+                if (idx != -1)
+                {
+                    TrySplit(m_mapData.Ways[w], idx, mouseWorldPos, ev);
+                    found = true;
+                }
+            }
+        }
+    }
+
 
     private bool TryFinishConstruction(Vertex v)
     {
@@ -162,6 +181,24 @@ public class WayMode : BaseEditorMode
                 deleted = true;
             }
         }
-
     }
+
+    private void TrySplit(Way way, int pos, Vector2 mouseWorldPos, EditorView ev)
+    {
+        int pos2 = (pos + 1) % way.Positions.Count;
+        Vector2 vertexPos = Geom2D.ProjectPointToLine(mouseWorldPos, way.Positions[pos].WorldPosition, way.Positions[pos2].WorldPosition);
+        vertexPos = ev.SnapWorldPos(vertexPos);
+        //new Vertex must not be placed on top of existing vertices
+        if (vertexPos == way.Positions[pos].WorldPosition || vertexPos == way.Positions[pos2].WorldPosition)
+        {
+            Debug.LogWarning("WayMode.TrySplit: Split operation not possible.");
+        }
+        else //proceed
+        {
+            Vertex v = new Vertex(vertexPos);
+            way.Positions.Insert(pos + 1, v);
+        }
+    }
+
+
 }
