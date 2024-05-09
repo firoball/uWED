@@ -11,13 +11,21 @@ public class WayMode : BaseEditorMode
     {
     }
 
-    public override bool StartDrag()
+    public override void Initialize()
+    {
+        m_currentWay = null;
+        m_currentVertex = null;
+
+        base.Initialize();
+    }
+
+    public override bool StartDrag(bool alt)
     {
         CursorInfo ci = m_drawer.CursorInfo;
         if (ci.HoverVertex != null)
         {
             m_currentVertex = ci.HoverVertex;
-            m_drawer.SetDragMode(true, m_currentVertex);
+            m_drawer.SetDragMode(true);
             return true;
         }
         return false;
@@ -28,13 +36,13 @@ public class WayMode : BaseEditorMode
         CursorInfo ci = m_drawer.CursorInfo;
         if (m_currentVertex != null && ci.VertexDragIsValid)
             m_currentVertex.WorldPosition = mouseSnappedWorldPos;
-        m_drawer.SetDragMode(false, null);
+        m_drawer.SetDragMode(false);
         m_currentVertex = null;
     }
 
     public override void AbortDrag()
     {
-        m_drawer.SetDragMode(false, null);
+        m_drawer.SetDragMode(false);
         m_currentVertex = null;
     }
 
@@ -79,7 +87,7 @@ public class WayMode : BaseEditorMode
             m_mapData.Ways.Remove(m_currentWay);
             m_currentVertex = null;
             m_currentWay = null;
-            AbortConstruction();
+            m_drawer.SetConstructionMode(false, null);
             return true;
         }
         else
@@ -108,13 +116,6 @@ public class WayMode : BaseEditorMode
             m_drawer.SetConstructionMode(true, m_currentVertex);
             return false;
         }
-    }
-
-    public override void AbortConstruction()
-    {
-        m_currentVertex = null;
-        m_currentWay = null;
-        m_drawer.SetConstructionMode(false, null);
     }
 
     public override void DeleteObject()
@@ -199,6 +200,5 @@ public class WayMode : BaseEditorMode
             way.Positions.Insert(pos + 1, v);
         }
     }
-
 
 }

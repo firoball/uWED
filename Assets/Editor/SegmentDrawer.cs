@@ -21,10 +21,19 @@ public class SegmentDrawer : BaseEditorDrawer
     {
         m_enableVertices = true;
         m_enableNormals = true;
-        m_constructing = false;
+    }
+
+    public override void Initialize()
+    {
         m_dragging = false;
+        m_draggedVertex = null;
         m_connectedVertices = new List<Vertex>();
         m_draggedSegments = new List<Segment>();
+
+        m_constructing = false;
+        m_focusedVertex = null;
+
+        base.Initialize();
     }
 
     public override void SetConstructionMode(bool on, Vertex reference)
@@ -78,14 +87,14 @@ public class SegmentDrawer : BaseEditorDrawer
         m_cursorInfo.SelectedVertices.Clear();
     }
 
-    public override void SetDragMode(bool on, Vertex reference)
+    public override void SetDragMode(bool on)
     {
         m_dragging = on;
-        m_draggedVertex = reference;
         m_connectedVertices.Clear();
         m_draggedSegments.Clear();
-        if (on)
+        if (on && m_cursorInfo.HoverVertex != null)
         {
+            m_draggedVertex = m_cursorInfo.HoverVertex;
             for (int i = 0; i < m_mapData.Segments.Count; i++)
             {
                 Segment s = m_mapData.Segments[i];
@@ -100,6 +109,10 @@ public class SegmentDrawer : BaseEditorDrawer
                     m_draggedSegments.Add(s);
                 }
             }
+        }
+        else
+        {
+            m_draggedVertex = null;
         }
     }
 
@@ -149,7 +162,7 @@ public class SegmentDrawer : BaseEditorDrawer
             return;
         if (m_mapData.Vertices.Count == 0)
         {
-            m_cursorInfo.Clear();
+            m_cursorInfo.Initialize();
             return;
         }
 

@@ -1,28 +1,38 @@
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UIElements;
 
 public abstract class BaseEditorDrawer : ImmediateModeElement
 {
+    //object colors
+    protected Color c_objectColor = new Color(0.0f, 0.6f, 0.0f, 1.0f);
+    protected Color c_objectBgColor = new Color(0.125f, 0.125f, 0.125f, 1.0f);
+
+    //way colors
     protected Color c_wayColor = new Color(0.3f, 0.3f, 1.0f, 1.0f);
     protected Color c_waypointColor = new Color(0.5f, 0.5f, 1.0f, 1.0f);
     protected Color c_wayStartColor = new Color(0.9f, 0.9f, 1.0f, 1.0f);
 
+    //segment colors
     protected Color c_vertexColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
     protected Color c_lineColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
 
+    //common colors
     protected Color c_hoverColor = new Color(1.0f, 0.75f, 0.0f, 1.0f);
     protected Color c_selectColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);
     protected Color c_validColor = new Color(0.3f, 0.8f, 0.3f, 1.0f);
     protected Color c_invalidColor = new Color(1.0f, 0.3f, 0.3f, 1.0f);
     protected Color c_centerColor = new Color(0.7f, 0.7f, 0.0f, 1.0f);
 
+    //default sizes
+    protected int c_smallObjectSize = 3;
+    protected int c_bigObjectSize = 7;
     protected int c_centerLength = 64;
     protected int c_pointSize = 5;
     protected int c_normalLength = 5;
     protected int c_arrowLength = 5;
 
     //option switches
+    protected bool m_enableObjectDetails = false;
     protected bool m_enableWaypoints = false;
     protected bool m_enableDirections = false;
     protected bool m_enableVertices = false;
@@ -44,9 +54,18 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
 
     public BaseEditorDrawer(MapData mapData) : base()
     {
+        //set initial values for derived class in overridden Initialize() method
         m_mapData = mapData;
         m_cursorInfo = new CursorInfo();
         this.StretchToParentSize();
+
+        Initialize();
+    }
+
+    public virtual void Initialize()
+    {
+        m_selecting = false;
+        m_cursorInfo.Initialize();
     }
 
     public void SetLocalMousePosition(Vector2 localMousePosition)
@@ -57,9 +76,16 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             m_mouseSnappedPos = editorView.SnapScreenPos(m_mousePos);
     }
 
+    public bool IsSelectionActive()
+    {
+        return m_cursorInfo.IsSelectionActive();
+    }
+
     public virtual void SetConstructionMode(bool on, Vertex reference) { }
+    
     public virtual void SetSelectSingle() { }
-    public virtual void SetSelectMode(bool on) 
+
+    public void SetSelectMode(bool on) 
     {
         if (on)
         {
@@ -82,14 +108,29 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
     }
 
     public virtual void Unselect() { }
-    public virtual void SetDragMode(bool on, Vertex reference) { }
+    
+    public virtual void SetDragMode(bool on, bool alt) { }
 
+    public virtual void SetDragMode(bool on) 
+    {
+        SetDragMode(on, false);
+    }
 
     protected virtual void SelectMultiple(Rect selection) { }
 
     protected virtual bool CloseWay(Way w)
     {
         return true;
+    }
+
+    protected virtual Color SetObjectColor(int i)
+    {
+        return c_objectColor;
+    }
+
+    protected virtual float SetObjectAngle(int i)
+    {
+        return m_mapData.Objects[i].Angle;
     }
 
     protected virtual Color SetWaypointColor(Way w, int p)
@@ -131,11 +172,13 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         {
             m_mapData.Vertices.ForEach(x => x.ScreenPosition = editorView.WorldtoScreenSpace(x.WorldPosition));
             m_mapData.Ways.ForEach(w => w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldtoScreenSpace(p.WorldPosition)));
+            m_mapData.Objects.ForEach(o => o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition));
 
             DrawCenter();
             DrawWays();
             DrawLines();
             DrawVertices();
+            DrawObjects();
             UpdateSelector();
             DrawSelector();
             HoverTest();
@@ -176,6 +219,65 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         }
     }
 
+    protected void DrawCircle(Vector2 point, Color color, int radius)
+    {
+        int steps = 16;
+        if (contentRect.Contains(point))
+        {
+            float degrees = 2 * Mathf.PI / steps;
+            GL.Begin(GL.TRIANGLE_STRIP);
+            GL.Color(color);
+            GL.Vertex(point + new Vector2(radius, 0));
+            for (int i = 1; i <= steps; i++)
+            {
+                float x = radius * Mathf.Cos(i * degrees);
+                float y = radius * Mathf.Sin(i * degrees);
+                GL.Vertex(point + new Vector2(x, y));
+                GL.Vertex(point);
+            }
+            GL.End();
+        }
+    }
+
+    protected void DrawArrow(Vector2 point, Color color, int size, float angle)
+    {
+        if (contentRect.Contains(point))
+        {
+            Vector2[] points = new Vector2[7];
+            points[0] = new Vector2(-0.7f * size, -0.3f * size);
+            points[1] = new Vector2(-0.7f * size, 0.3f * size);
+            points[2] = new Vector2(0.1f * size, 0.3f * size);
+            points[3] = new Vector2(0.1f * size, -0.3f * size);
+
+            points[4] = new Vector2(0.1f * size, -0.7f * size);
+            points[5] = new Vector2(0.1f * size, 0.7f * size);
+            points[6] = new Vector2(0.8f * size, 0);
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                Vector2 p;
+                p.x = points[i].x * Mathf.Cos(angle) - points[i].y * Mathf.Sin(angle);
+                p.y = -(points[i].x * Mathf.Sin(angle) + points[i].y * Mathf.Cos(angle)); //TODO -> Editorview
+                points[i] = point + p;
+            }
+
+            GL.Begin(GL.QUADS);
+            GL.Color(color);
+            GL.Vertex(points[0]);
+            GL.Vertex(points[1]);
+            GL.Vertex(points[2]);
+            GL.Vertex(points[3]);
+            GL.End();
+
+            GL.Begin(GL.TRIANGLES);
+            GL.Color(color);
+            GL.Vertex(points[4]);
+            GL.Vertex(points[5]);
+            GL.Vertex(points[6]);
+            GL.End();
+        }
+    }
+
     private void DrawCenter()
     {
         EditorView editorView = parent as EditorView;
@@ -211,6 +313,25 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             m_selectionEnd = m_mousePos;
     }
 
+    
+    private void DrawObjects()
+    {
+        for (int i = 0; i < m_mapData.Objects.Count; i++)
+        {
+            Color color = SetObjectColor(i);
+            float angle = SetObjectAngle(i);
+            if (m_enableObjectDetails)
+            {
+                DrawCircle(m_mapData.Objects[i].Vertex.ScreenPosition, color, c_bigObjectSize);
+                DrawArrow(m_mapData.Objects[i].Vertex.ScreenPosition, c_objectBgColor, c_bigObjectSize, angle);
+            }
+            else
+            {
+                DrawCircle(m_mapData.Objects[i].Vertex.ScreenPosition, color, c_smallObjectSize);
+            }
+        }
+    }
+
     private void DrawWays()
     {
         for (int i = 0; i < m_mapData.Ways.Count; i++)
@@ -224,18 +345,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
                 Vector2 current = w.Positions[p].ScreenPosition;
                 int np = (p + 1) % w.Positions.Count;
                 Vector2 next = w.Positions[np].ScreenPosition;
-                /*Vector2 direction = next - current;
-                int dashes = (int)(direction.magnitude / (10f + 5f));
-                direction.Normalize();
-                for (int d = 0; d < dashes; d++)
-                {
-                    Vector2 start = current + direction * d * (10f + 5f);
-                    Vector2 end = start + direction * 10;
-                    DrawLine(start, end, wayColor); //TODO: add direction marker
-                }
-                Vector2 last = current + direction * dashes * (10f + 5f);
-                DrawLine(last, next, wayColor); //TODO: add direction marker
-                */
+
                 if ((np != 0) || CloseWay(w))
                 {
                     DrawLine(current, next, wayColor);

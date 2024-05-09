@@ -13,13 +13,23 @@ public abstract class BaseEditorMode
         drawer.SetEnabled(false);
         m_drawer = drawer;
         m_mapData = mapData;
+
+        Initialize();
     }
 
-    public virtual bool StartDrag()
+    public virtual void Initialize()
     {
+        m_drawer?.Initialize();
+    }
+
+    public virtual bool StartDrag(bool alt)
+    {
+        //evaluate "alt" for alternative drag routine (ctrl key pressed)
         return false;
     }
+
     public virtual void FinishDrag(Vector2 mouseSnappedWorldPos) { }
+
     public virtual void AbortDrag() { }
 
     public virtual bool StartConstruction(Vector2 mouseSnappedWorldPos)
@@ -36,8 +46,6 @@ public abstract class BaseEditorMode
     {
         return true; //finished
     }
-
-    public virtual void AbortConstruction() { }
 
     public virtual void EditObject() { }
     public virtual void DeleteObject() { }
@@ -59,18 +67,14 @@ public abstract class BaseEditorMode
         m_drawer?.SetSelectSingle();
     }
 
-    public virtual void AbortSelection()
-    {
-        m_drawer?.SetSelectMode(false);
-    }
-
     public virtual bool ClearSelection()
     {
         if (m_drawer == null)
             return false; //there can't be any selection active
 
-        bool selected = m_drawer.CursorInfo.SelectionIsActive;
+        bool selected = m_drawer.IsSelectionActive();
         m_drawer.Unselect();
         return selected;
     }
+
 }

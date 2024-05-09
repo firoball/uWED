@@ -92,7 +92,7 @@ public class EditorManipulator : MouseManipulator
             //if left mouse is pressed 
             else if ((evt.pressedButtons & 1) != 0)
             {
-                if (m_editorModes[(int)m_mode].StartDrag())
+                if (m_editorModes[(int)m_mode].StartDrag(evt.ctrlKey))
                 {
                     m_constructMode = EditorStatus.Construct.Dragging;
                 }
@@ -215,30 +215,7 @@ public class EditorManipulator : MouseManipulator
 
     private void ResetMode()
     {
-        m_editorModes[(int)m_mode].ClearSelection();
-        switch (m_constructMode)
-        {
-            case EditorStatus.Construct.Idle:
-                break;
-
-            case EditorStatus.Construct.Constructing:
-                m_editorModes[(int)m_mode].AbortConstruction();
-                break;
-
-            case EditorStatus.Construct.Dragging:
-                m_editorModes[(int)m_mode].AbortDrag();
-                break;
-
-            case EditorStatus.Construct.Selecting:
-                m_editorModes[(int)m_mode].AbortSelection();
-                break;
-
-            case EditorStatus.Construct.Moving:
-                break;
-
-            default:
-                break;
-        }
+        m_editorModes[(int)m_mode].Initialize();
         m_constructMode = EditorStatus.Construct.Idle;
     }
 

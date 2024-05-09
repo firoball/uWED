@@ -6,6 +6,8 @@ using UnityEngine;
 public class MapData : ScriptableObject
 {
     [SerializeReference]
+    private List<MapObject> m_objects;
+    [SerializeReference]
     private  List<Way> m_ways;
     [SerializeReference]
     private  List<Vertex> m_vertices;
@@ -14,6 +16,7 @@ public class MapData : ScriptableObject
 
     public MapData()
     {
+        m_objects = new List<MapObject>();
         m_ways = new List<Way>();
         m_vertices = new List<Vertex>();
         m_segments = new List<Segment>();
@@ -21,30 +24,16 @@ public class MapData : ScriptableObject
 
     public void Clear()
     {
+        m_objects.Clear();
         m_ways.Clear();
         m_segments.Clear();
         m_vertices.Clear();
     }
 
+    public List<MapObject> Objects => m_objects;
     public List<Way> Ways => m_ways;
     public List<Vertex> Vertices => m_vertices; 
     public List<Segment> Segments => m_segments; 
-
-    /*public Vertex LastVertex()
-    {
-        if (m_vertices.Count > 0)
-            return m_vertices[m_vertices.Count - 1];
-        else
-            return null;
-    }
-
-    public Segment LastSegment()
-    {
-        if (m_segments.Count > 0)
-            return m_segments[m_segments.Count - 1];
-        else
-            return null;
-    }*/
 
     public void RemoveVertex(Vertex v)
     {
@@ -178,4 +167,21 @@ public class Segment
 
     public Vertex Vertex1 { get => m_vertex1; }
     public Vertex Vertex2 { get => m_vertex2; }
+}
+
+[Serializable]
+public class MapObject
+{
+    [SerializeReference]
+    private Vertex m_vertex;
+    [SerializeReference]
+    private float m_angle;
+
+    public MapObject(Vector2 position) 
+    {
+        m_vertex = new Vertex(position);
+    }
+
+    public Vertex Vertex { get => m_vertex; set => m_vertex = value; }
+    public float Angle { get => m_angle; set => m_angle = value; }
 }

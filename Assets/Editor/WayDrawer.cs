@@ -21,9 +21,19 @@ public class WayDrawer : BaseEditorDrawer
     {
         m_enableDirections = true;
         m_enableWaypoints = true;
-        m_constructing = false;
+    }
+
+    public override void Initialize()
+    {
         m_dragging = false;
+        m_draggedVertex = null;
         m_connectedVertices = new List<Vertex>();
+
+        m_constructing = false;
+        m_focusedVertex = null;
+        m_currentWay = null;
+
+        base.Initialize();
     }
 
     public override void SetConstructionMode(bool on, Vertex reference)
@@ -61,13 +71,13 @@ public class WayDrawer : BaseEditorDrawer
         m_cursorInfo.SelectedVertices.Clear();
     }
 
-    public override void SetDragMode(bool on, Vertex reference)
+    public override void SetDragMode(bool on)
     {
         m_dragging = on;
-        m_draggedVertex = reference;
         m_connectedVertices.Clear();
-        if (on)
+        if (on && m_cursorInfo.HoverVertex != null)
         {
+            m_draggedVertex = m_cursorInfo.HoverVertex;
             bool found = false;
             for (int w = 0; w < m_mapData.Ways.Count && !found; w++) 
             {
@@ -82,6 +92,10 @@ public class WayDrawer : BaseEditorDrawer
                     found = true;
                 }
             }
+        }
+        else
+        {
+            m_draggedVertex = null;
         }
     }
 
@@ -141,7 +155,7 @@ public class WayDrawer : BaseEditorDrawer
             return;
         if (m_mapData.Vertices.Count == 0)
         {
-            m_cursorInfo.Clear();
+            m_cursorInfo.Initialize();
             return;
         }
 

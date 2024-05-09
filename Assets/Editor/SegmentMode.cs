@@ -10,18 +10,24 @@ public class SegmentMode : BaseEditorMode
 
     public SegmentMode(MapData mapData) : base(mapData, new SegmentDrawer(mapData))
     {
-        m_current = null;
-        m_newSegments = new List<Segment>();
     }
 
-    public override bool StartDrag()
+    public override void Initialize()
+    {
+        m_current = null;
+        m_newSegments = new List<Segment>();
+
+        base.Initialize();
+    }
+
+    public override bool StartDrag(bool alt)
     {
         CursorInfo ci = m_drawer.CursorInfo;
         //if (ci.HoverVertex != null || ci.HoverSegment != null) //TODO: support segment drag
         if (ci.HoverVertex != null)
         {
             m_current = ci.HoverVertex;
-            m_drawer.SetDragMode(true, m_current);
+            m_drawer.SetDragMode(true);
             return true;
         }
         return false;
@@ -34,13 +40,13 @@ public class SegmentMode : BaseEditorMode
             m_current.WorldPosition = mouseSnappedWorldPos;
         //else
         //Debug.LogWarning("SegmentMode.FinishDrag: Drag operation not possible.");
-        m_drawer.SetDragMode(false, null);
+        m_drawer.SetDragMode(false);
         m_current = null;
     }
 
     public override void AbortDrag()
     {
-        m_drawer.SetDragMode(false, null);
+        m_drawer.SetDragMode(false);
         m_current = null;
     }
 
@@ -117,12 +123,6 @@ public class SegmentMode : BaseEditorMode
             }
         }
         return false;
-    }
-
-    public override void AbortConstruction()
-    {
-        m_newSegments.Clear();
-        m_drawer.SetConstructionMode(false, null);
     }
 
     private void FinishConstruction(Vertex final)
