@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -172,7 +173,7 @@ public class SegmentDrawer : BaseEditorDrawer
         DrawModes(intersects);
 
         
-        /* DO NOT DELETE - REQUIRED LATER
+        /* DO NOT DELETE - REQUIRED LATER 
         Color previewColor;
         List<Vector2> screenData = m_mapData.Vertices.Select(x => x.ScreenPosition).ToList();
         if (Geom2D.IsInside(screenData, m_mousePos)) 
@@ -184,8 +185,67 @@ public class SegmentDrawer : BaseEditorDrawer
             previewColor = c_invalidColor;
         }
 
-        DrawPoint(m_mousePos, previewColor, 5);
+        DrawPoint(m_mousePos, previewColor, 20);
         */
+
+        //TEMP - move to RegionMode
+        if (m_cursorInfo.HoverSegment != null)
+        {
+            Segment s = m_cursorInfo.HoverSegment;
+            if (s.Vertex2.Connections.Count > 2)
+            {
+                float cw = float.MaxValue;
+                float ccw = float.MinValue;
+                Segment scw = null;
+                Segment sccw = null;
+                //string v = "";
+                Vector2 lhs = (s.Vertex2.WorldPosition - s.Vertex1.WorldPosition).normalized;
+                for (int i = 0; i < s.Vertex2.Connections.Count; i++)
+                {
+                    if (s.Vertex2.Connections[i] != s)
+                    {
+                        Vector2 rhs;
+                        bool side;
+                        if (s.Vertex2.Connections[i].Vertex1 == s.Vertex2)
+                        {
+                            rhs = (s.Vertex2.Connections[i].Vertex2.WorldPosition - s.Vertex2.WorldPosition).normalized;
+                            side = Geom2D.IsCcw(s.Vertex1.WorldPosition, s.Vertex2.WorldPosition, s.Vertex2.Connections[i].Vertex2.WorldPosition);
+                        }
+                        else
+                        {
+                            rhs = (s.Vertex2.Connections[i].Vertex1.WorldPosition - s.Vertex2.WorldPosition).normalized;
+                            side = Geom2D.IsCcw(s.Vertex1.WorldPosition, s.Vertex2.WorldPosition, s.Vertex2.Connections[i].Vertex1.WorldPosition);
+                        }
+
+                        float newdot = Vector2.Dot(lhs, rhs);
+                        //v += "["+lhs + " " + rhs + " dot: " + side+ " " + newdot+ "] ";
+
+                        if (!side && newdot < cw)
+                        {
+                            cw = newdot;
+                            scw = s.Vertex2.Connections[i];
+                        }
+                        if (side && newdot > ccw)
+                        {
+                            ccw = newdot;
+                            sccw = s.Vertex2.Connections[i];
+                        }
+                    }
+                }
+                //string result = " => candidate: ";
+                if (scw != null)
+                {
+                    //result += cw + " (cw)";
+                    DrawLine(scw.Vertex2.ScreenPosition, scw.Vertex1.ScreenPosition, c_validColor);
+                }
+                else
+                {
+                    //result += ccw + " (ccw)";
+                    DrawLine(sccw.Vertex2.ScreenPosition, sccw.Vertex1.ScreenPosition, c_validColor);
+                }
+                //Debug.Log(v+result);
+            }
+        }
     }
 
     protected override void HoverTest()

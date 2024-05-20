@@ -740,22 +740,35 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1568, y: 672}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713015
+        - rid: 2459866007197713034
     - rid: 2459866007197713004
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1568, y: 928}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713013
+        - rid: 2459866007197713018
     - rid: 2459866007197713006
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1312, y: 928}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713022
+        - rid: 2459866007197713024
     - rid: 2459866007197713011
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1600, y: 864}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866007197713013
+        - rid: 2459866007197713016
+        - rid: 2459866007197713039
     - rid: 2459866007197713013
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -767,7 +780,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1600, y: 736}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866007197713015
+        - rid: 2459866007197713016
+        - rid: 2459866007197713036
     - rid: 2459866007197713015
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -786,7 +803,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1504, y: 960}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713018
+        - rid: 2459866007197713091
     - rid: 2459866007197713018
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -798,7 +818,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1376, y: 960}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713022
+        - rid: 2459866007197713095
     - rid: 2459866007197713022
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -810,7 +833,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: 864}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713024
+        - rid: 2459866597273633889
     - rid: 2459866007197713024
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -822,12 +848,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: 736}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713220
+        - rid: 2459866597273633893
     - rid: 2459866007197713032
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1504, y: 640}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713034
+        - rid: 2459866597273633642
     - rid: 2459866007197713034
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -839,7 +871,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1616, y: 736}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866007197713036
+        - rid: 2459866007197713038
+        - rid: 2459866007197713041
+        - rid: 2459866007197713149
     - rid: 2459866007197713036
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -851,7 +888,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1616, y: 864}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866007197713038
+        - rid: 2459866007197713039
+        - rid: 2459866007197713088
+        - rid: 2459866007197713151
     - rid: 2459866007197713038
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -870,7 +912,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1616, y: 656}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713041
+        - rid: 2459866007197713043
     - rid: 2459866007197713041
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -882,7 +927,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1664, y: 608}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713043
+        - rid: 2459866007197713238
     - rid: 2459866007197713043
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -894,12 +942,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1872, y: 576}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713047
+        - rid: 2459866007197713239
     - rid: 2459866007197713046
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2048, y: 544}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713047
+        - rid: 2459866007197713049
     - rid: 2459866007197713047
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -911,7 +965,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2224, y: 624}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713049
+        - rid: 2459866007197713051
     - rid: 2459866007197713049
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -923,7 +980,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2288, y: 720}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713051
+        - rid: 2459866007197713053
     - rid: 2459866007197713051
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -935,7 +995,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2320, y: 800}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713053
+        - rid: 2459866007197713055
     - rid: 2459866007197713053
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -947,7 +1010,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2336, y: 880}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713055
+        - rid: 2459866007197713057
     - rid: 2459866007197713055
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -959,7 +1025,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2400, y: 928}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713057
+        - rid: 2459866007197713105
     - rid: 2459866007197713057
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -971,12 +1040,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2400, y: 1152}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713061
+        - rid: 2459866007197713109
     - rid: 2459866007197713060
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2304, y: 1136}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713061
+        - rid: 2459866007197713116
     - rid: 2459866007197713061
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -988,12 +1063,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2176, y: 1040}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713065
+        - rid: 2459866098084610417
     - rid: 2459866007197713064
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2080, y: 1072}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713065
+        - rid: 2459866007197713067
     - rid: 2459866007197713065
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1005,7 +1086,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1984, y: 1136}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713067
+        - rid: 2459866007197713069
     - rid: 2459866007197713067
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1017,7 +1101,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1920, y: 1200}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713069
+        - rid: 2459866007197713209
     - rid: 2459866007197713069
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1029,17 +1116,26 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1664, y: 1248}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713210
+        - rid: 2459866098084610430
     - rid: 2459866007197713072
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1488, y: 1200}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713075
+        - rid: 2459866098084610430
     - rid: 2459866007197713074
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1440, y: 1152}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713075
+        - rid: 2459866007197713077
     - rid: 2459866007197713075
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1051,7 +1147,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 1104}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713077
+        - rid: 2459866007197713079
     - rid: 2459866007197713077
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1063,7 +1162,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1392, y: 1040}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713079
+        - rid: 2459866007197713081
     - rid: 2459866007197713079
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1075,7 +1177,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 976}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713081
+        - rid: 2459866007197713097
     - rid: 2459866007197713081
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1087,12 +1192,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1504, y: 976}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713085
+        - rid: 2459866007197713101
     - rid: 2459866007197713084
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1568, y: 944}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713085
+        - rid: 2459866007197713087
     - rid: 2459866007197713085
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1104,7 +1215,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1584, y: 928}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713087
+        - rid: 2459866007197713088
     - rid: 2459866007197713087
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1123,7 +1237,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 960}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866007197713091
+        - rid: 2459866007197713094
+        - rid: 2459866007197713103
     - rid: 2459866007197713091
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1135,7 +1253,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1424, y: 960}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866007197713094
+        - rid: 2459866007197713095
+        - rid: 2459866007197713102
     - rid: 2459866007197713094
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1154,7 +1276,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1424, y: 976}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866007197713097
+        - rid: 2459866007197713100
+        - rid: 2459866007197713102
     - rid: 2459866007197713097
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1166,7 +1292,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 976}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866007197713100
+        - rid: 2459866007197713101
+        - rid: 2459866007197713103
     - rid: 2459866007197713100
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1199,7 +1329,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2400, y: 1008}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866007197713105
+        - rid: 2459866007197713108
+        - rid: 2459866007197713111
+        - rid: 2459866007197713122
     - rid: 2459866007197713105
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1211,7 +1346,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2400, y: 1072}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866007197713108
+        - rid: 2459866007197713109
+        - rid: 2459866007197713114
+        - rid: 2459866007197713182
     - rid: 2459866007197713108
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1230,7 +1370,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2416, y: 1008}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866007197713111
+        - rid: 2459866007197713113
+        - rid: 2459866098084610979
     - rid: 2459866007197713111
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1242,7 +1386,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2416, y: 1072}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866007197713113
+        - rid: 2459866007197713114
+        - rid: 2459866098084611014
     - rid: 2459866007197713113
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1261,7 +1409,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2256, y: 1072}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713116
+        - rid: 2459866098084610417
     - rid: 2459866007197713116
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1273,7 +1424,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2336, y: 992}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713122
+        - rid: 2459866007197713124
     - rid: 2459866007197713122
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1285,7 +1439,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2288, y: 976}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713124
+        - rid: 2459866007197713126
     - rid: 2459866007197713124
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1297,7 +1454,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2240, y: 880}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713126
+        - rid: 2459866007197713128
     - rid: 2459866007197713126
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1309,7 +1469,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2240, y: 832}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713128
+        - rid: 2459866007197713130
     - rid: 2459866007197713128
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1321,7 +1484,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2208, y: 784}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713130
+        - rid: 2459866007197713132
     - rid: 2459866007197713130
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1333,7 +1499,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2144, y: 752}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713132
+        - rid: 2459866007197713134
     - rid: 2459866007197713132
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1345,7 +1514,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2080, y: 752}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713134
+        - rid: 2459866007197713136
     - rid: 2459866007197713134
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1357,7 +1529,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1984, y: 816}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713136
+        - rid: 2459866007197713138
     - rid: 2459866007197713136
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1369,7 +1544,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1920, y: 832}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713138
+        - rid: 2459866007197713140
     - rid: 2459866007197713138
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1381,7 +1559,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1856, y: 800}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713140
+        - rid: 2459866007197713142
     - rid: 2459866007197713140
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1393,7 +1574,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1808, y: 752}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713142
+        - rid: 2459866007197713144
     - rid: 2459866007197713142
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1405,7 +1589,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1760, y: 704}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713144
+        - rid: 2459866007197713146
     - rid: 2459866007197713144
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1417,7 +1604,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1696, y: 688}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713146
+        - rid: 2459866007197713148
     - rid: 2459866007197713146
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1429,7 +1619,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1632, y: 720}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713148
+        - rid: 2459866007197713149
     - rid: 2459866007197713148
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1448,7 +1641,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1632, y: 864}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713151
+        - rid: 2459866007197713153
     - rid: 2459866007197713151
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1460,7 +1656,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1680, y: 896}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713153
+        - rid: 2459866007197713155
     - rid: 2459866007197713153
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1472,7 +1671,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1680, y: 944}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713155
+        - rid: 2459866007197713157
     - rid: 2459866007197713155
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1484,7 +1686,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1696, y: 1008}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713157
+        - rid: 2459866007197713159
     - rid: 2459866007197713157
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1496,7 +1701,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1760, y: 1056}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713159
+        - rid: 2459866007197713161
     - rid: 2459866007197713159
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1508,7 +1716,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1840, y: 1088}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713161
+        - rid: 2459866007197713163
     - rid: 2459866007197713161
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1520,7 +1731,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1888, y: 1088}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713163
+        - rid: 2459866007197713165
     - rid: 2459866007197713163
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1532,7 +1746,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1952, y: 1056}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713165
+        - rid: 2459866007197713167
     - rid: 2459866007197713165
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1544,7 +1761,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1984, y: 1024}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713167
+        - rid: 2459866007197713169
     - rid: 2459866007197713167
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1556,7 +1776,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2000, y: 992}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713169
+        - rid: 2459866007197713171
     - rid: 2459866007197713169
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1568,7 +1791,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2032, y: 928}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713171
+        - rid: 2459866007197713206
     - rid: 2459866007197713171
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1580,12 +1806,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2096, y: 880}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713175
+        - rid: 2459866007197713207
     - rid: 2459866007197713174
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2144, y: 896}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713175
+        - rid: 2459866007197713177
     - rid: 2459866007197713175
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1597,7 +1829,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2176, y: 960}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713177
+        - rid: 2459866007197713179
     - rid: 2459866007197713177
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1609,7 +1844,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2256, y: 1024}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713179
+        - rid: 2459866007197713181
     - rid: 2459866007197713179
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1621,7 +1859,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2304, y: 1056}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713181
+        - rid: 2459866007197713182
     - rid: 2459866007197713181
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1640,12 +1881,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1776, y: 832}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713185
+        - rid: 2459866007197713204
     - rid: 2459866007197713184
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1824, y: 880}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713185
+        - rid: 2459866007197713187
     - rid: 2459866007197713185
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1657,7 +1904,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1872, y: 896}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713187
+        - rid: 2459866007197713189
     - rid: 2459866007197713187
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1669,7 +1919,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1936, y: 896}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713189
+        - rid: 2459866007197713191
     - rid: 2459866007197713189
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1681,7 +1934,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2016, y: 864}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713191
+        - rid: 2459866007197713193
     - rid: 2459866007197713191
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1693,7 +1949,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1968, y: 928}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713193
+        - rid: 2459866007197713195
     - rid: 2459866007197713193
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1705,7 +1964,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1920, y: 976}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713195
+        - rid: 2459866007197713197
     - rid: 2459866007197713195
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1717,7 +1979,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1840, y: 1008}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713197
+        - rid: 2459866007197713199
     - rid: 2459866007197713197
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1729,7 +1994,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1792, y: 976}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713199
+        - rid: 2459866007197713201
     - rid: 2459866007197713199
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1741,7 +2009,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1776, y: 912}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713201
+        - rid: 2459866007197713203
     - rid: 2459866007197713201
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1753,7 +2024,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1760, y: 880}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713203
+        - rid: 2459866007197713204
     - rid: 2459866007197713203
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1772,7 +2046,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2064, y: 896}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713206
+        - rid: 2459866007197713207
     - rid: 2459866007197713206
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1791,7 +2068,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1808, y: 1232}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713209
+        - rid: 2459866007197713210
     - rid: 2459866007197713209
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1810,7 +2090,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1312, y: 672}
-        m_connections: 3
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713220
+        - rid: 2459866098084610182
     - rid: 2459866007197713220
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1822,7 +2105,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1760, y: 576}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866007197713238
+        - rid: 2459866007197713239
     - rid: 2459866007197713238
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1841,12 +2127,19 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1412, y: 636}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610185
+        - rid: 2459866597273633624
+        - rid: 2459866597273633651
     - rid: 2459866098084610180
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1376, y: 640}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610182
+        - rid: 2459866597273633653
     - rid: 2459866098084610182
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1858,7 +2151,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1468, y: 636}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610185
+        - rid: 2459866597273633628
+        - rid: 2459866597273633644
     - rid: 2459866098084610185
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1870,47 +2167,74 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 812}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610211
+        - rid: 2459866098084610233
     - rid: 2459866098084610187
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1428, y: 768}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610214
+        - rid: 2459866098084610230
     - rid: 2459866098084610189
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 788}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610217
+        - rid: 2459866098084610231
     - rid: 2459866098084610191
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1452, y: 832}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610208
+        - rid: 2459866098084610232
     - rid: 2459866098084610194
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1428, y: 832}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610210
+        - rid: 2459866098084610232
     - rid: 2459866098084610197
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 788}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610213
+        - rid: 2459866098084610233
     - rid: 2459866098084610200
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1452, y: 768}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610216
+        - rid: 2459866098084610230
     - rid: 2459866098084610203
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 812}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610207
+        - rid: 2459866098084610231
     - rid: 2459866098084610206
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1464, y: 824}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610207
+        - rid: 2459866098084610208
     - rid: 2459866098084610207
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1929,7 +2253,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1416, y: 824}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610210
+        - rid: 2459866098084610211
     - rid: 2459866098084610210
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1948,7 +2275,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1416, y: 776}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610213
+        - rid: 2459866098084610214
     - rid: 2459866098084610213
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1967,7 +2297,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1464, y: 776}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610216
+        - rid: 2459866098084610217
     - rid: 2459866098084610216
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2014,12 +2347,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 512}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610707
+        - rid: 2459866597273633659
     - rid: 2459866098084610354
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 512}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610700
+        - rid: 2459866597273633667
     - rid: 2459866098084610417
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2038,7 +2377,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: 512}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610700
+        - rid: 2459866098084610702
     - rid: 2459866098084610700
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2050,7 +2392,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: 320}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610702
+        - rid: 2459866098084610709
     - rid: 2459866098084610702
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2062,12 +2407,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1600, y: 320}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610706
+        - rid: 2459866098084610713
     - rid: 2459866098084610705
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1600, y: 512}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610706
+        - rid: 2459866098084610707
     - rid: 2459866098084610706
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2086,7 +2437,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1344, y: 320}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610709
+        - rid: 2459866098084610712
+        - rid: 2459866098084610715
     - rid: 2459866098084610709
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2098,7 +2453,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 320}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610712
+        - rid: 2459866098084610713
+        - rid: 2459866098084610750
     - rid: 2459866098084610712
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2117,7 +2476,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1344, y: 288}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610715
+        - rid: 2459866098084610717
     - rid: 2459866098084610715
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2129,7 +2491,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: 192}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610717
+        - rid: 2459866098084610719
     - rid: 2459866098084610717
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2141,7 +2506,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1184, y: 160}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610719
+        - rid: 2459866098084610721
     - rid: 2459866098084610719
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2153,7 +2521,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1088, y: 128}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610721
+        - rid: 2459866098084610723
     - rid: 2459866098084610721
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2165,7 +2536,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1024, y: 128}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610723
+        - rid: 2459866098084610725
     - rid: 2459866098084610723
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2177,7 +2551,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -960, y: 128}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610725
+        - rid: 2459866098084610727
     - rid: 2459866098084610725
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2189,7 +2566,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -864, y: 64}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610727
+        - rid: 2459866098084610729
     - rid: 2459866098084610727
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2201,7 +2581,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -832, y: 0}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610729
+        - rid: 2459866098084610731
+        - rid: 2459866597273633197
     - rid: 2459866098084610729
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2213,7 +2597,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -832, y: -96}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610731
+        - rid: 2459866098084610733
+        - rid: 2459866597273633200
     - rid: 2459866098084610731
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2225,7 +2613,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -896, y: -192}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610733
+        - rid: 2459866098084610735
     - rid: 2459866098084610733
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2237,7 +2628,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1024, y: -256}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610735
+        - rid: 2459866098084610737
     - rid: 2459866098084610735
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2249,7 +2643,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: -256}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610737
+        - rid: 2459866098084610739
     - rid: 2459866098084610737
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2261,7 +2658,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: -224}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610739
+        - rid: 2459866098084610741
     - rid: 2459866098084610739
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2273,7 +2673,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: -160}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610741
+        - rid: 2459866098084610743
     - rid: 2459866098084610741
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2285,7 +2688,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1504, y: -64}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610743
+        - rid: 2459866098084610942
     - rid: 2459866098084610743
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2297,12 +2703,19 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1504, y: 128}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610747
+        - rid: 2459866098084610943
+        - rid: 2459866597273633740
     - rid: 2459866098084610746
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 160}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610747
+        - rid: 2459866098084610749
     - rid: 2459866098084610747
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2314,7 +2727,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 192}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610749
+        - rid: 2459866098084610750
     - rid: 2459866098084610749
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2333,17 +2749,27 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2240, y: 0}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610937
+        - rid: 2459866597273633592
     - rid: 2459866098084610928
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2560, y: 0}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610931
+        - rid: 2459866597273633590
     - rid: 2459866098084610930
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2560, y: 320}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610931
+        - rid: 2459866098084610973
+        - rid: 2459866597273633596
     - rid: 2459866098084610931
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2355,12 +2781,20 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2240, y: 320}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610939
+        - rid: 2459866098084610977
+        - rid: 2459866597273633597
     - rid: 2459866098084610935
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2240, y: 96}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610937
+        - rid: 2459866098084610940
+        - rid: 2459866597273633475
     - rid: 2459866098084610937
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2372,7 +2806,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2240, y: 224}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610939
+        - rid: 2459866098084610940
+        - rid: 2459866597273633730
     - rid: 2459866098084610939
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2391,7 +2829,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1504, y: 0}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610942
+        - rid: 2459866098084610943
+        - rid: 2459866597273633567
     - rid: 2459866098084610942
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2410,12 +2852,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1856, y: 0}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610951
+        - rid: 2459866597273633571
     - rid: 2459866098084610950
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1856, y: 320}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610951
+        - rid: 2459866098084610953
     - rid: 2459866098084610951
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2427,7 +2875,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1984, y: 320}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610953
+        - rid: 2459866597273633731
     - rid: 2459866098084610953
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2439,22 +2890,34 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1984, y: 96}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633471
+        - rid: 2459866597273633731
     - rid: 2459866098084610957
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2112, y: 224}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633729
+        - rid: 2459866597273633730
     - rid: 2459866098084610961
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2112, y: 384}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610964
+        - rid: 2459866597273633729
     - rid: 2459866098084610963
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2048, y: 448}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610964
+        - rid: 2459866597273633721
     - rid: 2459866098084610964
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2466,12 +2929,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1792, y: 448}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610968
+        - rid: 2459866597273633721
     - rid: 2459866098084610967
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1728, y: 384}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610968
+        - rid: 2459866098084610970
     - rid: 2459866098084610968
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2483,7 +2952,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1728, y: 128}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610970
+        - rid: 2459866597273633740
     - rid: 2459866098084610970
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2495,7 +2967,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2464, y: 320}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610973
+        - rid: 2459866098084610976
+        - rid: 2459866098084610996
     - rid: 2459866098084610973
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2507,7 +2983,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2336, y: 320}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866098084610976
+        - rid: 2459866098084610977
+        - rid: 2459866098084610994
     - rid: 2459866098084610976
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2526,7 +3006,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2496, y: 992}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610979
+        - rid: 2459866098084610981
     - rid: 2459866098084610979
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2538,7 +3021,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2496, y: 832}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610981
+        - rid: 2459866098084610983
     - rid: 2459866098084610981
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2550,7 +3036,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2432, y: 768}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610983
+        - rid: 2459866098084610985
     - rid: 2459866098084610983
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2562,7 +3051,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2336, y: 704}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610985
+        - rid: 2459866098084610987
     - rid: 2459866098084610985
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2574,7 +3066,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2368, y: 576}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610987
+        - rid: 2459866098084610989
     - rid: 2459866098084610987
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2586,7 +3081,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2336, y: 480}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610989
+        - rid: 2459866098084610991
     - rid: 2459866098084610989
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2598,7 +3096,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2272, y: 416}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610991
+        - rid: 2459866098084610993
     - rid: 2459866098084610991
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2610,7 +3111,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2304, y: 352}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610993
+        - rid: 2459866098084610994
     - rid: 2459866098084610993
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2629,7 +3133,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2432, y: 384}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610996
+        - rid: 2459866098084610998
     - rid: 2459866098084610996
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2641,7 +3148,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2464, y: 448}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084610998
+        - rid: 2459866098084611000
     - rid: 2459866098084610998
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2653,7 +3163,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2560, y: 480}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084611000
+        - rid: 2459866098084611002
     - rid: 2459866098084611000
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2665,7 +3178,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2624, y: 608}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084611002
+        - rid: 2459866098084611004
     - rid: 2459866098084611002
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2677,7 +3193,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2592, y: 736}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084611004
+        - rid: 2459866098084611006
     - rid: 2459866098084611004
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2689,7 +3208,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2656, y: 832}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084611006
+        - rid: 2459866098084611008
     - rid: 2459866098084611006
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2701,7 +3223,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2656, y: 1056}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084611008
+        - rid: 2459866098084611010
     - rid: 2459866098084611008
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2713,7 +3238,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2592, y: 1152}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084611010
+        - rid: 2459866098084611013
     - rid: 2459866098084611010
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2725,7 +3253,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2496, y: 1152}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866098084611013
+        - rid: 2459866098084611014
     - rid: 2459866098084611013
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2790,222 +3321,272 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1152, y: -160}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611017
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1312, y: -128}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611018
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1440, y: 64}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611019
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1792, y: 64}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611020
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1792, y: 320}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611021
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1856, y: 384}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611022
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1984, y: 384}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611023
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2048, y: 320}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611024
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2048, y: 160}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611025
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2304, y: 160}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611026
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2400, y: 96}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611027
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2496, y: 192}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611028
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2400, y: 288}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611029
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2368, y: 384}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611030
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2432, y: 544}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611031
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2464, y: 672}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611032
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2560, y: 800}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611033
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2592, y: 992}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611034
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2528, y: 1056}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611035
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2368, y: 1024}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611036
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2272, y: 992}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611037
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2176, y: 896}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611038
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2112, y: 832}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611039
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2016, y: 832}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611040
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1920, y: 864}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611041
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1824, y: 832}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611042
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1696, y: 768}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611043
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1568, y: 800}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611044
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 896}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611045
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1376, y: 896}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611046
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1344, y: 800}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611047
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1376, y: 704}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611048
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1440, y: 672}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611049
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1440, y: 480}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611050
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 416}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611051
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1440, y: 352}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611052
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1376, y: 352}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611053
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1344, y: 192}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611054
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: 96}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611055
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1152, y: 32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866098084611056
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1088, y: -64}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273632955
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -32, y: 128}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633186
+        - rid: 2459866597273634041
     - rid: 2459866597273632956
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 480, y: 96}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632959
+        - rid: 2459866597273633187
     - rid: 2459866597273632958
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 640, y: -224}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632959
+        - rid: 2459866597273632961
     - rid: 2459866597273632959
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3017,7 +3598,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 288, y: -320}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632961
+        - rid: 2459866597273632963
     - rid: 2459866597273632961
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3029,7 +3613,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 128, y: -160}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632963
+        - rid: 2459866597273632965
     - rid: 2459866597273632963
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3041,7 +3628,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 64, y: 32}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632965
+        - rid: 2459866597273632967
     - rid: 2459866597273632965
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3053,7 +3643,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -15.208754, y: 18.04174}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632967
+        - rid: 2459866597273632969
     - rid: 2459866597273632967
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3065,7 +3658,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -32, y: -64}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632969
+        - rid: 2459866597273632971
     - rid: 2459866597273632969
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3077,7 +3673,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 64, y: -128}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632971
+        - rid: 2459866597273632973
     - rid: 2459866597273632971
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3089,7 +3688,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 32, y: -256}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632973
+        - rid: 2459866597273632975
     - rid: 2459866597273632973
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3101,7 +3703,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -192, y: -224}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273632975
+        - rid: 2459866597273633189
     - rid: 2459866597273632975
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3113,7 +3718,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -224, y: -64}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633050
+        - rid: 2459866597273633190
+        - rid: 2459866597273633195
     - rid: 2459866597273632996
       type: {class: Way, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3126,7 +3735,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -160, y: 32}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633050
+        - rid: 2459866597273634041
     - rid: 2459866597273633050
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3169,137 +3781,166 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 535.6125, y: -199.24501}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633144
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 352, y: -256}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633145
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 267.145, y: -213.79251}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633146
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 182.505, y: -117.25}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633147
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 158.7, y: 1.7749939}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633148
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 107.1225, y: 55.997494}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633149
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 29.095, y: 63.93249}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633150
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -55.545002, y: 59.964993}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633151
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -75.3825, y: 5.7424936}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633152
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -62.1575, y: -78.89751}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633153
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 10.579999, y: -139.7325}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633154
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 21.159998, y: -199.24501}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633155
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -23.805, y: -227.0175}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633156
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -119.025, y: -219.0825}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633157
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -162.6675, y: -179.4075}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633158
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -189.1175, y: -81.5425}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633159
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -165.3125, y: -10.127506}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633160
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -126.96, y: 41.449993}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633161
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -64, y: 96}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633162
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 32, y: 96}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633163
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 160, y: 96}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633164
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 256, y: 96}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633165
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 396.75, y: 71.86749}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633166
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 465.52, y: 30.869993}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633167
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 527.6775, y: -59.060005}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633168
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 564.7075, y: -148.99}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633185
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 256, y: 160}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633186
+        - rid: 2459866597273633187
     - rid: 2459866597273633186
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3318,7 +3959,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -224, y: -160}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633189
+        - rid: 2459866597273633190
+        - rid: 2459866597273633192
     - rid: 2459866597273633189
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3337,7 +3982,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -240, y: -160}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633192
+        - rid: 2459866597273633194
+        - rid: 2459866597273633211
     - rid: 2459866597273633192
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3349,7 +3998,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -240, y: -64}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633194
+        - rid: 2459866597273633195
+        - rid: 2459866597273633209
     - rid: 2459866597273633194
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3368,7 +4021,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -816, y: 0}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633197
+        - rid: 2459866597273633199
+        - rid: 2459866597273633202
     - rid: 2459866597273633197
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3380,7 +4037,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -816, y: -96}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633199
+        - rid: 2459866597273633200
+        - rid: 2459866597273633218
     - rid: 2459866597273633199
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3399,7 +4060,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -720, y: 0}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633202
+        - rid: 2459866597273633219
+        - rid: 2459866597273633251
     - rid: 2459866597273633202
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3411,17 +4076,29 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -544, y: -16}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633236
+        - rid: 2459866597273633238
+        - rid: 2459866597273633246
     - rid: 2459866597273633205
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -480, y: -48}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633228
+        - rid: 2459866597273633235
+        - rid: 2459866597273633239
     - rid: 2459866597273633207
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -320, y: -64}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633209
+        - rid: 2459866597273633220
+        - rid: 2459866597273633223
     - rid: 2459866597273633209
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3433,7 +4110,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -320, y: -160}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633211
+        - rid: 2459866597273633220
+        - rid: 2459866597273633225
     - rid: 2459866597273633211
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3445,17 +4126,29 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -496, y: -144}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633232
+        - rid: 2459866597273633235
+        - rid: 2459866597273633241
     - rid: 2459866597273633214
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -560, y: -112}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633236
+        - rid: 2459866597273633242
+        - rid: 2459866597273633248
     - rid: 2459866597273633216
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -720, y: -96}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633218
+        - rid: 2459866597273633219
+        - rid: 2459866597273633255
     - rid: 2459866597273633218
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3481,7 +4174,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -368, y: -64}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633223
+        - rid: 2459866597273633229
+        - rid: 2459866597273633233
     - rid: 2459866597273633223
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3493,7 +4190,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -384, y: -160}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633225
+        - rid: 2459866597273633231
+        - rid: 2459866597273633233
     - rid: 2459866597273633225
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3505,7 +4206,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -432, y: -64}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633228
+        - rid: 2459866597273633229
+        - rid: 2459866597273633234
     - rid: 2459866597273633228
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3524,7 +4229,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -432, y: -160}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633231
+        - rid: 2459866597273633232
+        - rid: 2459866597273633234
     - rid: 2459866597273633231
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3571,7 +4280,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -512, y: -32}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633238
+        - rid: 2459866597273633239
+        - rid: 2459866597273633243
     - rid: 2459866597273633238
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3590,7 +4303,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -528, y: -128}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633241
+        - rid: 2459866597273633242
+        - rid: 2459866597273633243
     - rid: 2459866597273633241
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3616,7 +4333,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -608, y: 0}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633246
+        - rid: 2459866597273633252
+        - rid: 2459866597273633256
     - rid: 2459866597273633246
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3628,7 +4349,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -608, y: -96}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633248
+        - rid: 2459866597273633254
+        - rid: 2459866597273633256
     - rid: 2459866597273633248
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3640,7 +4365,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -656, y: 0}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633251
+        - rid: 2459866597273633252
+        - rid: 2459866597273633257
     - rid: 2459866597273633251
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3659,7 +4388,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -672, y: -96}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633254
+        - rid: 2459866597273633255
+        - rid: 2459866597273633257
     - rid: 2459866597273633254
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3714,112 +4447,142 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -192, y: -144}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633261
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -368, y: -128}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633262
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -496, y: -112}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633263
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -624, y: -48}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633264
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -800, y: -48}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633265
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -912, y: -112}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633266
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1056, y: -160}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633267
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1168, y: -96}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633268
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1120, y: 32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633269
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -960, y: 16}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633270
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -864, y: -32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633271
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -752, y: -32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633272
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -608, y: -32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633273
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -464, y: -80}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633274
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -288, y: -96}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633275
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -144, y: -80}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633276
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -96, y: -112}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633277
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -80, y: -192}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633336
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -672, y: 816}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633358
+        - rid: 2459866597273633458
     - rid: 2459866597273633339
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -912, y: 944}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633461
+        - rid: 2459866597273633465
     - rid: 2459866597273633345
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -608, y: 1024}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633348
+        - rid: 2459866597273633356
     - rid: 2459866597273633347
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -560, y: 896}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633348
+        - rid: 2459866597273633457
     - rid: 2459866597273633348
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3831,17 +4594,26 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -800, y: 720}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633399
+        - rid: 2459866597273633469
     - rid: 2459866597273633351
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -896, y: 768}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633469
+        - rid: 2459866597273633900
     - rid: 2459866597273633354
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -608, y: 1072}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633356
+        - rid: 2459866597273633452
     - rid: 2459866597273633356
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3853,7 +4625,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -608, y: 752}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633358
+        - rid: 2459866597273633360
     - rid: 2459866597273633358
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3865,7 +4640,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -576, y: 688}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633360
+        - rid: 2459866597273633462
     - rid: 2459866597273633360
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3877,12 +4655,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -656, y: 672}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633396
+        - rid: 2459866597273633462
     - rid: 2459866597273633395
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -688, y: 720}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633396
+        - rid: 2459866597273633398
     - rid: 2459866597273633396
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3894,7 +4678,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -720, y: 704}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633398
+        - rid: 2459866597273633399
     - rid: 2459866597273633398
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3913,12 +4700,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -928, y: 960}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633409
+        - rid: 2459866597273633465
     - rid: 2459866597273633408
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -960, y: 960}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633409
+        - rid: 2459866597273633411
     - rid: 2459866597273633409
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3930,7 +4723,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -992, y: 1024}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633411
+        - rid: 2459866597273633413
     - rid: 2459866597273633411
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3942,7 +4738,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -960, y: 1088}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633413
+        - rid: 2459866597273633415
     - rid: 2459866597273633413
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3954,7 +4753,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -928, y: 1088}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633415
+        - rid: 2459866597273633417
     - rid: 2459866597273633415
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3966,7 +4768,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -896, y: 1056}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633417
+        - rid: 2459866597273633419
     - rid: 2459866597273633417
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3978,7 +4783,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -864, y: 992}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633419
+        - rid: 2459866597273633421
     - rid: 2459866597273633419
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3990,7 +4798,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -832, y: 960}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633421
+        - rid: 2459866597273633423
     - rid: 2459866597273633421
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4002,7 +4813,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -768, y: 976}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633423
+        - rid: 2459866597273633425
     - rid: 2459866597273633423
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4014,7 +4828,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -752, y: 1024}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633425
+        - rid: 2459866597273633427
     - rid: 2459866597273633425
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4026,7 +4843,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -768, y: 1088}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633427
+        - rid: 2459866597273633429
     - rid: 2459866597273633427
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4038,7 +4858,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -832, y: 1120}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633429
+        - rid: 2459866597273633431
     - rid: 2459866597273633429
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4050,7 +4873,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -864, y: 1152}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633431
+        - rid: 2459866597273633433
     - rid: 2459866597273633431
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4062,7 +4888,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -832, y: 1184}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633433
+        - rid: 2459866597273633435
     - rid: 2459866597273633433
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4074,7 +4903,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -736, y: 1184}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633435
+        - rid: 2459866597273633437
     - rid: 2459866597273633435
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4086,7 +4918,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -672, y: 1152}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633437
+        - rid: 2459866597273633439
     - rid: 2459866597273633437
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4098,7 +4933,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -672, y: 1120}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633439
+        - rid: 2459866597273633441
     - rid: 2459866597273633439
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4110,7 +4948,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -608, y: 1120}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633441
+        - rid: 2459866597273633443
     - rid: 2459866597273633441
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4122,7 +4963,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -544, y: 1184}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633443
+        - rid: 2459866597273633454
     - rid: 2459866597273633443
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4134,12 +4978,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -480, y: 1120}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633447
+        - rid: 2459866597273633455
     - rid: 2459866597273633446
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -512, y: 1088}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633447
+        - rid: 2459866597273633449
     - rid: 2459866597273633447
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4151,7 +5001,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -576, y: 1056}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633449
+        - rid: 2459866597273633452
     - rid: 2459866597273633449
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4170,7 +5023,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -496, y: 1168}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633454
+        - rid: 2459866597273633455
     - rid: 2459866597273633454
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4189,7 +5045,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -608, y: 848}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633457
+        - rid: 2459866597273633458
     - rid: 2459866597273633457
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4208,7 +5067,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -920, y: 848}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633461
+        - rid: 2459866597273633901
+        - rid: 2459866597273633906
     - rid: 2459866597273633461
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4241,7 +5104,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2080, y: 96}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866597273633471
+        - rid: 2459866597273633474
+        - rid: 2459866597273633489
+        - rid: 2459866597273633727
     - rid: 2459866597273633471
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4253,7 +5121,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2112, y: 96}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866597273633474
+        - rid: 2459866597273633475
+        - rid: 2459866597273633492
+        - rid: 2459866597273633723
     - rid: 2459866597273633474
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4272,7 +5145,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2072, y: 80}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633489
+        - rid: 2459866597273633496
+        - rid: 2459866597273633502
     - rid: 2459866597273633489
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4284,7 +5161,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2120, y: 80}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633492
+        - rid: 2459866597273633496
+        - rid: 2459866597273633500
     - rid: 2459866597273633492
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4303,12 +5184,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2224, y: -16}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633499
+        - rid: 2459866597273633584
     - rid: 2459866597273633498
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2224, y: 80}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633499
+        - rid: 2459866597273633500
     - rid: 2459866597273633499
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4327,7 +5214,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1968, y: 80}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633502
+        - rid: 2459866597273633504
     - rid: 2459866597273633502
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4339,7 +5229,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1968, y: 304}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633504
+        - rid: 2459866597273633506
     - rid: 2459866597273633504
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4351,7 +5244,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1872, y: 304}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633506
+        - rid: 2459866597273633510
     - rid: 2459866597273633506
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4363,7 +5259,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1872, y: -16}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633510
+        - rid: 2459866597273633561
     - rid: 2459866597273633510
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4375,12 +5274,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1568, y: -336}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633514
+        - rid: 2459866597273633538
     - rid: 2459866597273633513
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1856, y: -368}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633514
+        - rid: 2459866597273633516
     - rid: 2459866597273633514
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4392,7 +5297,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2032, y: -368}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633516
+        - rid: 2459866597273633518
     - rid: 2459866597273633516
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4404,7 +5312,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2304, y: -352}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633518
+        - rid: 2459866597273633520
     - rid: 2459866597273633518
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4416,7 +5327,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2480, y: -304}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633520
+        - rid: 2459866597273633522
     - rid: 2459866597273633520
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4428,7 +5342,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2528, y: -240}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633522
+        - rid: 2459866597273633524
     - rid: 2459866597273633522
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4440,7 +5357,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2560, y: -160}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633524
+        - rid: 2459866597273633526
     - rid: 2459866597273633524
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4452,7 +5372,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2560, y: -16}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633526
+        - rid: 2459866597273633559
+        - rid: 2459866597273633586
     - rid: 2459866597273633526
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4464,12 +5388,18 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1520, y: -16}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633531
+        - rid: 2459866597273633565
     - rid: 2459866597273633530
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1520, y: -64}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633531
+        - rid: 2459866597273633533
     - rid: 2459866597273633531
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4481,7 +5411,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1488, y: -168}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633533
+        - rid: 2459866597273633535
     - rid: 2459866597273633533
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4493,7 +5426,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: -248}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633535
+        - rid: 2459866597273633537
+        - rid: 2459866597273633540
     - rid: 2459866597273633535
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4505,7 +5442,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: -320}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633537
+        - rid: 2459866597273633538
     - rid: 2459866597273633537
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4524,7 +5464,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1376, y: -256}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633540
+        - rid: 2459866597273633542
     - rid: 2459866597273633540
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4536,7 +5479,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1376, y: -352}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633542
+        - rid: 2459866597273633544
     - rid: 2459866597273633542
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4548,7 +5494,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1552, y: -368}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633544
+        - rid: 2459866597273633546
     - rid: 2459866597273633544
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4560,7 +5509,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1856, y: -400}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633546
+        - rid: 2459866597273633548
     - rid: 2459866597273633546
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4572,7 +5524,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2032, y: -400}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633548
+        - rid: 2459866597273633550
     - rid: 2459866597273633548
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4584,7 +5539,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2304, y: -384}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633550
+        - rid: 2459866597273633552
     - rid: 2459866597273633550
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4596,7 +5554,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2496, y: -336}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633552
+        - rid: 2459866597273633554
     - rid: 2459866597273633552
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4608,7 +5569,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2560, y: -256}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633554
+        - rid: 2459866597273633556
     - rid: 2459866597273633554
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4620,7 +5584,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2592, y: -176}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633556
+        - rid: 2459866597273633558
     - rid: 2459866597273633556
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4632,7 +5599,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2592, y: -16}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633558
+        - rid: 2459866597273633559
     - rid: 2459866597273633558
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4651,7 +5621,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1672, y: -16}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633561
+        - rid: 2459866597273633564
+        - rid: 2459866597273633573
     - rid: 2459866597273633561
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4663,7 +5637,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1624, y: -16}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633564
+        - rid: 2459866597273633565
+        - rid: 2459866597273633572
     - rid: 2459866597273633564
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4682,7 +5660,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1632, y: 0}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866597273633567
+        - rid: 2459866597273633570
+        - rid: 2459866597273633572
+        - rid: 2459866597273633737
     - rid: 2459866597273633567
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4694,7 +5677,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1664, y: 0}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866597273633570
+        - rid: 2459866597273633571
+        - rid: 2459866597273633573
+        - rid: 2459866597273633733
     - rid: 2459866597273633570
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4727,7 +5715,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2376, y: -16}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633584
+        - rid: 2459866597273633587
+        - rid: 2459866597273633594
     - rid: 2459866597273633584
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4739,7 +5731,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2424, y: -16}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633586
+        - rid: 2459866597273633587
+        - rid: 2459866597273633595
     - rid: 2459866597273633586
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4758,7 +5754,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2416, y: 0}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866597273633590
+        - rid: 2459866597273633593
+        - rid: 2459866597273633595
+        - rid: 2459866597273633596
     - rid: 2459866597273633590
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4770,7 +5771,12 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2384, y: 0}
-        m_connections: 4
+        m_connectedSegments: 4
+        m_connections:
+        - rid: 2459866597273633592
+        - rid: 2459866597273633593
+        - rid: 2459866597273633594
+        - rid: 2459866597273633597
     - rid: 2459866597273633592
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4845,122 +5851,149 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1568, y: -48}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633600
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1568, y: -128}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633601
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1520, y: -208}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633602
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: -240}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633603
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: -272}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633604
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1568, y: -304}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633605
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1744, y: -320}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633606
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1856, y: -320}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633607
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2096, y: -288}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633609
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2384, y: -272}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633610
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2448, y: -208}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633611
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2480, y: -144}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633612
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2480, y: -80}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633613
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2384, y: -48}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633614
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2272, y: -64}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633615
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2176, y: -48}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633616
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2160, y: 32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633617
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2112, y: 32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633618
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2000, y: 32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633619
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1936, y: 16}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633620
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1888, y: -64}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633621
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1744, y: -80}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633622
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1616, y: -48}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633623
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1412, y: 628}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633624
+        - rid: 2459866597273633629
+        - rid: 2459866597273633647
     - rid: 2459866597273633624
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4972,7 +6005,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1468, y: 628}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633628
+        - rid: 2459866597273633629
+        - rid: 2459866597273633639
     - rid: 2459866597273633628
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4991,17 +6028,26 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 520}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633638
+        - rid: 2459866597273633657
     - rid: 2459866597273633633
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 520}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633648
+        - rid: 2459866597273633663
     - rid: 2459866597273633637
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 628}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633638
+        - rid: 2459866597273633639
     - rid: 2459866597273633638
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5020,7 +6066,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 640}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633642
+        - rid: 2459866597273633645
     - rid: 2459866597273633642
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5032,7 +6081,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1472, y: 636}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633644
+        - rid: 2459866597273633645
     - rid: 2459866597273633644
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5051,7 +6103,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 628}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633647
+        - rid: 2459866597273633648
     - rid: 2459866597273633647
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5070,7 +6125,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 636}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633651
+        - rid: 2459866597273633654
     - rid: 2459866597273633651
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5082,7 +6140,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 640}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633653
+        - rid: 2459866597273633654
     - rid: 2459866597273633653
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5101,7 +6162,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1468, y: 520}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633657
+        - rid: 2459866597273633661
+        - rid: 2459866597273633664
     - rid: 2459866597273633657
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5113,7 +6178,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1468, y: 512}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633659
+        - rid: 2459866597273633661
+        - rid: 2459866597273633666
     - rid: 2459866597273633659
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5132,7 +6201,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1412, y: 520}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633663
+        - rid: 2459866597273633664
+        - rid: 2459866597273633668
     - rid: 2459866597273633663
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5151,7 +6224,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1412, y: 512}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633666
+        - rid: 2459866597273633667
+        - rid: 2459866597273633668
     - rid: 2459866597273633666
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5189,27 +6266,32 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1464, y: 848}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633672
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1383.4783, y: 791.5217}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633673
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1400, y: 746.3043}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633676
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1513.9131, y: 788.04346}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633677
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1496, y: 832}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633721
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5221,7 +6303,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2152, y: 192}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633723
+        - rid: 2459866597273633728
     - rid: 2459866597273633723
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5233,7 +6318,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2040, y: 192}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633727
+        - rid: 2459866597273633728
     - rid: 2459866597273633727
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5273,7 +6361,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1704, y: 96}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633733
+        - rid: 2459866597273633738
     - rid: 2459866597273633733
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5285,7 +6376,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1592, y: 96}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633737
+        - rid: 2459866597273633738
     - rid: 2459866597273633737
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5311,32 +6405,38 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 448, y: -240}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633754
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1408, y: 840}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633755
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1440, y: 720}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633756
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1488, y: 736}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633757
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2224, y: -304}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633758
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1216, y: -160}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633874
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5347,7 +6447,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 160, y: 32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633876
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5358,7 +6459,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 256, y: -32}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633878
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5369,7 +6471,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: 288, y: -192}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633880
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5380,7 +6483,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1696, y: 736}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633882
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5391,7 +6495,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2080, y: 864}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633884
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5402,12 +6507,17 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -2176, y: 832}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273633888
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: 832}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633889
+        - rid: 2459866597273633892
+        - rid: 2459866597273633895
     - rid: 2459866597273633889
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5419,7 +6529,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1280, y: 768}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633892
+        - rid: 2459866597273633893
+        - rid: 2459866597273633898
     - rid: 2459866597273633892
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5438,7 +6552,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1264, y: 832}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633895
+        - rid: 2459866597273633897
+        - rid: 2459866597273633936
     - rid: 2459866597273633895
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5450,7 +6568,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1264, y: 768}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633897
+        - rid: 2459866597273633898
+        - rid: 2459866597273633908
     - rid: 2459866597273633897
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5469,7 +6591,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -920, y: 800}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633900
+        - rid: 2459866597273633901
+        - rid: 2459866597273633903
     - rid: 2459866597273633900
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5488,7 +6614,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -936, y: 800}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633903
+        - rid: 2459866597273633905
+        - rid: 2459866597273633923
     - rid: 2459866597273633903
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5500,7 +6630,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -936, y: 848}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633905
+        - rid: 2459866597273633906
+        - rid: 2459866597273633941
     - rid: 2459866597273633905
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5519,7 +6653,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1200, y: 768}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633908
+        - rid: 2459866597273633910
     - rid: 2459866597273633908
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5531,7 +6668,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1200, y: 776}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633910
+        - rid: 2459866597273633912
     - rid: 2459866597273633910
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5543,7 +6683,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1120, y: 776}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633912
+        - rid: 2459866597273633914
     - rid: 2459866597273633912
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5555,7 +6698,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1120, y: 784}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633914
+        - rid: 2459866597273633942
+        - rid: 2459866597273633955
     - rid: 2459866597273633914
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5567,12 +6714,19 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1040, y: 784}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633918
+        - rid: 2459866597273633945
     - rid: 2459866597273633917
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1040, y: 792}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633918
+        - rid: 2459866597273633920
+        - rid: 2459866597273633943
     - rid: 2459866597273633918
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5584,7 +6738,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -960, y: 792}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633920
+        - rid: 2459866597273633922
     - rid: 2459866597273633920
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5596,7 +6753,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -960, y: 800}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633922
+        - rid: 2459866597273633923
     - rid: 2459866597273633922
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5615,17 +6775,28 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1048, y: 848}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633937
+        - rid: 2459866597273633941
     - rid: 2459866597273633930
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1048, y: 840}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633937
+        - rid: 2459866597273633943
+        - rid: 2459866597273633949
     - rid: 2459866597273633932
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1128, y: 832}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633936
+        - rid: 2459866597273633939
+        - rid: 2459866597273633942
     - rid: 2459866597273633936
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5644,7 +6815,10 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1128, y: 840}
-        m_connections: 2
+        m_connectedSegments: 2
+        m_connections:
+        - rid: 2459866597273633939
+        - rid: 2459866597273633951
     - rid: 2459866597273633939
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5677,7 +6851,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1056, y: 784}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633945
+        - rid: 2459866597273633957
+        - rid: 2459866597273633963
     - rid: 2459866597273633945
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5689,7 +6867,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1064, y: 840}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633949
+        - rid: 2459866597273633961
+        - rid: 2459866597273633963
     - rid: 2459866597273633949
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5701,7 +6883,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1112, y: 840}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633951
+        - rid: 2459866597273633960
+        - rid: 2459866597273633962
     - rid: 2459866597273633951
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5713,7 +6899,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1104, y: 784}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633955
+        - rid: 2459866597273633958
+        - rid: 2459866597273633962
     - rid: 2459866597273633955
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5725,7 +6915,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1088, y: 784}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633957
+        - rid: 2459866597273633958
+        - rid: 2459866597273633964
     - rid: 2459866597273633957
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5744,7 +6938,11 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -1080, y: 840}
-        m_connections: 3
+        m_connectedSegments: 3
+        m_connections:
+        - rid: 2459866597273633960
+        - rid: 2459866597273633961
+        - rid: 2459866597273633964
     - rid: 2459866597273633960
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5797,7 +6995,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -480, y: 192}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273634044
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5808,7 +7007,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -320, y: 288}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273634046
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5819,7 +7019,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -160, y: 192}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273634048
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5830,7 +7031,8 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -224, y: 128}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []
     - rid: 2459866597273634050
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5841,4 +7043,5 @@ MonoBehaviour:
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
         m_worldPosition: {x: -352, y: 128}
-        m_connections: 0
+        m_connectedSegments: 0
+        m_connections: []

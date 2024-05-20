@@ -20,7 +20,8 @@ public class Geom2D
 
     public static bool IsCcw(Vector2 a, Vector2 b, Vector2 c)
     {
-        return ((c.y - a.y) * (b.x - a.x)) > ((b.y - a.y) * (c.x - a.x));
+        //2d cross product: Nz = Ax*By - Ay*Bx
+        return ((b.x - a.x) * (c.y - a.y)) > ((b.y - a.y) * (c.x - a.x));
     }
 
     public static Vector2 CalculateRightNormal(Vector2 p1, Vector2 p2, float length)

@@ -111,11 +111,6 @@ public class ObjectDrawer : BaseEditorDrawer
     {
         if (!enabledSelf)
             return;
-        if (m_mapData.Objects.Count == 0)
-        {
-            m_cursorInfo.Initialize();
-            return;
-        }
 
         base.ImmediateRepaint();
 
@@ -154,7 +149,7 @@ public class ObjectDrawer : BaseEditorDrawer
     private void DrawModes()
     {
         //Draw mouse - drag mode
-        if (m_dragging)
+        if (m_dragging && m_draggedObject != null)
         {
             if (m_rotating)
             {

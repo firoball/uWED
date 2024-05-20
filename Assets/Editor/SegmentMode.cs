@@ -190,7 +190,7 @@ public class SegmentMode : BaseEditorMode
         //Split or join segments, if feasible
         CursorInfo ci = m_drawer.CursorInfo;
 
-        if (ci.HoverVertex != null && ci.HoverVertex.Connections == 2) //Join two segments (vertex must not have other connections)
+        if (ci.HoverVertex != null && ci.HoverVertex.Connections.Count == 2) //Join two segments (vertex must not have other connections)
         {
             TryJoin(ci.HoverVertex);
         }

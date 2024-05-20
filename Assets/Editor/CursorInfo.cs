@@ -22,11 +22,16 @@ public class CursorInfo
     //Way mode
     private Vertex m_waypoint;
 
+    //Region mode
+    private Region m_hoverRegion;
+    private readonly List<Region> m_selectedRegions;
+
     public CursorInfo()
     {
         m_selectedVertices = new List<Vertex>();
         m_selectedObjects = new List<MapObject>();
         m_selectedSegments = new List<Segment>();
+        m_selectedRegions = new List<Region>();
         Initialize();
     }
 
@@ -46,11 +51,15 @@ public class CursorInfo
         m_selectedSegments.Clear();
 
         m_waypoint = null;
+
+        m_hoverRegion = null;
+        m_selectedRegions.Clear();
+
     }
 
     public bool IsSelectionActive()
     {
-        if (m_selectedVertices.Count > 0 || m_selectedObjects.Count > 0 || m_selectedSegments.Count > 0)
+        if (m_selectedVertices.Count > 0 || m_selectedObjects.Count > 0 || m_selectedSegments.Count > 0 || m_selectedRegions.Count > 0)
             return true;
         else
             return false;
@@ -70,5 +79,7 @@ public class CursorInfo
     public List<Segment> SelectedSegments => m_selectedSegments;
 
     public Vertex Waypoint { get => m_waypoint; set => m_waypoint = value; }
-
+    
+    public Region HoverRegion { get => m_hoverRegion; set => m_hoverRegion = value; }
+    public List<Region> SelectedRegions => m_selectedRegions;
 }
