@@ -9,8 +9,6 @@ public class RegionDrawer : BaseEditorDrawer
     private List<Vector2> m_hoveredContour;
     private Tuple<Segment, bool> m_nearest;
     private bool m_inside;
-    private Vector2 m_min;
-    private Vector2 m_max;
 
     public RegionDrawer(MapData mapData) : base(mapData)
     {
@@ -23,8 +21,6 @@ public class RegionDrawer : BaseEditorDrawer
         m_hoveredContour = new List<Vector2>();
         m_nearest = null;
         m_inside = false;
-        m_min = new Vector2(float.MaxValue, float.MaxValue);
-        m_max = new Vector2(float.MinValue, float.MinValue);
         base.Initialize();
     }
 
@@ -32,9 +28,9 @@ public class RegionDrawer : BaseEditorDrawer
     {
         Color color;
         /*if (m_nearest != null && m_nearest.Item1 == m_mapData.Segments[i] && m_nearest.Item2) //TODO: temp - for testing only
-            color = c_hoverColor;
+            color = Color.white;
         else if (m_nearest != null && m_nearest.Item1 == m_mapData.Segments[i] && !m_nearest.Item2) //TODO: temp - for testing only
-            color = c_validColor;
+            color = Color.blue;
         else*/ if (m_hoveredSegments.Contains(m_mapData.Segments[i]) && m_inside)
             color = c_validColor;
         else if (m_hoveredSegments.Contains(m_mapData.Segments[i]) && !m_inside)
@@ -75,22 +71,9 @@ public class RegionDrawer : BaseEditorDrawer
     protected override void HoverTest()
     {
         Segment segment = FindNearestSegment(m_mapData.Segments);
-        /*float minDist = float.MaxValue;
-        for (int i = 0; i < m_mapData.Segments.Count; i++)
-        {
-            Vector2 v1 = m_mapData.Segments[i].Vertex1.ScreenPosition;
-            Vector2 v2 = m_mapData.Segments[i].Vertex2.ScreenPosition;
-
-            float sqrDist = Geom2D.PointToLineSqrDist(m_mousePos, v1, v2);
-            if (sqrDist < minDist)
-            {
-                minDist = sqrDist;
-                segment = m_mapData.Segments[i];
-            }
-        }*/
 
         EditorView ev = parent as EditorView;
-        if (ev != null && segment != null)
+        if (ev != null)
         {
             Vector2 mouseWorldPos = ev.ScreenToWorldSpace(m_mousePos);
             bool left;
@@ -107,8 +90,38 @@ public class RegionDrawer : BaseEditorDrawer
 
             //find complete contour independently from assigned regions
             Tuple<Segment, bool> nearest = new Tuple<Segment, bool>(segment, left);
-            List<Vector2> hoveredContour = FindContour(nearest);
-            m_inside = Geom2D.IsInside(hoveredContour, mouseWorldPos);
+            //hovered segment has changed?
+            /*if (
+                (m_nearest != null) &&
+                ((m_nearest.Item1 != nearest.Item1) || (m_nearest.Item2 != nearest.Item2))
+                )*/
+            {
+
+                m_hoveredSegments.Clear();
+                m_hoveredContour = FindContour(nearest, out m_hoveredSegments); //store new contour
+
+                m_inside = Geom2D.IsInside(m_hoveredContour, mouseWorldPos);
+                //complex contour treatment (polygon with holes)
+                if (m_inside)
+                {
+                    /* mouse cursor is inside polygon:
+                     * Identify any sements inside and find next inner contour. 
+                     * Remove any segments inside of inner contour.
+                     * Repeat until no inner contours and segments are left.
+                     */
+                    ProcessInnerSegments(m_mapData.Segments, m_hoveredContour, mouseWorldPos);
+                }
+                else
+                {
+                    /* mouse cursor is outside polygon:
+                     * Identify any sements outside and find next contour. 
+                     * if mouse sursor is outside polygon, repeat.
+                     * if mouse cursor is inside polygon, continue with finding any remaining inner contour
+                     * (details see case above).
+                     */
+                    ProcessOuterSegments(m_mapData.Segments, m_hoveredContour, mouseWorldPos);
+                }
+            }
             m_nearest = nearest;
         }
         else
@@ -117,6 +130,68 @@ public class RegionDrawer : BaseEditorDrawer
         }
     }
 
+    private void ProcessInnerSegments(List<Segment> segments, List<Vector2> outerContour, Vector2 mouseWorldPos)
+    {
+        List<Segment> innerSegments = FindInnerSegments(segments, outerContour);
+        if (innerSegments != null)
+        {
+            int iterations = 0;
+            while (innerSegments.Count > 0 && iterations < innerSegments.Count)
+            {
+                Segment segment = FindNearestSegment(innerSegments);
+                if (segment != null)
+                {
+                    bool left = Geom2D.IsCcw(segment.Vertex1.WorldPosition, segment.Vertex2.WorldPosition, mouseWorldPos);
+                    Tuple<Segment, bool> nearest = new Tuple<Segment, bool>(segment, left);
+                    List<Vector2> contour = FindContour(nearest, out List<Segment> contourSegments);
+                    //segments inside of inner contours can never be part of the final contour - remove
+                    RemoveInnerSegments(innerSegments, contour);
+                    //remove inner contour itself from list of inner segments
+                    contourSegments.ForEach(x => innerSegments.Remove(x));
+                    //make sure inner contours are hovered as well
+                    m_hoveredSegments.AddRange(contourSegments);
+                }
+                iterations++; //make sure deadlock can never happen
+            }
+        }
+    }
+
+    private void ProcessOuterSegments(List<Segment> segments, List<Vector2> innerContour, Vector2 mouseWorldPos)
+    {
+        List<Segment> outerSegments = FindOuterSegments(segments, innerContour);
+        if (outerSegments != null)
+        {
+            int interations = 0;
+            while (outerSegments.Count > 0 && interations < outerSegments.Count)
+            {
+                Segment segment = FindNearestSegment(outerSegments);
+                if (segment != null)
+                {
+                    bool left = Geom2D.IsCcw(segment.Vertex1.WorldPosition, segment.Vertex2.WorldPosition, mouseWorldPos);
+                    Tuple<Segment, bool> nearest = new Tuple<Segment, bool>(segment, left);
+                    List<Vector2> contour = FindContour(nearest, out List<Segment> contourSegments);
+                    //remove contour itself from list of inner segments
+                    contourSegments.ForEach(x => outerSegments.Remove(x));
+                    //make sure inner contours are hovered as well
+                    m_hoveredSegments.AddRange(contourSegments);
+                    if (!Geom2D.IsInside(contour, mouseWorldPos)) //another inner contour found
+                    {
+                        //segments inside of inner contours can never be part of the final contour - remove
+                        RemoveInnerSegments(outerSegments, contour);
+                    }
+                    else //outer contour found
+                    {
+                        m_inside = true;
+                        ProcessInnerSegments(outerSegments, contour, mouseWorldPos);
+                        outerSegments.Clear(); //done
+                    }
+                }
+                interations++; //make sure deadlock can never happen
+            }
+        }
+    }
+
+    Vector2 dp1, dp2;
     private Segment FindNearestSegment(List<Segment> segments)
     {
         Segment segment = null;
@@ -132,52 +207,136 @@ public class RegionDrawer : BaseEditorDrawer
                 minDist = sqrDist;
                 segment = segments[i];
             }
+            else if (sqrDist == minDist) //find best candidate of multiple segments with same distance
+            {
+                //the steeper the angle (--> 0) the less reliable the result is - always take bigger angle (smaller dot product)
+                EditorView ev = parent as EditorView;
+                if (ev != null)
+                {
+                    Vector2 mouseWorldPos = ev.ScreenToWorldSpace(m_mousePos);
+
+                    Vector2 connection;
+                    Vector2 current;
+                    Vector2 next;
+                    if (segment.Vertex2 == segments[i].Vertex1) 
+                    {
+                        connection = segment.Vertex2.WorldPosition;
+                        current = segment.Vertex1.WorldPosition;
+                        next = segments[i].Vertex2.WorldPosition;
+                    }
+                    else if (segment.Vertex1 == segments[i].Vertex1)
+                    {
+                        connection = segment.Vertex1.WorldPosition;
+                        current = segment.Vertex2.WorldPosition;
+                        next = segments[i].Vertex2.WorldPosition;
+                    }
+                    else if (segment.Vertex2 == segments[i].Vertex2)
+                    {
+                        connection = segment.Vertex2.WorldPosition;
+                        current = segment.Vertex1.WorldPosition;
+                        next = segments[i].Vertex1.WorldPosition;
+                    }
+                    else
+                    {
+                        connection = segment.Vertex1.WorldPosition;
+                        current = segment.Vertex2.WorldPosition;
+                        next = segments[i].Vertex1.WorldPosition;
+                    }
+
+                    Vector2 lhs = (connection - mouseWorldPos).normalized;
+                    Vector2 rhscurrent = (current - connection).normalized;
+                    Vector2 rhsnext = (next - connection).normalized;
+
+                    float dotcurrent = Vector2.Dot(lhs, rhscurrent);
+                    float dotnext = Vector2.Dot(lhs, rhsnext);
+
+                    if (dotnext < dotcurrent)
+                        segment = segments[i];
+                }
+            }
+            else
+            {
+                //nop
+            }
         }
         return segment;
     }
 
-    private List<Vector2> FindContour(Tuple<Segment, bool> nearest)
+    private List<Segment> FindInnerSegments(List<Segment> segments, List<Vector2> contour)
     {
-        if (
-            (m_nearest != null) && (nearest != null) &&
-            ((m_nearest.Item1 != nearest.Item1) || (m_nearest.Item2 != nearest.Item2))
-            )
+        List<Segment> innerSegments = new List<Segment>();
+        for (int i = 0;  i < segments.Count; i++) 
         {
-            List<Vector2> hoveredContour = new List<Vector2>();
-
-            //init
-            m_hoveredSegments.Clear();
-            m_min = new Vector2(float.MaxValue, float.MaxValue);
-            m_max = new Vector2(float.MinValue, float.MinValue);
-
-            //iterate through connected segments
-            Tuple<Segment, bool> first = nearest;
-            Tuple<Segment, bool> current = first;
-            do
-            {
-                current = ContourHelper.FindNextSegment(current);
-                m_hoveredSegments.Add(current.Item1);
-                Vector2 nextPos;
-                if (current.Item2)
-                    nextPos = current.Item1.Vertex1.WorldPosition;
-                else
-                    nextPos = current.Item1.Vertex2.WorldPosition;
-                hoveredContour.Add(nextPos);
-
-                //rect of contour
-                m_min.x = Mathf.Min(nextPos.x, m_min.x);
-                m_min.y = Mathf.Min(nextPos.y, m_min.y);
-                m_max.x = Mathf.Max(nextPos.x, m_max.x);
-                m_max.y = Mathf.Max(nextPos.y, m_max.y);
-
-            } while (
-                (current.Item1 != first.Item1 || current.Item2 != first.Item2) && 
-                m_hoveredSegments.Count <= m_mapData.Segments.Count //avoid endless loop in case of some weird error
-                );
-            m_hoveredContour = hoveredContour; //Yikes (1)
+            Vector2 point = segments[i].Vertex1.WorldPosition + (segments[i].Vertex2.WorldPosition - segments[i].Vertex1.WorldPosition) * 0.5f;
+            if (
+                Geom2D.IsInside(contour, point) &&
+                //Geom2D.IsInside(contour, segments[i].Vertex1.WorldPosition) &&
+                //Geom2D.IsInside(contour, segments[i].Vertex2.WorldPosition) &&
+                !m_hoveredSegments.Contains(segments[i])
+                )
+                innerSegments.Add(segments[i]); //TODO is this sufficient?
         }
+        return innerSegments;
+    }
 
-        return m_hoveredContour; //Yikes (2)
+    private List<Segment> FindOuterSegments(List<Segment> segments, List<Vector2> contour)
+    {
+        List<Segment> outerSegments = new List<Segment>();
+        for (int i = 0; i < segments.Count; i++)
+        {
+            Vector2 point = segments[i].Vertex1.WorldPosition + (segments[i].Vertex2.WorldPosition - segments[i].Vertex1.WorldPosition) * 0.5f;
+            if (
+                !Geom2D.IsInside(contour, point) &&
+                //!Geom2D.IsInside(contour, segments[i].Vertex1.WorldPosition) &&
+                //!Geom2D.IsInside(contour, segments[i].Vertex2.WorldPosition) &&
+                !m_hoveredSegments.Contains(segments[i])
+                )
+                outerSegments.Add(segments[i]); //TODO is this sufficient?
+        }
+        return outerSegments;
+    }
+
+    private void RemoveInnerSegments(List<Segment> segments, List<Vector2> contour)
+    {
+        for (int i = segments.Count - 1; i >= 0; i--)
+        {
+            if (
+                (Geom2D.IsInside(contour, segments[i].Vertex1.WorldPosition) ||
+                Geom2D.IsInside(contour, segments[i].Vertex2.WorldPosition) ||
+                (contour.Contains(segments[i].Vertex1.WorldPosition) && contour.Contains(segments[i].Vertex2.WorldPosition)) //edge case
+                ) && 
+                !m_hoveredSegments.Contains(segments[i])
+                )
+                segments.RemoveAt(i); //TODO is this sufficient?
+        }
+    }
+
+    private List<Vector2> FindContour(Tuple<Segment, bool> nearest, out List<Segment> hoveredSegments)
+    {
+        List<Vector2> hoveredContour = new List<Vector2>();
+        hoveredSegments = new List<Segment>();
+        //init
+        //m_hoveredSegments.Clear();
+
+        //iterate through connected segments
+        Tuple<Segment, bool> first = nearest;
+        Tuple<Segment, bool> current = first;
+        do
+        {
+            current = ContourHelper.FindNextSegment(current);
+            hoveredSegments.Add(current.Item1);
+            Vector2 nextPos;
+            if (current.Item2)
+                nextPos = current.Item1.Vertex1.WorldPosition;
+            else
+                nextPos = current.Item1.Vertex2.WorldPosition;
+            hoveredContour.Add(nextPos);
+        } while (
+            (current.Item1 != first.Item1 || current.Item2 != first.Item2) && 
+            hoveredSegments.Count <= m_mapData.Segments.Count //avoid endless loop in case of some weird error
+            );
+
+        return hoveredContour;
     }
 
     /*void MarkNextSegment() // temp

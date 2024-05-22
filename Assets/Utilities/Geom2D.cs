@@ -1,5 +1,3 @@
-using Palmmedia.ReportGenerator.Core;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -58,10 +56,10 @@ public class Geom2D
 
         Vector2 pointOnLine;
         //        if (dot > lengthp1p2)
-        if (dot * dot > sqrLengthp1p2)
-            pointOnLine = p2;
-        else if (dot < 0)
+        if (dot < 0)
             pointOnLine = p1;
+        else if (dot * dot > sqrLengthp1p2)
+            pointOnLine = p2;
         else
         {
             Vector2 projected = linep1p2 * dot;
