@@ -80,6 +80,7 @@
     <Compile Include="Assets\Editor\UWed.cs" />
     <Compile Include="Assets\Editor\MapDataEditor.cs" />
     <Compile Include="Assets\Editor\EditorManipulator.cs" />
+    <Compile Include="Assets\Editor\SegmentHelper.cs" />
     <Compile Include="Assets\Editor\FlexibleGridBackground.cs" />
     <Compile Include="Assets\Editor\SegmentDrawer.cs" />
   </ItemGroup>

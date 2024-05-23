@@ -1,9 +1,36 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class ContourHelper
 {
-    public static Tuple<Segment, bool> FindNextSegment(Tuple<Segment, bool> t)
+    public static List<Vector2> FindContour(Tuple<Segment, bool> nearest, out List<Segment> hoveredSegments, int limit)
+    {
+        List<Vector2> hoveredContour = new List<Vector2>();
+        hoveredSegments = new List<Segment>();
+
+        //iterate through connected segments
+        Tuple<Segment, bool> first = nearest;
+        Tuple<Segment, bool> current = first;
+        do
+        {
+            current = FindNextSegment(current);
+            hoveredSegments.Add(current.Item1);
+            Vector2 nextPos;
+            if (current.Item2) //left sided segment
+                nextPos = current.Item1.Vertex1.WorldPosition;
+            else
+                nextPos = current.Item1.Vertex2.WorldPosition;
+            hoveredContour.Add(nextPos);
+        } while (
+            (current.Item1 != first.Item1 || current.Item2 != first.Item2) &&
+            hoveredSegments.Count <= limit //avoid endless loop in case of some weird error
+            );
+
+        return hoveredContour;
+    }
+
+    private static Tuple<Segment, bool> FindNextSegment(Tuple<Segment, bool> t)
     {
         if (t != null && t.Item1 != null)
         {
