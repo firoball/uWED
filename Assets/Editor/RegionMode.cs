@@ -17,95 +17,70 @@ public class RegionMode : BaseEditorMode
         //BuildRegions();
     }
 
-    /*private void BuildRegions()
+    public override bool StartConstruction(Vector2 mouseSnappedWorldPos)
     {
-        m_mapData.Regions.Clear(); //TODO: temp
-
-        for (int s = 0; s < m_mapData.Segments.Count; s++)
+        CursorInfo ci = m_drawer.CursorInfo;
+        if (ci.HoverRegion != null) //TODO: fix broken regions
         {
-            if (m_mapData.Segments[s].Right == null)
-            {
-                BuildRightRegion(m_mapData.Segments[s]);
-            }
-            if (m_mapData.Segments[s].Left == null)
-            {
-                //BuildLeftContour(s);
-            }
+            return true; //done
         }
-    }*/
-
-    /*private void BuildRightRegion(Segment segment) //TODO: redo
-    {
-        List<List<Segment>> contours = new List<List<Segment>>();
-        List<List<Segment>> stitches = new List<List<Segment>>();
-        List<Segment> contour = new List<Segment>();
-
-        Region region = new Region();
-        segment.Right = region;
-
-        Vertex startVertex = segment.Vertex1;
-        Vertex nextVertex = segment.Vertex2;
-
-        do
+        else //place new object
         {
-            if (nextVertex.Connections.Count > 2)
-            {
-                //Step1: multiple segments meet - start new contour
-                contours.Add(contour);
-                contour = new List<Segment>();
+            //Add region
+            Region region = new Region();
+            m_mapData.Regions.Add(region);
 
-                //Step2: identify next Segment
-                Segment nextSegment;
-                //nextSegment = FindNextSegment(segment);
-
-                //Step3: test which vertex of next segment is connected and determine on which side region is
-                if (nextVertex == nextSegment.Vertex1) //right side
-                {
-                    nextVertex = nextSegment.Vertex2;
-                    nextSegment.Right = region;
-                }
-                else //left side
-                {
-                    nextVertex = nextSegment.Vertex1;
-                    nextSegment.Left = region;
-                }
-                contour.Add(nextSegment);
-            }
-            else if (nextVertex.Connections.Count == 2)
+            //reference region
+            for(int i = 0; i < ci.HoverSegments.Count; i++)
             {
-                //Step1: pick "other" connection
-                Segment nextSegment;
-                if (nextVertex.Connections[0] == segment)
-                    nextSegment = nextVertex.Connections[1];
-                else
-                    nextSegment = nextVertex.Connections[0];
+                if (ci.HoverSegments[i].Item2) //left side
+                    ci.HoverSegments[i].Item1.Left = region;
+                else //right side
+                    ci.HoverSegments[i].Item1.Right = region;
+            }
+            return true; //construction immediately finished
+        }
 
-                //Step2: test which vertex of next segment is connected and determine on which side region is
-                if (nextVertex == nextSegment.Vertex1) //right side
-                {
-                    nextVertex = nextSegment.Vertex2;
-                    nextSegment.Right = region;
-                }
-                else //left side
-                {
-                    nextVertex = nextSegment.Vertex1;
-                    nextSegment.Left = region;
-                }
-                contour.Add(nextSegment);
-            }
-            else if (nextVertex == startVertex)
-            {
-                //contour closed
-            }
-            else
-            {
-                nextVertex = null; //TODO: this should be set to vertex of last segment of previously stored contour
-                //dead end
-                stitches.Add(contour);
-                contour = contours[^1];
-            }
+    }
 
-        } while (nextVertex != startVertex || nextVertex != null);
-    }*/
+
+    public override void EditObject()
+    {
+        //TODO: implement
+    }
+
+    public override void DeleteObject()
+    {
+        CursorInfo ci = m_drawer.CursorInfo;
+
+        if (ci.SelectedRegions.Count > 0)
+        {
+            foreach (Region r in ci.SelectedRegions)
+                DeleteRegion(r);
+            m_drawer.Unselect();
+        }
+        else if (ci.HoverRegion != null) //region is hovered - destroy it
+        {
+            DeleteRegion(ci.HoverRegion);
+        }
+        else
+        {
+            //nothing do destroy
+        }
+    }
+
+    private void DeleteRegion(Region r)
+    {
+        //remove all references
+        for (int s = 0; s < m_mapData.Segments.Count; s++) 
+        {
+            if (m_mapData.Segments[s].Left == r)
+                m_mapData.Segments[s].Left = null;
+            if (m_mapData.Segments[s].Right == r)
+                m_mapData.Segments[s].Right = null;
+        }
+        //remove region
+        m_mapData.Regions.Remove(r);
+    }
 
 }

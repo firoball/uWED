@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -25,6 +26,7 @@ public class CursorInfo
     //Region mode
     private Region m_hoverRegion;
     private readonly List<Region> m_selectedRegions;
+    private List<Tuple<Segment, bool>> m_hoverSegments;
 
     public CursorInfo()
     {
@@ -32,6 +34,7 @@ public class CursorInfo
         m_selectedObjects = new List<MapObject>();
         m_selectedSegments = new List<Segment>();
         m_selectedRegions = new List<Region>();
+        m_hoverSegments = new List<Tuple<Segment, bool>>();
         Initialize();
     }
 
@@ -82,4 +85,6 @@ public class CursorInfo
     
     public Region HoverRegion { get => m_hoverRegion; set => m_hoverRegion = value; }
     public List<Region> SelectedRegions => m_selectedRegions;
+
+    public List<Tuple<Segment, bool>> HoverSegments { get => m_hoverSegments; set => m_hoverSegments = value; }
 }

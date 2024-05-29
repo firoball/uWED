@@ -4,10 +4,10 @@ using UnityEngine;
 
 public static class ContourHelper
 {
-    public static List<Vector2> FindContour(Tuple<Segment, bool> nearest, out List<Segment> hoveredSegments, int limit)
+    public static List<Vector2> FindContour(Tuple<Segment, bool> nearest, out List<Tuple<Segment, bool>> hoveredSegments, int limit)
     {
         List<Vector2> hoveredContour = new List<Vector2>();
-        hoveredSegments = new List<Segment>();
+        hoveredSegments = new List<Tuple<Segment, bool>>();
 
         //iterate through connected segments
         Tuple<Segment, bool> first = nearest;
@@ -15,7 +15,7 @@ public static class ContourHelper
         do
         {
             current = FindNextSegment(current);
-            hoveredSegments.Add(current.Item1);
+            hoveredSegments.Add(current);
             Vector2 nextPos;
             if (current.Item2) //left sided segment
                 nextPos = current.Item1.Vertex1.WorldPosition;
