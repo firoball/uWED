@@ -787,7 +787,36 @@ MonoBehaviour:
   - rid: 1125430883877388339
   - rid: 1125430883877388340
   - rid: 1125430883877388341
-  m_regions: []
+  m_regions:
+  - rid: 1125430883877388452
+  - rid: 1125430883877388453
+  - rid: 1125430883877388454
+  - rid: 1125430883877388455
+  - rid: 1125430883877388456
+  - rid: 1125430883877388457
+  - rid: 1125430883877388458
+  - rid: 1125430883877388459
+  - rid: 1125430883877388463
+  - rid: 1125430883877388464
+  - rid: 1125430883877388465
+  - rid: 1125430883877388467
+  - rid: 1125430883877388468
+  - rid: 1125430883877388469
+  - rid: 1125430883877388470
+  - rid: 1125430883877388471
+  - rid: 1125430883877388472
+  - rid: 1125430883877388473
+  - rid: 1125430883877388477
+  - rid: 1125430883877388480
+  - rid: 1125430883877388481
+  - rid: 1125430883877388482
+  - rid: 1125430883877388483
+  - rid: 1125430883877388484
+  - rid: 1125430883877388485
+  - rid: 1125430883877388486
+  - rid: 1125430883877388487
+  - rid: 1125430883877388488
+  - rid: 1125430883877388489
   references:
     version: 2
     RefIds:
@@ -1125,9 +1154,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 1125430883877388303
         m_left:
-          rid: -2
+          rid: 1125430883877388477
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 1125430883877388323
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1136,9 +1165,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 1125430883877388304
         m_left:
-          rid: -2
+          rid: 1125430883877388477
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 1125430883877388324
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1147,9 +1176,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 1125430883877388306
         m_left:
-          rid: -2
+          rid: 1125430883877388477
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 1125430883877388325
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1274,7 +1303,7 @@ MonoBehaviour:
     - rid: 1125430883877388337
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
-        m_worldPosition: {x: -672, y: 992}
+        m_worldPosition: {x: -680, y: 984}
         m_connectedSegments: 4
         m_connections:
         - rid: 1125430883877388338
@@ -1325,6 +1354,151 @@ MonoBehaviour:
           rid: -2
         m_right:
           rid: -2
+    - rid: 1125430883877388452
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 4
+    - rid: 1125430883877388453
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 5
+    - rid: 1125430883877388454
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 6
+    - rid: 1125430883877388455
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 7
+    - rid: 1125430883877388456
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 8
+    - rid: 1125430883877388457
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 9
+    - rid: 1125430883877388458
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 10
+    - rid: 1125430883877388459
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 11
+    - rid: 1125430883877388463
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 8
+    - rid: 1125430883877388464
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 9
+    - rid: 1125430883877388465
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 10
+    - rid: 1125430883877388467
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 12
+    - rid: 1125430883877388468
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 13
+    - rid: 1125430883877388469
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 14
+    - rid: 1125430883877388470
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 15
+    - rid: 1125430883877388471
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 16
+    - rid: 1125430883877388472
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 17
+    - rid: 1125430883877388473
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 18
+    - rid: 1125430883877388477
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 21
+    - rid: 1125430883877388480
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 24
+    - rid: 1125430883877388481
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 25
+    - rid: 1125430883877388482
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 26
+    - rid: 1125430883877388483
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 27
+    - rid: 1125430883877388484
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 28
+    - rid: 1125430883877388485
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 29
+    - rid: 1125430883877388486
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 30
+    - rid: 1125430883877388487
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 31
+    - rid: 1125430883877388488
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 32
+    - rid: 1125430883877388489
+      type: {class: Region, ns: , asm: Assembly-CSharp-Editor}
+      data:
+        m_default: 1
+        m_count: 33
     - rid: 2459866007197713003
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1368,7 +1542,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713014
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1388,7 +1562,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713016
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1397,9 +1571,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713011
         m_left:
-          rid: -2
+          rid: 1125430883877388489
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713017
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1418,7 +1592,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713020
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1437,7 +1611,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713023
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1456,7 +1630,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713026
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1483,7 +1657,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713035
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1504,7 +1678,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388489
     - rid: 2459866007197713037
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1523,9 +1697,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713037
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388489
     - rid: 2459866007197713039
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1536,7 +1710,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388489
     - rid: 2459866007197713040
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1555,7 +1729,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713042
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1574,7 +1748,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713044
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1601,7 +1775,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713048
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1620,7 +1794,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713050
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1639,7 +1813,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713052
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1658,7 +1832,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713054
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1677,7 +1851,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713056
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1696,7 +1870,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713058
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1723,7 +1897,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713062
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1750,7 +1924,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713066
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1769,7 +1943,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713068
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1788,7 +1962,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713070
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1823,7 +1997,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713076
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1842,7 +2016,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713078
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1861,7 +2035,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713080
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1880,7 +2054,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713082
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1907,7 +2081,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713086
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1926,7 +2100,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713088
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1937,7 +2111,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713090
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1957,7 +2131,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713093
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1975,9 +2149,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713093
         m_left:
-          rid: -2
+          rid: 1125430883877388488
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713095
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -1988,7 +2162,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713096
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2008,7 +2182,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713099
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2026,9 +2200,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713099
         m_left:
-          rid: -2
+          rid: 1125430883877388488
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713101
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2039,7 +2213,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713102
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2050,7 +2224,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388488
     - rid: 2459866007197713103
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2061,7 +2235,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388488
     - rid: 2459866007197713104
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2082,7 +2256,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713107
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2101,9 +2275,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713107
         m_left:
-          rid: -2
+          rid: 1125430883877388487
         m_right:
-          rid: -2
+          rid: 1125430883877388465
     - rid: 2459866007197713109
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2114,7 +2288,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713110
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2134,7 +2308,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388487
     - rid: 2459866007197713112
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2152,9 +2326,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713112
         m_left:
-          rid: -2
+          rid: 1125430883877388467
         m_right:
-          rid: -2
+          rid: 1125430883877388487
     - rid: 2459866007197713114
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2165,7 +2339,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388487
     - rid: 2459866007197713115
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2184,7 +2358,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713121
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2201,9 +2375,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713121
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713123
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2220,9 +2394,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713123
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713125
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2239,9 +2413,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713125
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713127
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2258,9 +2432,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713127
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713129
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2277,9 +2451,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713129
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713131
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2296,9 +2470,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713131
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713133
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2315,9 +2489,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713133
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713135
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2334,9 +2508,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713135
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713137
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2353,9 +2527,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713137
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713139
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2372,9 +2546,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713139
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713141
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2391,9 +2565,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713141
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713143
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2410,9 +2584,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713143
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713145
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2429,9 +2603,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713145
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713147
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2448,9 +2622,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713147
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713149
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2459,9 +2633,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713035
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713150
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2478,9 +2652,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713150
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713152
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2497,9 +2671,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713152
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713154
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2516,9 +2690,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713154
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713156
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2535,9 +2709,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713156
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713158
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2554,9 +2728,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713158
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713160
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2573,9 +2747,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713160
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713162
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2592,9 +2766,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713162
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713164
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2611,9 +2785,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713164
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713166
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2630,9 +2804,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713166
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713168
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2649,9 +2823,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713168
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713170
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2668,9 +2842,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713170
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713172
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2695,9 +2869,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713174
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713176
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2714,9 +2888,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713176
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713178
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2733,9 +2907,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713178
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713180
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2752,9 +2926,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713180
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713182
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2763,9 +2937,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713107
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713183
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -2790,7 +2964,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713184
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713186
@@ -2809,7 +2983,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713186
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713188
@@ -2828,7 +3002,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713188
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713190
@@ -2847,7 +3021,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713190
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713192
@@ -2866,7 +3040,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713192
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713194
@@ -2885,7 +3059,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713194
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713196
@@ -2904,7 +3078,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713196
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713198
@@ -2923,7 +3097,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713198
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713200
@@ -2942,7 +3116,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713200
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713202
@@ -2961,7 +3135,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713202
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713204
@@ -2972,7 +3146,7 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713183
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
           rid: -2
     - rid: 2459866007197713205
@@ -2991,9 +3165,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713205
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713207
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3002,9 +3176,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866007197713172
         m_left:
-          rid: -2
+          rid: 1125430883877388465
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713208
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3023,7 +3197,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713210
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3034,7 +3208,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866007197713218
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3053,7 +3227,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866007197713237
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3072,7 +3246,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866007197713239
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3083,7 +3257,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388464
     - rid: 2459866098084610177
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3111,7 +3285,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610183
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3131,7 +3305,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610186
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3214,7 +3388,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610208
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3225,7 +3399,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610209
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3244,7 +3418,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610211
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3255,7 +3429,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610212
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3274,7 +3448,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610214
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3285,7 +3459,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610215
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3304,7 +3478,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610217
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3315,7 +3489,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610230
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3326,7 +3500,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610231
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3337,7 +3511,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610232
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3348,7 +3522,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610233
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3359,7 +3533,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866098084610351
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3386,7 +3560,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866098084610430
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3397,7 +3571,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388485
     - rid: 2459866098084610699
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3416,7 +3590,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866098084610701
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3435,7 +3609,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866098084610703
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3462,7 +3636,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866098084610707
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3473,7 +3647,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866098084610708
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3493,7 +3667,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866098084610711
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3511,9 +3685,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866098084610711
         m_left:
-          rid: -2
+          rid: 1125430883877388480
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866098084610713
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3524,7 +3698,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866098084610714
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3543,7 +3717,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610716
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3562,7 +3736,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610718
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3581,7 +3755,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610720
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3600,7 +3774,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610722
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3619,7 +3793,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610724
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3638,7 +3812,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610726
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3657,7 +3831,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610728
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3677,7 +3851,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610730
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3695,9 +3869,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866098084610730
         m_left:
-          rid: -2
+          rid: 1125430883877388483
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610732
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3716,7 +3890,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610734
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3735,7 +3909,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610736
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3754,7 +3928,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610738
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3773,7 +3947,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610740
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3792,7 +3966,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610742
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3811,7 +3985,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610744
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3839,7 +4013,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610748
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3858,7 +4032,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610750
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3869,7 +4043,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610927
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3905,7 +4079,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388473
     - rid: 2459866098084610932
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3934,7 +4108,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388471
     - rid: 2459866098084610938
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3954,7 +4128,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388471
     - rid: 2459866098084610940
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3963,9 +4137,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866098084610935
         m_left:
-          rid: -2
+          rid: 1125430883877388468
         m_right:
-          rid: -2
+          rid: 1125430883877388471
     - rid: 2459866098084610941
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3985,7 +4159,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610943
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -3994,9 +4168,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866098084610744
         m_left:
-          rid: -2
+          rid: 1125430883877388468
         m_right:
-          rid: -2
+          rid: 1125430883877388480
     - rid: 2459866098084610948
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4023,7 +4197,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866098084610952
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4042,7 +4216,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866098084610954
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4085,7 +4259,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866098084610965
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4112,7 +4286,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866098084610969
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4131,7 +4305,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866098084610972
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4151,7 +4325,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388472
     - rid: 2459866098084610975
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4169,9 +4343,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866098084610975
         m_left:
-          rid: -2
+          rid: 1125430883877388467
         m_right:
-          rid: -2
+          rid: 1125430883877388472
     - rid: 2459866098084610977
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4182,7 +4356,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388472
     - rid: 2459866098084610978
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4201,7 +4375,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610980
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4220,7 +4394,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610982
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4239,7 +4413,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610984
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4258,7 +4432,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610986
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4277,7 +4451,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610988
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4296,7 +4470,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610990
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4315,7 +4489,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610992
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4334,7 +4508,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610994
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4345,7 +4519,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610995
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4364,7 +4538,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610997
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4383,7 +4557,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084610999
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4402,7 +4576,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084611001
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4421,7 +4595,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084611003
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4440,7 +4614,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084611005
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4459,7 +4633,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084611007
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4478,7 +4652,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084611009
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4497,7 +4671,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084611012
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4516,7 +4690,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084611014
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4527,7 +4701,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388467
     - rid: 2459866098084611015
       type: {class: Way, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4854,7 +5028,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632960
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4873,7 +5047,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632962
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4892,7 +5066,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632964
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4912,7 +5086,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632966
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4931,7 +5105,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632968
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4950,7 +5124,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632970
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4969,7 +5143,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632972
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -4988,7 +5162,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632974
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5007,7 +5181,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273632976
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5043,7 +5217,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273633142
       type: {class: Way, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5250,7 +5424,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273633187
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5261,7 +5435,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273633188
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5281,7 +5455,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273633190
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5290,9 +5464,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273632976
         m_left:
-          rid: -2
+          rid: 1125430883877388484
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273633191
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5312,7 +5486,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388484
     - rid: 2459866597273633193
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5330,9 +5504,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633193
         m_left:
-          rid: -2
+          rid: 1125430883877388452
         m_right:
-          rid: -2
+          rid: 1125430883877388484
     - rid: 2459866597273633195
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5343,7 +5517,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388484
     - rid: 2459866597273633196
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5363,7 +5537,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388483
     - rid: 2459866597273633198
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5381,9 +5555,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633198
         m_left:
-          rid: -2
+          rid: 1125430883877388482
         m_right:
-          rid: -2
+          rid: 1125430883877388483
     - rid: 2459866597273633200
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5394,7 +5568,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388483
     - rid: 2459866597273633201
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5414,7 +5588,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388482
     - rid: 2459866597273633203
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5452,7 +5626,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388452
     - rid: 2459866597273633210
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5472,7 +5646,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388452
     - rid: 2459866597273633212
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5510,7 +5684,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388482
     - rid: 2459866597273633219
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5519,9 +5693,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633201
         m_left:
-          rid: -2
+          rid: 1125430883877388482
         m_right:
-          rid: -2
+          rid: 1125430883877388481
     - rid: 2459866597273633220
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5530,9 +5704,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633210
         m_left:
-          rid: -2
+          rid: 1125430883877388452
         m_right:
-          rid: -2
+          rid: 1125430883877388453
     - rid: 2459866597273633221
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5552,7 +5726,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388453
     - rid: 2459866597273633224
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5572,7 +5746,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388453
     - rid: 2459866597273633227
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5592,7 +5766,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388455
     - rid: 2459866597273633229
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5603,7 +5777,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388454
     - rid: 2459866597273633230
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5623,7 +5797,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388454
     - rid: 2459866597273633232
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5634,7 +5808,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388455
     - rid: 2459866597273633233
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5643,9 +5817,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633224
         m_left:
-          rid: -2
+          rid: 1125430883877388453
         m_right:
-          rid: -2
+          rid: 1125430883877388454
     - rid: 2459866597273633234
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5654,9 +5828,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633230
         m_left:
-          rid: -2
+          rid: 1125430883877388454
         m_right:
-          rid: -2
+          rid: 1125430883877388455
     - rid: 2459866597273633235
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5665,9 +5839,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633212
         m_left:
-          rid: -2
+          rid: 1125430883877388455
         m_right:
-          rid: -2
+          rid: 1125430883877388456
     - rid: 2459866597273633236
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5676,9 +5850,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633214
         m_left:
-          rid: -2
+          rid: 1125430883877388457
         m_right:
-          rid: -2
+          rid: 1125430883877388458
     - rid: 2459866597273633237
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5698,7 +5872,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388457
     - rid: 2459866597273633239
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5709,7 +5883,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388456
     - rid: 2459866597273633240
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5729,7 +5903,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388456
     - rid: 2459866597273633242
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5740,7 +5914,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388457
     - rid: 2459866597273633243
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5749,9 +5923,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633240
         m_left:
-          rid: -2
+          rid: 1125430883877388456
         m_right:
-          rid: -2
+          rid: 1125430883877388457
     - rid: 2459866597273633244
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5771,7 +5945,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388458
     - rid: 2459866597273633247
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5791,7 +5965,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388458
     - rid: 2459866597273633250
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5811,7 +5985,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388481
     - rid: 2459866597273633252
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5822,7 +5996,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388459
     - rid: 2459866597273633253
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5842,7 +6016,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388459
     - rid: 2459866597273633255
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5853,7 +6027,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388481
     - rid: 2459866597273633256
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5862,9 +6036,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633247
         m_left:
-          rid: -2
+          rid: 1125430883877388458
         m_right:
-          rid: -2
+          rid: 1125430883877388459
     - rid: 2459866597273633257
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -5873,9 +6047,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633253
         m_left:
-          rid: -2
+          rid: 1125430883877388459
         m_right:
-          rid: -2
+          rid: 1125430883877388481
     - rid: 2459866597273633259
       type: {class: Way, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -6719,7 +6893,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633473
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -6740,7 +6914,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388469
     - rid: 2459866597273633475
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -6751,7 +6925,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633488
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7427,7 +7601,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633569
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7448,7 +7622,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388470
     - rid: 2459866597273633571
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7459,7 +7633,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633572
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7553,7 +7727,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388473
     - rid: 2459866597273633591
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7574,7 +7748,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388471
     - rid: 2459866597273633593
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7585,7 +7759,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388472
     - rid: 2459866597273633594
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7616,9 +7790,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866098084610930
         m_left:
-          rid: -2
+          rid: 1125430883877388473
         m_right:
-          rid: -2
+          rid: 1125430883877388472
     - rid: 2459866597273633597
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7627,9 +7801,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633591
         m_left:
-          rid: -2
+          rid: 1125430883877388471
         m_right:
-          rid: -2
+          rid: 1125430883877388472
     - rid: 2459866597273633598
       type: {class: Way, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7911,7 +8085,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633643
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7930,7 +8104,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633645
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7941,7 +8115,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633646
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -7990,7 +8164,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633652
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8009,7 +8183,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633654
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8020,7 +8194,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633655
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8060,7 +8234,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866597273633661
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8122,7 +8296,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866597273633667
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8133,7 +8307,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388486
     - rid: 2459866597273633668
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8197,7 +8371,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633722
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8214,9 +8388,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633722
         m_left:
-          rid: -2
+          rid: 1125430883877388468
         m_right:
-          rid: -2
+          rid: 1125430883877388469
     - rid: 2459866597273633725
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8233,9 +8407,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633470
         m_left:
-          rid: -2
+          rid: 1125430883877388468
         m_right:
-          rid: -2
+          rid: 1125430883877388469
     - rid: 2459866597273633728
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8244,9 +8418,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633725
         m_left:
-          rid: -2
+          rid: 1125430883877388468
         m_right:
-          rid: -2
+          rid: 1125430883877388469
     - rid: 2459866597273633729
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8257,7 +8431,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633730
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8268,7 +8442,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633731
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8279,7 +8453,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633732
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8296,9 +8470,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633732
         m_left:
-          rid: -2
+          rid: 1125430883877388468
         m_right:
-          rid: -2
+          rid: 1125430883877388470
     - rid: 2459866597273633735
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8315,9 +8489,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633566
         m_left:
-          rid: -2
+          rid: 1125430883877388468
         m_right:
-          rid: -2
+          rid: 1125430883877388470
     - rid: 2459866597273633738
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8326,9 +8500,9 @@ MonoBehaviour:
         m_vertex2:
           rid: 2459866597273633735
         m_left:
-          rid: -2
+          rid: 1125430883877388468
         m_right:
-          rid: -2
+          rid: 1125430883877388470
     - rid: 2459866597273633740
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8339,7 +8513,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388468
     - rid: 2459866597273633747
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8467,7 +8641,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633891
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8487,7 +8661,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633893
       type: {class: Segment, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -8498,7 +8672,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388463
     - rid: 2459866597273633894
       type: {class: Vertex, ns: , asm: Assembly-CSharp-Editor}
       data:
@@ -9071,7 +9245,7 @@ MonoBehaviour:
         m_left:
           rid: -2
         m_right:
-          rid: -2
+          rid: 1125430883877388477
     - rid: 2459866597273634042
       type: {class: MapObject, ns: , asm: Assembly-CSharp-Editor}
       data:
