@@ -69,7 +69,7 @@ public class SegmentMode : BaseEditorMode
         else //start from new vertex
         {
             m_current = new Vertex(mouseSnappedWorldPos);
-            m_mapData.Vertices.Add(m_current);
+            m_mapData.Add(m_current);
         }
 
         m_newSegments.Clear();
@@ -84,9 +84,9 @@ public class SegmentMode : BaseEditorMode
         {
             Segment s = m_newSegments[m_newSegments.Count - 1];
             m_current = s.Vertex1;
-            m_mapData.RemoveSegment(s);
+            m_mapData.Remove(s);
             m_newSegments.Remove(s);
-            m_mapData.RemoveVertex(s.Vertex2); //Vertex2 is new and should not have any connections yet
+            m_mapData.Remove(s.Vertex2); //Vertex2 is new and should not have any connections yet
             m_drawer.SetConstructionMode(true, m_current);
         }
 
@@ -117,7 +117,7 @@ public class SegmentMode : BaseEditorMode
             {
                 Vertex last = m_current;
                 m_current = new Vertex(mouseSnappedWorldPos);
-                m_mapData.Vertices.Add(m_current);
+                m_mapData.Add(m_current);
                 ConstructNewSegment(last, m_current);
                 m_drawer.SetConstructionMode(true, m_current);
             }
@@ -128,7 +128,7 @@ public class SegmentMode : BaseEditorMode
     private void FinishConstruction(Vertex final)
     {
         ConstructNewSegment(m_current, final);
-        m_mapData.RemoveVertex(m_current); //Vertex was added another time by ConstructNewSegment
+        m_mapData.Remove(m_current); //Vertex was added another time by ConstructNewSegment
         m_current = null;
         m_newSegments.Clear();
         m_drawer.SetConstructionMode(false, null);
@@ -139,7 +139,7 @@ public class SegmentMode : BaseEditorMode
         if (v1 != v2) //exit construction mode by clicking last created vertex
         {
             Segment s = new Segment(v1, v2);
-            m_mapData.Segments.Add(s);
+            m_mapData.Add(s);
             m_newSegments.Add(s);
         }
     }
@@ -166,7 +166,7 @@ public class SegmentMode : BaseEditorMode
         }
         else if (ci.HoverSegment != null) //segment is hovered - destroy it
         {
-            m_mapData.RemoveSegment(ci.HoverSegment);
+            m_mapData.Remove(ci.HoverSegment);
         }
         else
         {
@@ -180,9 +180,9 @@ public class SegmentMode : BaseEditorMode
         {
             List<Segment> segments = m_mapData.FindSegments(v);
             foreach (Segment s in segments)
-                m_mapData.RemoveSegment(s);
+                m_mapData.Remove(s);
         }
-        m_mapData.RemoveVertex(v, true); //if there's still a connection, it's a broken one - force vertex deletion
+        m_mapData.Remove(v, true); //if there's still a connection, it's a broken one - force vertex deletion
     }
 
     public override void ModifyObject(Vector2 mouseWorldPos, EditorView ev)
@@ -251,13 +251,13 @@ public class SegmentMode : BaseEditorMode
             {
                 //add new segments
                 Segment ns = new Segment(n1, n2);
-                m_mapData.Segments.Add(ns);
+                m_mapData.Add(ns);
                 //TODO: transfer segment properties from first segment found
 
                 //remove old segments
                 foreach (Segment s in segments)
-                    m_mapData.RemoveSegment(s);
-                m_mapData.RemoveVertex(v, true); //if there's still a connection, it's a broken one - force vertex deletion
+                    m_mapData.Remove(s);
+                m_mapData.Remove(v, true); //if there's still a connection, it's a broken one - force vertex deletion
             }
         }
 
@@ -280,11 +280,11 @@ public class SegmentMode : BaseEditorMode
             Segment n1 = new Segment(s.Vertex1, v);
             Segment n2 = new Segment(v, s.Vertex2);
             //add new segments + vertex
-            m_mapData.Vertices.Add(v);
-            m_mapData.Segments.Add(n1);
-            m_mapData.Segments.Add(n2);
+            m_mapData.Add(v);
+            m_mapData.Add(n1);
+            m_mapData.Add(n2);
             //remove old segment (must happen after adding new segments in order to preserve vertices!)
-            m_mapData.RemoveSegment(s);
+            m_mapData.Remove(s);
             //TODO: transfer segment properties
         }
     }

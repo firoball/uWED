@@ -6,7 +6,7 @@ using UnityEngine;
 public static class SegmentHelper
 {
 
-    public static Tuple<Segment, bool> FindNearestSegment(List<Segment> segments, Vector2 worldPos)
+    public static Tuple<Segment, bool> FindNearestSegment(IList<Segment> segments, Vector2 worldPos)
     {
         Segment segment = null;
         float minDist = float.MaxValue;
@@ -73,7 +73,7 @@ public static class SegmentHelper
         return nearest;
     }
 
-    public static List<Segment> FindInnerSegments(List<Segment> segments, List<Vector2> contour, List<Tuple<Segment, bool>> ignore)
+    public static List<Segment> FindInnerSegments(IList<Segment> segments, List<Vector2> contour, List<Tuple<Segment, bool>> ignore)
     {
         List<Segment> innerSegments = new List<Segment>();
         for (int i = 0; i < segments.Count; i++)
@@ -91,7 +91,7 @@ public static class SegmentHelper
         return innerSegments;
     }
 
-    public static List<Segment> FindOuterSegments(List<Segment> segments, List<Vector2> contour, List<Tuple<Segment, bool>> ignore)
+    public static List<Segment> FindOuterSegments(IList<Segment> segments, List<Vector2> contour, List<Tuple<Segment, bool>> ignore)
     {
         List<Segment> outerSegments = new List<Segment>();
         for (int i = 0; i < segments.Count; i++)

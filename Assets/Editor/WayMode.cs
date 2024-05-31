@@ -67,7 +67,7 @@ public class WayMode : BaseEditorMode
             m_currentWay = new Way();
             m_currentVertex = new Vertex(mouseSnappedWorldPos);
             m_currentWay.Positions.Add(m_currentVertex);
-            m_mapData.Ways.Add(m_currentWay);
+            m_mapData.Add(m_currentWay);
         }
 
         m_drawer.SetConstructionMode(true, m_currentVertex);
@@ -84,7 +84,7 @@ public class WayMode : BaseEditorMode
 
         if (m_currentWay.Positions.Count == 0) //only start Vertex has been picked - end construction
         {
-            m_mapData.Ways.Remove(m_currentWay);
+            m_mapData.Remove(m_currentWay);
             m_currentVertex = null;
             m_currentWay = null;
             m_drawer.SetConstructionMode(false, null);
@@ -178,7 +178,7 @@ public class WayMode : BaseEditorMode
             {
                 way.Positions.Remove(v);
                 if (way.Positions.Count < 2) //destroy ways with single position left
-                    m_mapData.Ways.Remove(way);
+                    m_mapData.Remove(way);
                 deleted = true;
             }
         }

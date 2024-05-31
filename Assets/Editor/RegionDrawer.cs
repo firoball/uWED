@@ -136,7 +136,7 @@ public class RegionDrawer : BaseEditorDrawer
         m_nearest = nearest;
     }
 
-    private void ProcessInnerSegments(List<Segment> segments, List<Vector2> outerContour)
+    private void ProcessInnerSegments(IList<Segment> segments, List<Vector2> outerContour)
     {
         List<Segment> innerSegments = SegmentHelper.FindInnerSegments(segments, outerContour, m_hoveredSegments);
         if (innerSegments != null)
@@ -162,7 +162,7 @@ public class RegionDrawer : BaseEditorDrawer
         }
     }
 
-    private void ProcessOuterSegments(List<Segment> segments, List<Vector2> innerContour)
+    private void ProcessOuterSegments(IList<Segment> segments, List<Vector2> innerContour)
     {
         List<Segment> outerSegments = SegmentHelper.FindOuterSegments(segments, innerContour, m_hoveredSegments);
         if (outerSegments != null)

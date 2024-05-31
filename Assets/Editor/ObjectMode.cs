@@ -65,7 +65,7 @@ public class ObjectMode : BaseEditorMode
         }
         else //place new object
         {
-            m_mapData.Objects.Add(new MapObject(mouseSnappedWorldPos));
+            m_mapData.Add(new MapObject(mouseSnappedWorldPos));
             return true; //construction immediately finished
         }
 
@@ -78,12 +78,12 @@ public class ObjectMode : BaseEditorMode
         if (ci.SelectedObjects.Count > 0) //delete marked objects
         {
             foreach (MapObject o in ci.SelectedObjects)
-                m_mapData.Objects.Remove(o);
+                m_mapData.Remove(o);
             m_drawer.Unselect();
         }
         else if (ci.HoverObject != null) //object is hovered - delete it
         {
-            m_mapData.Objects.Remove(ci.HoverObject);
+            m_mapData.Remove(ci.HoverObject);
         }
     }
 

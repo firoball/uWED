@@ -173,21 +173,7 @@ public class SegmentDrawer : BaseEditorDrawer
         DrawModes(intersects);
 
         
-        /* DO NOT DELETE - REQUIRED LATER 
-        Color previewColor;
-        List<Vector2> screenData = m_mapData.Vertices.Select(x => x.ScreenPosition).ToList();
-        if (Geom2D.IsInside(screenData, m_mousePos)) 
-        {
-            previewColor = c_validColor;
-        }
-        else
-        {
-            previewColor = c_invalidColor;
-        }
-
-        DrawPoint(m_mousePos, previewColor, 20);
-        */
-
+/*
         //TEMP - move to RegionMode
         if (m_cursorInfo.HoverSegment != null)
         {
@@ -245,7 +231,7 @@ public class SegmentDrawer : BaseEditorDrawer
                 }
                 //Debug.Log(v+result);
             }
-        }
+        }*/
     }
 
     protected override void HoverTest()

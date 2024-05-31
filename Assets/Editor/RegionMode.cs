@@ -24,11 +24,11 @@ public class RegionMode : BaseEditorMode
         {
             return true; //done
         }
-        else //place new object
+        else
         {
             //Add region
             Region region = new Region();
-            m_mapData.Regions.Add(region);
+            m_mapData.Add(region);
 
             //reference region
             for(int i = 0; i < ci.HoverSegments.Count; i++)
@@ -80,7 +80,7 @@ public class RegionMode : BaseEditorMode
                 m_mapData.Segments[s].Right = null;
         }
         //remove region
-        m_mapData.Regions.Remove(r);
+        m_mapData.Remove(r);
     }
 
 }

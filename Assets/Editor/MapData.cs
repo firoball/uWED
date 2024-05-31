@@ -22,6 +22,7 @@ public class MapData : ScriptableObject
         m_ways = new List<Way>();
         m_vertices = new List<Vertex>();
         m_segments = new List<Segment>();
+        m_regions = new List<Region>();
     }
 
     public void Clear()
@@ -30,19 +31,48 @@ public class MapData : ScriptableObject
         m_ways.Clear();
         m_segments.Clear();
         m_vertices.Clear();
+        m_regions.Clear();
     }
 
-    public List<MapObject> Objects => m_objects;
-    public List<Way> Ways => m_ways;
-    public List<Vertex> Vertices => m_vertices; 
-    public List<Segment> Segments => m_segments;
-    public List<Region> Regions => m_regions;
+    public IList<MapObject> Objects => m_objects.AsReadOnly();
+    public IList<Way> Ways => m_ways.AsReadOnly();
+    public IList<Vertex> Vertices => m_vertices.AsReadOnly(); 
+    public IList<Segment> Segments => m_segments.AsReadOnly();
+    public IList<Region> Regions => m_regions.AsReadOnly();
 
-    public void RemoveVertex(Vertex v)
+    public void Add(MapObject m)
     {
-        RemoveVertex(v, false);
+        if (!m_objects.Contains(m))
+            m_objects.Add(m);
     }
-    public void RemoveVertex(Vertex v, bool force)
+
+    public void Remove(MapObject m)
+    {
+        m_objects.Remove(m);
+    }
+
+    public void Add(Way w)
+    {
+        if (!m_ways.Contains(w))
+            m_ways.Add(w);
+    }
+
+    public void Remove(Way w)
+    {
+        m_ways.Remove(w);
+    }
+
+    public void Add(Vertex v)
+    {
+        if (!m_vertices.Contains(v))
+            m_vertices.Add(v);
+    }
+
+    public void Remove(Vertex v)
+    {
+        Remove(v, false);
+    }
+    public void Remove(Vertex v, bool force)
     {
         if (v != null && !v.IsConnected())
         {
@@ -55,15 +85,27 @@ public class MapData : ScriptableObject
         }
     }
 
-    public void RemoveSegment(Segment s)
+    public void Add(Segment s)
+    {
+        if (!m_segments.Contains(s))
+        {
+            s.Vertex1.Connect(s);
+            s.Vertex2.Connect(s);
+            m_segments.Add(s);
+        }
+    }
+
+    public void Remove(Segment s)
     {
         if (s != null)
         {
             if (m_segments.Remove(s))
             {
-                s.Unconnect();
-                RemoveVertex(s.Vertex1);
-                RemoveVertex(s.Vertex2);
+                s.Vertex1.Unconnect(s);
+                s.Vertex2.Unconnect(s);
+
+                Remove(s.Vertex1);
+                Remove(s.Vertex2);
             }
         }
     }
@@ -89,6 +131,19 @@ public class MapData : ScriptableObject
                 return s;
         }
         return null;
+    }
+
+    public void Add(Region r)
+    {
+        if (!m_regions.Contains(r))
+        {
+            m_regions.Add(r);
+        }
+    }
+
+    public void Remove(Region r) 
+    {
+        m_regions.Remove(r);
     }
 
     /*
@@ -187,16 +242,8 @@ public class Segment
     {
         m_vertex1 = v1;
         m_vertex2 = v2;
-        v1.Connect(this);
-        v2.Connect(this);
         m_left = null;
         m_right = null;
-    }
-
-    public void Unconnect()
-    {
-        m_vertex1.Unconnect(this);
-        m_vertex2.Unconnect(this);
     }
 
     public void Flip()
@@ -234,16 +281,10 @@ public class Region
 {
     [SerializeReference]
     private bool m_default;
-    [SerializeReference]
-    private int m_count;
-
-    static int s_count = 0;
 
     public Region()
     {
         m_default = true;
-        m_count = s_count;
-        s_count++;
     }
 
     public bool Default { get => m_default; set => m_default = value; }

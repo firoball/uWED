@@ -170,9 +170,17 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         EditorView editorView = parent as EditorView;
         if (editorView != null)
         {
-            m_mapData.Vertices.ForEach(x => x.ScreenPosition = editorView.WorldtoScreenSpace(x.WorldPosition));
-            m_mapData.Ways.ForEach(w => w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldtoScreenSpace(p.WorldPosition)));
-            m_mapData.Objects.ForEach(o => o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition));
+            //calculate screen positions
+            foreach (Vertex v in m_mapData.Vertices)
+                v.ScreenPosition = editorView.WorldtoScreenSpace(v.WorldPosition);
+            foreach (Way w in m_mapData.Ways)
+                w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldtoScreenSpace(p.WorldPosition));
+            foreach (MapObject o in m_mapData.Objects)
+                o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition);
+
+            //m_mapData.Vertices.ForEach(x => x.ScreenPosition = editorView.WorldtoScreenSpace(x.WorldPosition));
+            //m_mapData.Ways.ForEach(w => w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldtoScreenSpace(p.WorldPosition)));
+            //m_mapData.Objects.ForEach(o => o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition));
 
             DrawCenter();
             DrawWays();
