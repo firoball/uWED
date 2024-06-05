@@ -42,29 +42,31 @@ public class MapData : ScriptableObject
 
     public void Add(MapObject m)
     {
-        if (!m_objects.Contains(m))
+        if (m != null && !m_objects.Contains(m))
             m_objects.Add(m);
     }
 
     public void Remove(MapObject m)
     {
-        m_objects.Remove(m);
+        if (m != null)
+            m_objects.Remove(m);
     }
 
     public void Add(Way w)
     {
-        if (!m_ways.Contains(w))
+        if (w != null && !m_ways.Contains(w))
             m_ways.Add(w);
     }
 
     public void Remove(Way w)
     {
-        m_ways.Remove(w);
+        if (w != null)
+            m_ways.Remove(w);
     }
 
     public void Add(Vertex v)
     {
-        if (!m_vertices.Contains(v))
+        if (v != null && !m_vertices.Contains(v))
             m_vertices.Add(v);
     }
 
@@ -72,6 +74,7 @@ public class MapData : ScriptableObject
     {
         Remove(v, false);
     }
+
     public void Remove(Vertex v, bool force)
     {
         if (v != null && !v.IsConnected())
@@ -87,7 +90,7 @@ public class MapData : ScriptableObject
 
     public void Add(Segment s)
     {
-        if (!m_segments.Contains(s))
+        if (s != null && !m_segments.Contains(s))
         {
             s.Vertex1.Connect(s);
             s.Vertex2.Connect(s);
@@ -135,7 +138,7 @@ public class MapData : ScriptableObject
 
     public void Add(Region r)
     {
-        if (!m_regions.Contains(r))
+        if (r != null && !m_regions.Contains(r))
         {
             m_regions.Add(r);
         }
@@ -143,7 +146,8 @@ public class MapData : ScriptableObject
 
     public void Remove(Region r) 
     {
-        m_regions.Remove(r);
+        if (r != null)
+            m_regions.Remove(r);
     }
 
     /*
@@ -282,10 +286,18 @@ public class Region
     [SerializeReference]
     private bool m_default;
 
+    //region boundaries - for multi-select
+    private Vector2 m_min;
+    private Vector2 m_max;
+
     public Region()
     {
         m_default = true;
+        m_min = new Vector2(float.MaxValue, float.MaxValue);
+        m_max = new Vector2(float.MinValue, float.MinValue);
     }
 
     public bool Default { get => m_default; set => m_default = value; }
+    public Vector2 Min { get => m_min; set => m_min = value; }
+    public Vector2 Max { get => m_max; set => m_max = value; }
 }

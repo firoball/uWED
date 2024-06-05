@@ -26,25 +26,65 @@ public class RegionDrawer : BaseEditorDrawer
         base.Initialize();
     }
 
+    public override void SetSelectSingle()
+    {
+        if (m_cursorInfo.HoverRegion != null)
+        {
+            Region r = m_cursorInfo.HoverRegion;
+            if (!m_cursorInfo.SelectedRegions.Contains(r))
+                m_cursorInfo.SelectedRegions.Add(r);
+            else
+                m_cursorInfo.SelectedRegions.Remove(r);
+        }
+    }
+
+    public override void Unselect()
+    {
+        m_cursorInfo.SelectedRegions.Clear();
+    }
+
+
+    protected override void SelectMultiple(Rect selection)
+    {
+        EditorView ev = parent as EditorView;
+        if (ev != null)
+        {
+            foreach (Region r in m_mapData.Regions)
+            {
+                if (!m_cursorInfo.SelectedRegions.Contains(r) && 
+                    selection.Contains(ev.WorldtoScreenSpace(r.Min)) && selection.Contains(ev.WorldtoScreenSpace(r.Max))
+                    )
+                    m_cursorInfo.SelectedRegions.Add(r);
+            }
+        }
+    }
+
+
     protected override Color SetSegmentColor(int i)
     {
         Color color;
         if ((m_cursorInfo.HoverRegion != null) &&
             (m_mapData.Segments[i].Left == m_cursorInfo.HoverRegion || m_mapData.Segments[i].Right == m_cursorInfo.HoverRegion)
             )//existing region
+        {
             color = c_hoverColor;
+        }
         /*else if (m_nearest != null && m_nearest.Item1 == m_mapData.Segments[i] && m_nearest.Item2) //TODO: temp - for testing only
             color = Color.white;
         else if (m_nearest != null && m_nearest.Item1 == m_mapData.Segments[i] && !m_nearest.Item2) //TODO: temp - for testing only
             color = Color.blue;
         */
+        else if (m_cursorInfo.SelectedRegions.Contains(m_mapData.Segments[i].Left) || m_cursorInfo.SelectedRegions.Contains(m_mapData.Segments[i].Right))
+        {
+            color = c_selectColor;
+        }
         else
         {
             bool newAndHovered = (m_hoveredSegments.Where(x => x.Item1 == m_mapData.Segments[i]).FirstOrDefault() != null);
             if (newAndHovered/* && m_inside*/) //candidate for new reion
                 color = c_validColor; //TODO: proper coloring
-            //else if (newAndHovered && !m_inside) //candidate for border region
-                //color = c_hoverColor; //TODO: proper coloring
+                                      //else if (newAndHovered && !m_inside) //candidate for border region
+                                      //color = c_hoverColor; //TODO: proper coloring
             else if (m_mapData.Segments[i].Left != null && m_mapData.Segments[i].Right != null) //two regions assigned
                 color = c_lineDarkColor;
             else if (m_mapData.Segments[i].Left != null || m_mapData.Segments[i].Right != null) //one region assigned

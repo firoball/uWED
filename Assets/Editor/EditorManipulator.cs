@@ -224,9 +224,10 @@ public class EditorManipulator : MouseManipulator
     {
         if (mode != m_mode)
         {
-            ResetMode();
+//            ResetMode();
             m_editorModes[(int)m_mode].Drawer.SetEnabled(false);
             m_mode = mode;
+            ResetMode();
             EditorView ev = target as EditorView;
             ev?.Interface.NotifySetModeListeners(m_mode);
             m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
