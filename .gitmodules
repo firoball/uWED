@@ -1,0 +1,3 @@
+[submodule "Assets/ext/WMPio"]
+	path = Assets/ext/WMPio
+	url = git@github.com:firoball/WMPio.git
