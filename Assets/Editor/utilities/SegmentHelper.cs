@@ -8,6 +8,8 @@ public static class SegmentHelper
 
     public static Tuple<Segment, bool> FindNearestSegment(IList<Segment> segments, Vector2 worldPos)
     {
+        if (segments == null) return null;
+
         Segment segment = null;
         float minDist = float.MaxValue;
         for (int i = 0; i < segments.Count; i++)
@@ -67,25 +69,33 @@ public static class SegmentHelper
                 //nop
             }
         }
-        bool left = Geom2D.IsCcw(segment.Vertex1.WorldPosition, segment.Vertex2.WorldPosition, worldPos);
-        Tuple<Segment, bool> nearest = new Tuple<Segment, bool>(segment, left);
+        Tuple<Segment, bool> nearest = null;
+        if (segment != null)
+        {
+            bool left = Geom2D.IsCcw(segment.Vertex1.WorldPosition, segment.Vertex2.WorldPosition, worldPos);
+            nearest = new Tuple<Segment, bool>(segment, left);
+        }
 
         return nearest;
     }
 
     public static List<Segment> FindInnerSegments(IList<Segment> segments, List<Vector2> contour, List<Tuple<Segment, bool>> ignore)
     {
+        if (segments == null) return null;
+
         List<Segment> innerSegments = new List<Segment>();
         for (int i = 0; i < segments.Count; i++)
         {
             Vector2 point = segments[i].Vertex1.WorldPosition + (segments[i].Vertex2.WorldPosition - segments[i].Vertex1.WorldPosition) * 0.5f;
             if (
                 Geom2D.IsInside(contour, point) &&
-                ignore.Where(x => x.Item1 == segments[i]).FirstOrDefault() == null
+                (
+                    (ignore == null) || (ignore.Where(x => x.Item1 == segments[i]).FirstOrDefault() == null)
+                )
                 //Geom2D.IsInside(contour, segments[i].Vertex1.WorldPosition) &&
                 //Geom2D.IsInside(contour, segments[i].Vertex2.WorldPosition) &&
                 //!ignore.Contains(segments[i])
-                )
+            )
                 innerSegments.Add(segments[i]); //TODO is this sufficient?
         }
         return innerSegments;
@@ -93,17 +103,21 @@ public static class SegmentHelper
 
     public static List<Segment> FindOuterSegments(IList<Segment> segments, List<Vector2> contour, List<Tuple<Segment, bool>> ignore)
     {
+        if (segments == null) return null;
+
         List<Segment> outerSegments = new List<Segment>();
         for (int i = 0; i < segments.Count; i++)
         {
             Vector2 point = segments[i].Vertex1.WorldPosition + (segments[i].Vertex2.WorldPosition - segments[i].Vertex1.WorldPosition) * 0.5f;
             if (
                 !Geom2D.IsInside(contour, point) &&
-                ignore.Where(x => x.Item1 == segments[i]).FirstOrDefault() == null
+                (
+                    (ignore == null) || (ignore.Where(x => x.Item1 == segments[i]).FirstOrDefault() == null)
+                )
                 //!Geom2D.IsInside(contour, segments[i].Vertex1.WorldPosition) &&
                 //!Geom2D.IsInside(contour, segments[i].Vertex2.WorldPosition) &&
                 //!ignore.Contains(segments[i])
-                )
+            )
                 outerSegments.Add(segments[i]); //TODO is this sufficient?
         }
         return outerSegments;
@@ -111,17 +125,22 @@ public static class SegmentHelper
 
     public static void RemoveInnerSegments(List<Segment> segments, List<Vector2> contour, List<Tuple<Segment, bool>> ignore)
     {
-        for (int i = segments.Count - 1; i >= 0; i--)
+        if (segments != null)
         {
-            if (
-                (Geom2D.IsInside(contour, segments[i].Vertex1.WorldPosition) ||
-                Geom2D.IsInside(contour, segments[i].Vertex2.WorldPosition) ||
-                (contour.Contains(segments[i].Vertex1.WorldPosition) && contour.Contains(segments[i].Vertex2.WorldPosition)) //edge case
-                ) &&
-                ignore.Where(x => x.Item1 == segments[i]).FirstOrDefault() == null
-                //!ignore.Contains(segments[i])
+            for (int i = segments.Count - 1; i >= 0; i--)
+            {
+                if (
+                    (Geom2D.IsInside(contour, segments[i].Vertex1.WorldPosition) ||
+                    Geom2D.IsInside(contour, segments[i].Vertex2.WorldPosition) ||
+                    (contour.Contains(segments[i].Vertex1.WorldPosition) && contour.Contains(segments[i].Vertex2.WorldPosition)) //edge case
+                    ) &&
+                    (
+                        (ignore == null) || (ignore.Where(x => x.Item1 == segments[i]).FirstOrDefault() == null)
+                    )
+                    //!ignore.Contains(segments[i])
                 )
-                segments.RemoveAt(i); //TODO is this sufficient?
+                    segments.RemoveAt(i); //TODO is this sufficient?
+            }
         }
     }
 

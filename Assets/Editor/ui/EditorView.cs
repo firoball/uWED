@@ -97,18 +97,23 @@ public class EditorView : GraphView
         }
     }
 
-    public float SnapAngle(float angle) //angle in deg!
+    public float SnapAngle(float angle) //angle in rad
     {
         if (m_enableAngleSnapping)
         {
-            float degrees = angle * 180 / Mathf.PI;
-            int snapped = (int)(degrees / c_angleSnapping);
+            float degrees = angle * 180 / Mathf.PI; //angle in deg
+            int snapped;
+            if (degrees > 0.0f)
+                snapped = (int)((degrees + 0.5f * c_angleSnapping) / c_angleSnapping);
+            else
+                snapped = (int)((degrees - 0.5f * c_angleSnapping) / c_angleSnapping);
             angle = snapped * c_angleSnapping;
-            return (angle / 180) * Mathf.PI;
+            if (angle <= -180f) angle = 180f; //edge case: -180 deg -> 180 deg
+            return (angle / 180) * Mathf.PI; //angle in rad
         }
         else
         {
-            return angle;
+            return angle; //angle in rad
         }
     }
 

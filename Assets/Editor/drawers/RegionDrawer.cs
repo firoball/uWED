@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RegionDrawer : BaseEditorDrawer
 {
@@ -120,15 +119,19 @@ public class RegionDrawer : BaseEditorDrawer
             Vector2 mouseWorldPos = ev.ScreenToWorldSpace(m_mousePos);
 
             Tuple<Segment, bool> nearest = SegmentHelper.FindNearestSegment(m_mapData.Segments, mouseWorldPos);
-            FindNearestContour(mouseWorldPos);
-            m_cursorInfo.HoverSegments = m_hoveredSegments;
+            if (nearest != null)
+            {
+                FindNearestContour(mouseWorldPos);
+                m_cursorInfo.HoverSegments = m_hoveredSegments;
 
-            if (nearest.Item2) //left sided segment
-                m_cursorInfo.HoverRegion = nearest.Item1.Left; //TODO: support creation of regions
-            else
-                m_cursorInfo.HoverRegion = nearest.Item1.Right; //TODO: support creation of regions
+                if (nearest.Item2) //left sided segment
+                    m_cursorInfo.HoverRegion = nearest.Item1.Left; //TODO: support creation of regions
+                else
+                    m_cursorInfo.HoverRegion = nearest.Item1.Right; //TODO: support creation of regions
+            }
         }
-        else
+        
+        if (ev == null || m_nearest == null)
         {
             m_cursorInfo.HoverRegion = null;
             m_cursorInfo.HoverSegments.Clear();

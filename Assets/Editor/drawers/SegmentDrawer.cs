@@ -161,11 +161,6 @@ public class SegmentDrawer : BaseEditorDrawer
     {
         if (!enabledSelf)
             return;
-        if (m_mapData.Vertices.Count == 0)
-        {
-            m_cursorInfo.Initialize();
-            return;
-        }
 
         base.ImmediateRepaint();
 
