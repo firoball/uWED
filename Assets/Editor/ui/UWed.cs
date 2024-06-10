@@ -39,6 +39,6 @@ public class UWed : EditorWindow
         VisualElement label = new Label("A wild uWED appears.");
         inspector.Add(label);
 
-        MenuBinder binder = new MenuBinder(editorView, menu);
+        MenuBinder binder = new MenuBinder(editorView, menu, this);
     }
 }

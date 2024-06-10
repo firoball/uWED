@@ -1,17 +1,23 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="menu" style="position: absolute; left: 0; top: 0; right: 0; flex-direction: row; height: 26px; padding-top: 1px; padding-bottom: 1px;">
-        <ui:VisualElement name="editorMode" style="flex-grow: 1; flex-direction: row;">
+        <ui:VisualElement name="fileOperation" style="flex-grow: 0; flex-direction: row; flex-shrink: 0;">
+            <uie:ToolbarMenu text="File" display-tooltip-when-elided="true" tooltip="File operations" name="fileMenu" style="align-items: stretch; flex-shrink: 0; margin-top: 1px; margin-right: 4px; margin-bottom: 1px; margin-left: 4px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; background-color: rgb(81, 81, 81); border-left-color: rgb(37, 37, 37); border-right-color: rgb(37, 37, 37); border-top-color: rgb(37, 37, 37); border-bottom-color: rgb(37, 37, 37);" />
+        </ui:VisualElement>
+        <ui:VisualElement name="editorMode" style="flex-grow: 0; flex-direction: row; flex-shrink: 0;">
             <ui:DropdownField choices="Objects,Segments,Regions,Ways" name="editorModes" tooltip="Activate different editor modes" index="0" style="width: 80px;" />
         </ui:VisualElement>
         <ui:VisualElement name="editorView" style="flex-grow: 1; flex-direction: row;">
             <ui:Button text="Construct" parse-escape-sequences="true" display-tooltip-when-elided="true" name="construct" tooltip="Activate construction view" style="margin-right: 2px; margin-left: 2px;" />
             <ui:Button text="Design" parse-escape-sequences="true" display-tooltip-when-elided="true" name="design" tooltip="Activate designer view" style="margin-right: 2px; margin-left: 2px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="gridControl" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; align-self: auto; right: 0; top: 0; bottom: 0; align-items: flex-start;">
-            <ui:Toggle label="Grid" name="gridShow" value="true" focusable="true" tooltip="Toggle grid visibility" style="width: 60px; justify-content: flex-end; -unity-text-align: upper-right; text-overflow: ellipsis; align-items: auto; align-self: center;" />
+        <ui:VisualElement name="gridControl" style="flex-grow: 0; flex-direction: row; justify-content: flex-end; align-self: auto; right: 0; top: 0; bottom: 0; align-items: flex-start; flex-shrink: 0;">
+            <ui:Label tabindex="-1" text="Angle" parse-escape-sequences="true" display-tooltip-when-elided="true" name="angle" style="align-items: auto; flex-direction: row; align-self: center; justify-content: flex-end;" />
+            <ui:SliderInt high-value="11" low-value="1" show-input-field="false" page-size="1" name="angleSize" focusable="true" direction="Horizontal" tooltip="Set angle steps (deg)" style="width: 50px; flex-direction: row; margin-top: 4px; margin-bottom: 0; height: auto; align-self: flex-start; text-overflow: ellipsis; -unity-text-align: upper-right; justify-content: flex-end;" />
+            <ui:Label tabindex="-1" text="90" parse-escape-sequences="true" display-tooltip-when-elided="true" name="angleSizeValue" binding-path="gridSize" style="flex-direction: row; align-self: center; margin-top: 0; align-items: auto; width: 25px;" />
+            <ui:Toggle label="Grid" name="gridShow" value="true" focusable="true" tooltip="Toggle grid visibility" style="width: 45px; justify-content: flex-end; -unity-text-align: upper-right; text-overflow: ellipsis; align-items: auto; align-self: center;" />
             <ui:SliderInt high-value="10" low-value="1" show-input-field="false" page-size="1" name="gridSize" focusable="true" direction="Horizontal" tooltip="Set grid size" style="width: 50px; flex-direction: row; margin-top: 4px; margin-bottom: 0; height: auto; align-self: flex-start; text-overflow: ellipsis; -unity-text-align: upper-right; justify-content: flex-end;" />
             <ui:Label tabindex="-1" text="1024" parse-escape-sequences="true" display-tooltip-when-elided="true" name="gridSizeValue" binding-path="gridSize" style="flex-direction: row; align-self: center; margin-top: 0; align-items: auto; width: 30px;" />
-            <ui:Toggle label="Snap" name="gridSnap" value="true" tooltip="Toggle grid snapping" style="-unity-text-align: upper-right; text-overflow: ellipsis; width: 50px; justify-content: flex-end; align-items: auto; align-self: center;" />
+            <ui:Toggle label="Snap" name="enableSnap" value="true" tooltip="Toggle snapping" style="-unity-text-align: upper-right; text-overflow: ellipsis; width: 50px; justify-content: flex-end; align-items: auto; align-self: center;" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="editor" style="flex-grow: 1; position: absolute; top: 28px; height: auto; width: auto; bottom: 100px; left: 4px; right: 4px; background-color: rgba(0, 0, 0, 0);" />

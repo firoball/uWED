@@ -6,20 +6,18 @@ public class EditorView : GraphView
 {
     const float c_pixelsPerUnit = 1f;
     const bool c_invertYPosition = true;
-    const float c_angleSnapping = 15.0f; //TODO: temp - hook to UI (in deg)
 
     private readonly GridManipulator m_gridManipulator;
     private readonly EditorManipulator m_editorManipulator;
     private readonly EditorInterface m_interface;
+    private float m_lockAngle = 15.0f; //in deg
     private bool m_enableSnapping;
-    private bool m_enableAngleSnapping;
 
     public EditorInterface Interface => m_interface;
 
     public EditorView()
     {
         m_enableSnapping = true;
-        m_enableAngleSnapping = true;
         FlexibleGridBackground grid = new FlexibleGridBackground();
         m_gridManipulator = new GridManipulator(grid);
         m_editorManipulator = new EditorManipulator();
@@ -33,6 +31,7 @@ public class EditorView : GraphView
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(m_editorManipulator);
         //pass defaults to all listeners
+        m_interface.NotifyLockAngleListeners(m_lockAngle);
         m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
 
         //this.generateVisualContent += Test; //TODO: use this hook for drawing textured regions
@@ -99,15 +98,15 @@ public class EditorView : GraphView
 
     public float SnapAngle(float angle) //angle in rad
     {
-        if (m_enableAngleSnapping)
+        if (m_enableSnapping)
         {
             float degrees = angle * 180 / Mathf.PI; //angle in deg
             int snapped;
             if (degrees > 0.0f)
-                snapped = (int)((degrees + 0.5f * c_angleSnapping) / c_angleSnapping);
+                snapped = (int)((degrees + 0.5f * m_lockAngle) / m_lockAngle);
             else
-                snapped = (int)((degrees - 0.5f * c_angleSnapping) / c_angleSnapping);
-            angle = snapped * c_angleSnapping;
+                snapped = (int)((degrees - 0.5f * m_lockAngle) / m_lockAngle);
+            angle = snapped * m_lockAngle;
             if (angle <= -180f) angle = 180f; //edge case: -180 deg -> 180 deg
             return (angle / 180) * Mathf.PI; //angle in rad
         }
@@ -123,10 +122,10 @@ public class EditorView : GraphView
         m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
     }
 
-    public void ToggleAngleSnapping(bool enable)
+    public void LockAngle(float angle)
     {
-        m_enableAngleSnapping = enable;
-        //m_interface.NotifyToggleAngleSnappingListeners(m_enableAngleSnapping);
+        m_lockAngle = angle;
+        m_interface.NotifyLockAngleListeners(m_lockAngle);
     }
 
 }

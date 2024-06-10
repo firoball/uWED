@@ -81,6 +81,7 @@
     <Compile Include="Assets\Editor\ui\UWed.cs" />
     <Compile Include="Assets\Editor\modes\ObjectMode.cs" />
     <Compile Include="Assets\Editor\utilities\ContourHelper.cs" />
+    <Compile Include="Assets\Editor\ui\FileDialog.cs" />
     <Compile Include="Assets\Editor\utilities\SegmentHelper.cs" />
     <Compile Include="Assets\Editor\ui\EditorInterface.cs" />
   </ItemGroup>
