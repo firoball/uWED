@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -21,16 +22,26 @@ public class GridManipulator : MouseManipulator
     public GridManipulator(FlexibleGridBackground grid)
     {
         m_grid = grid;
+        m_grid.RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
+    }
+
+    private void OnCustomStyleResolved(CustomStyleResolvedEvent e)
+    {
+        //only load prefs once grid has loaded its stylesheet - otherwise it won't update correctly
+        LoadPrefs();
+        //pass defaults to all listeners
+        EditorView ev = target as EditorView;
+        ev?.Interface.NotifyScaleGridListeners(m_gridScale);
+        ev?.Interface.NotifyToggleGridListeners(m_gridEnabled);
     }
 
     protected override void RegisterCallbacksOnTarget()
     {
-        //pass defaults to all listeners
-        EditorView ev = target as EditorView;
-        ev.Interface.NotifyScaleGridListeners(m_gridScale);
-        ev.Interface.NotifyToggleGridListeners(m_gridEnabled);
-
         target.RegisterCallback<WheelEvent>(OnWheel);
+        //pass defaults to all listeners - OnCustomStyleResolved is too late for init phase
+        EditorView ev = target as EditorView;
+        ev?.Interface.NotifyScaleGridListeners(m_gridScale);
+        ev?.Interface.NotifyToggleGridListeners(m_gridEnabled);
     }
 
     protected override void UnregisterCallbacksFromTarget()
@@ -130,5 +141,21 @@ public class GridManipulator : MouseManipulator
                 HideBackground();
         }
     }
+
+    public void SavePrefs()
+    {
+        EditorPrefs.SetFloat("uWED::GridManipulator::gridScale", m_gridScale);
+        EditorPrefs.SetBool("uWED::GridManipulator::gridEnabled", m_gridEnabled);
+    }
+
+    private void LoadPrefs()
+    {
+        if (EditorPrefs.HasKey("uWED::GridManipulator::gridScale"))
+            m_gridScale = EditorPrefs.GetFloat("uWED::GridManipulator::gridScale");
+
+        if (EditorPrefs.HasKey("uWED::GridManipulator::gridEnabled"))
+            m_gridEnabled = EditorPrefs.GetBool("uWED::GridManipulator::gridEnabled");
+    }
+
 
 }

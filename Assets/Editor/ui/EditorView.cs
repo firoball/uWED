@@ -1,4 +1,5 @@
-﻿using UnityEditor.Experimental.GraphView;
+﻿using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -30,16 +31,21 @@ public class EditorView : GraphView
         Add(grid);
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(m_editorManipulator);
+
+        //TODO: don't load transform prefs when map is new or has changed
+        LoadPrefs();
         //pass defaults to all listeners
         m_interface.NotifyLockAngleListeners(m_lockAngle);
         m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
 
-        //this.generateVisualContent += Test; //TODO: use this hook for drawing textured regions
+        //this.generateVisualContent += GenerateVisualContent; //TODO: use this hook for drawing textured regions
         contentViewContainer.BringToFront();
-        //contentViewContainer.Add(new Label { name = "origin", text = "(0,0)" });
+        //TODO: only perform schedule.Execute when prefs were not found/loaded (e.g. new map)
         schedule.Execute(() =>
         {
             contentViewContainer.transform.position = parent.worldBound.size / 2f;
+            //TODO: don't load transform prefs when map is new or has changed
+            LoadPrefs();
         });
     }
 
@@ -47,9 +53,9 @@ public class EditorView : GraphView
     {
         evt.menu.ClearItems(); //context menu SHUT UP!
     }
-    /*void Test(MeshGenerationContext m) //TODO: use this hook for drawing textured regions
+    /*void GenerateVisualContent(MeshGenerationContext m) //TODO: use this hook for drawing textured regions
     {
-        Debug.Log("GVC Test");
+        Debug.Log("GenerateVisualContent");
     }*/
 
     public Vector2 WorldtoScreenSpace(Vector2 pos)
@@ -128,4 +134,38 @@ public class EditorView : GraphView
         m_interface.NotifyLockAngleListeners(m_lockAngle);
     }
 
+    public void SavePrefs()
+    {
+        m_gridManipulator?.SavePrefs();
+        m_editorManipulator?.SavePrefs();
+        EditorPrefs.SetBool("uWED::EditorView::enableSnapping", m_enableSnapping);
+        EditorPrefs.SetFloat("uWED::EditorView::lockAngle", m_lockAngle);
+        EditorPrefs.SetFloat("uWED::EditorView::transform.position.x", contentViewContainer.transform.position.x);
+        EditorPrefs.SetFloat("uWED::EditorView::transform.position.y", contentViewContainer.transform.position.y);
+        EditorPrefs.SetFloat("uWED::EditorView::transform.scale.x", contentViewContainer.transform.scale.y);
+        EditorPrefs.SetFloat("uWED::EditorView::transform.scale.y", contentViewContainer.transform.scale.y);
+    }
+
+    private void LoadPrefs()
+    {
+        if (EditorPrefs.HasKey("uWED::EditorView::enableSnapping"))
+            m_enableSnapping = EditorPrefs.GetBool("uWED::EditorView::enableSnapping");
+        if (EditorPrefs.HasKey("uWED::EditorView::lockAngle"))
+            m_lockAngle = EditorPrefs.GetFloat("uWED::EditorView::lockAngle");
+
+        //TODO: load pos and scale only if map has not changed
+        Vector3 pos = contentViewContainer.transform.position;
+        if (EditorPrefs.HasKey("uWED::EditorView::transform.position.x"))
+            pos.x = EditorPrefs.GetFloat("uWED::EditorView::transform.position.x");
+        if (EditorPrefs.HasKey("uWED::EditorView::transform.position.y"))
+            pos.y = EditorPrefs.GetFloat("uWED::EditorView::transform.position.y");
+        contentViewContainer.transform.position = pos;
+
+        Vector3 scale = contentViewContainer.transform.scale;
+        if (EditorPrefs.HasKey("uWED::EditorView::transform.scale.x"))
+            scale.x = EditorPrefs.GetFloat("uWED::EditorView::transform.scale.x");
+        if (EditorPrefs.HasKey("uWED::EditorView::transform.scale.y"))
+            scale.y = EditorPrefs.GetFloat("uWED::EditorView::transform.scale.y");
+        contentViewContainer.transform.scale = scale;
+    }
 }

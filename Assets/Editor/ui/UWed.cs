@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,6 +10,8 @@ public class UWed : EditorWindow
     private VisualTreeAsset m_uxml = default;
     [SerializeField]
     private StyleSheet m_StyleSheet = default;
+
+    private EditorView m_editorView;
 
     [MenuItem("Window/UI Toolkit/uWED")]
     public static void OpenWindow()
@@ -31,14 +32,20 @@ public class UWed : EditorWindow
         VisualElement editor = containers.Where(x => x.name == "editor").FirstOrDefault();
         VisualElement inspector = containers.Where(x => x.name == "inspector").FirstOrDefault();
 
-        EditorView editorView = new EditorView();
-        editorView.styleSheets.Add(m_StyleSheet);
-        editor.Add(editorView);
+        m_editorView = new EditorView();
+        m_editorView.styleSheets.Add(m_StyleSheet);
+        editor.Add(m_editorView);
 
         // VisualElements objects can contain other VisualElement following a tree hierarchy.
         VisualElement label = new Label("A wild uWED appears.");
         inspector.Add(label);
 
-        MenuBinder binder = new MenuBinder(editorView, menu, this);
+        MenuBinder binder = new MenuBinder(m_editorView, menu, this);
+        AssemblyReloadEvents.beforeAssemblyReload += m_editorView.SavePrefs;
+    }
+
+    public void OnDestroy()
+    {
+        m_editorView?.SavePrefs();
     }
 }

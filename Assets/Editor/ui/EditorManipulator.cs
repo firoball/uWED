@@ -38,6 +38,8 @@ public class EditorManipulator : MouseManipulator
 
         m_mode = EditorStatus.Mode.Segments;
         m_constructMode = EditorStatus.Construct.Idle;
+        LoadPrefs();
+        ResetMode();
     }
 
     protected override void RegisterCallbacksOnTarget()
@@ -233,5 +235,17 @@ public class EditorManipulator : MouseManipulator
             m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
         }
     }
+
+    public void SavePrefs()
+    {
+        EditorPrefs.SetFloat("uWED::EditorManipulator::mode", (int)m_mode);
+    }
+
+    private void LoadPrefs()
+    {
+        if (EditorPrefs.HasKey("uWED::EditorManipulator::mode"))
+            m_mode = (EditorStatus.Mode)EditorPrefs.GetFloat("uWED::EditorManipulator::mode");
+    }
+
 
 }
