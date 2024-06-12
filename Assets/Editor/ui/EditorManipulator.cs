@@ -12,9 +12,17 @@ public class EditorManipulator : MouseManipulator
     private EditorStatus.Mode m_mode;
     private List<BaseEditorMode> m_editorModes;
 
+    private MapManager m_mapManager;
+    private const string c_defaultAsset = "assets/DefaultMapAsset.asset";
+
     public EditorManipulator()
     {
+        m_mapManager = new MapManager();
+        m_mapManager.Load(new MapAssetLoader(), c_defaultAsset);
+        //m_mapManager.CreateMap("assets/testmap.asset");
+        m_mapData = m_mapManager.MapData; //TEMP
         //TEMP - this should be handled in a better way
+/*
         m_mapData = AssetDatabase.LoadAssetAtPath<MapData>("assets/testmap.asset");
         if (m_mapData == null)
         {
@@ -24,7 +32,7 @@ public class EditorManipulator : MouseManipulator
             //if (m_mapData == null) //everything failed... at least allow using the editor
             //    m_mapData = new MapData();
         }
-
+*/
         m_mouseLabel = new Label { name = "mousePosition", text = "(0,0)", pickingMode = PickingMode.Ignore };
 
 

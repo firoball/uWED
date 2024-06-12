@@ -8,13 +8,26 @@ public class MapData : ScriptableObject
     [SerializeReference]
     private List<MapObject> m_objects;
     [SerializeReference]
-    private  List<Way> m_ways;
+    private List<Way> m_ways;
     [SerializeReference]
-    private  List<Vertex> m_vertices;
+    private List<Vertex> m_vertices;
     [SerializeReference]
-    private  List<Segment> m_segments;
+    private List<Segment> m_segments;
     [SerializeReference]
     private List<Region> m_regions;
+
+    public MapDataSet Data { 
+        //temporary - also use MapDataSet internally in future
+        get {
+            MapDataSet data = new MapDataSet();
+            data.Objects = m_objects;
+            data.Ways = m_ways;
+            data.Vertices = m_vertices;
+            data.Segments = m_segments;
+            data.Regions = m_regions;
+            return data;
+        } 
+    }
 
     public MapData()
     {
@@ -23,6 +36,17 @@ public class MapData : ScriptableObject
         m_vertices = new List<Vertex>();
         m_segments = new List<Segment>();
         m_regions = new List<Region>();
+    }
+
+    //TODO: transform this into a constructor once ScriptableObejct is separated
+    public void Initialize(MapDataSet data)
+    {
+        //temporary - also use MapDataSet internally in future
+        m_objects = data.Objects;
+        m_ways = data.Ways;
+        m_vertices = data.Vertices;
+        m_segments = data.Segments;
+        m_regions = data.Regions;
     }
 
     public void Clear()
