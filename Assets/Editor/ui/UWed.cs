@@ -13,11 +13,19 @@ public class UWed : EditorWindow
 
     private EditorView m_editorView;
 
+    private static UWed s_instance = null;
+
     [MenuItem("Window/UI Toolkit/uWED")]
     public static void OpenWindow()
     {
         UWed wnd = GetWindow<UWed>();
         wnd.titleContent = new GUIContent("uWED");
+        s_instance = wnd;
+    }
+
+    public static void OpenMap(string assetName)
+    {
+        s_instance?.m_editorView.Interface.OnLoadMapAsset(assetName);
     }
 
     public void CreateGUI()
@@ -47,5 +55,6 @@ public class UWed : EditorWindow
     public void OnDestroy()
     {
         m_editorView?.SavePrefs();
+        s_instance = null;
     }
 }

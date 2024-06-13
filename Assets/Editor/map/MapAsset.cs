@@ -20,7 +20,7 @@ public class MapAsset : ScriptableObject
         return mapAsset;
     }
 
-    static public MapAsset Load(string name)
+    static public MapAsset Get(string name)
     {
        return AssetDatabase.LoadAssetAtPath<MapAsset>(name);
     }

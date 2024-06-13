@@ -2,19 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.IO;
 using UnityEditor.Callbacks;
 
-[CustomEditor(typeof(MapData))]
-public class MapDataEditor : Editor
+[CustomEditor(typeof(MapAsset))]
+public class MapAssetEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        MapData map = (MapData)target;
+        MapAsset map = (MapAsset)target;
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Clear", GUILayout.Height(26)))
         {
-            map.Clear();
+            map.Data.Clear();
         }
         /*if (GUILayout.Button("Edit", GUILayout.Height(26)))
         {
@@ -30,15 +29,18 @@ public class MapDataEditor : Editor
     {
         Object target = EditorUtility.InstanceIDToObject(instanceID);
 
-        if (target is MapData)
+        if (target is MapAsset)
         {
-            var path = AssetDatabase.GetAssetPath(instanceID);
+            var map = AssetDatabase.GetAssetPath(instanceID);
 
             Selection.activeObject = target;
             UWed.OpenWindow();
+            UWed.OpenMap(map);
             return true;
         }
-
-        return false;
+        else
+        {
+            return false;
+        }
     }
 }

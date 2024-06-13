@@ -2,96 +2,89 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class MapData : ScriptableObject
+public class MapData
 {
-    [SerializeReference]
-    private List<MapObject> m_objects;
-    [SerializeReference]
-    private List<Way> m_ways;
-    [SerializeReference]
-    private List<Vertex> m_vertices;
-    [SerializeReference]
-    private List<Segment> m_segments;
-    [SerializeReference]
-    private List<Region> m_regions;
+    private MapDataSet m_data;
 
-    public MapDataSet Data { 
-        //temporary - also use MapDataSet internally in future
-        get {
-            MapDataSet data = new MapDataSet();
-            data.Objects = m_objects;
-            data.Ways = m_ways;
-            data.Vertices = m_vertices;
-            data.Segments = m_segments;
-            data.Regions = m_regions;
-            return data;
-        } 
-    }
+    public MapData() : this(null) { }
 
-    public MapData()
-    {
-        m_objects = new List<MapObject>();
-        m_ways = new List<Way>();
-        m_vertices = new List<Vertex>();
-        m_segments = new List<Segment>();
-        m_regions = new List<Region>();
-    }
-
-    //TODO: transform this into a constructor once ScriptableObejct is separated
-    public void Initialize(MapDataSet data)
+    public MapData(MapDataSet data)
     {
         //temporary - also use MapDataSet internally in future
-        m_objects = data.Objects;
-        m_ways = data.Ways;
-        m_vertices = data.Vertices;
-        m_segments = data.Segments;
-        m_regions = data.Regions;
+        if (data != null)
+        {
+            m_data = data;
+            Rebuild();
+        }
+        else
+        {
+            m_data = new MapDataSet();
+        }
     }
 
-    public void Clear()
+    public IList<MapObject> Objects => m_data.Objects.AsReadOnly();
+    public IList<Way> Ways => m_data.Ways.AsReadOnly();
+    public IList<Vertex> Vertices => m_data.Vertices.AsReadOnly(); 
+    public IList<Segment> Segments => m_data.Segments.AsReadOnly();
+    public IList<Region> Regions => m_data.Regions.AsReadOnly();
+
+    public MapDataSet Data { get => m_data; }
+
+    public void Load(IMapLoader loader, string name)
     {
-        m_objects.Clear();
-        m_ways.Clear();
-        m_segments.Clear();
-        m_vertices.Clear();
-        m_regions.Clear();
+        if ((loader != null) && loader.Load(name))
+        {
+            m_data = loader.Data;
+        }
     }
 
-    public IList<MapObject> Objects => m_objects.AsReadOnly();
-    public IList<Way> Ways => m_ways.AsReadOnly();
-    public IList<Vertex> Vertices => m_vertices.AsReadOnly(); 
-    public IList<Segment> Segments => m_segments.AsReadOnly();
-    public IList<Region> Regions => m_regions.AsReadOnly();
+    public void Write(IMapWriter writer, string name)
+    {
+        if (writer != null)
+        {
+            writer.Data = m_data;
+            writer.Write(name);
+        }
+    }
+
+    #region MapObject interfaces
 
     public void Add(MapObject m)
     {
-        if (m != null && !m_objects.Contains(m))
-            m_objects.Add(m);
+        if (m != null && !m_data.Objects.Contains(m))
+            m_data.Objects.Add(m);
     }
 
     public void Remove(MapObject m)
     {
         if (m != null)
-            m_objects.Remove(m);
+            m_data.Objects.Remove(m);
     }
+
+    #endregion
+
+    #region Way interfaces
 
     public void Add(Way w)
     {
-        if (w != null && !m_ways.Contains(w))
-            m_ways.Add(w);
+        if (w != null && !m_data.Ways.Contains(w))
+            m_data.Ways.Add(w);
     }
 
     public void Remove(Way w)
     {
         if (w != null)
-            m_ways.Remove(w);
+            m_data.Ways.Remove(w);
     }
+
+    #endregion
+
+    #region Vertex interfaces
 
     public void Add(Vertex v)
     {
-        if (v != null && !m_vertices.Contains(v))
-            m_vertices.Add(v);
+        if (v != null && !m_data.Vertices.Contains(v))
+            m_data.Vertices.Add(v);
     }
 
     public void Remove(Vertex v)
@@ -103,22 +96,26 @@ public class MapData : ScriptableObject
     {
         if (v != null && !v.IsConnected())
         {
-            m_vertices.Remove(v);
+            m_data.Vertices.Remove(v);
         }
         else if (v != null && force)
         {
-            m_vertices.Remove(v);
+            m_data.Vertices.Remove(v);
             Debug.LogWarning("MapData.RemoveVertex: Removed vertex was still connected.");
         }
     }
 
+    #endregion
+
+    #region Segment interfaces
+
     public void Add(Segment s)
     {
-        if (s != null && !m_segments.Contains(s))
+        if (s != null && !m_data.Segments.Contains(s))
         {
             s.Vertex1.Connect(s);
             s.Vertex2.Connect(s);
-            m_segments.Add(s);
+            m_data.Segments.Add(s);
         }
     }
 
@@ -126,7 +123,7 @@ public class MapData : ScriptableObject
     {
         if (s != null)
         {
-            if (m_segments.Remove(s))
+            if (m_data.Segments.Remove(s))
             {
                 s.Vertex1.Unconnect(s);
                 s.Vertex2.Unconnect(s);
@@ -141,7 +138,7 @@ public class MapData : ScriptableObject
     {
         //TODO: replace with connection list
         List<Segment> segments = new List<Segment>();
-        foreach(Segment s in m_segments)
+        foreach(Segment s in m_data.Segments)
         {
             if ((s.Vertex1 == v) || (s.Vertex2 == v))
                 segments.Add(s);
@@ -151,7 +148,7 @@ public class MapData : ScriptableObject
 
     public Segment FindSegment(Vertex v1, Vertex v2)
     {
-        foreach (Segment s in m_segments)
+        foreach (Segment s in m_data.Segments)
         {
             if (((s.Vertex1 == v1) && (s.Vertex2 == v2)) ||
                 ((s.Vertex1 == v2) && (s.Vertex2 == v1)))
@@ -160,168 +157,47 @@ public class MapData : ScriptableObject
         return null;
     }
 
+    #endregion
+
+    #region Region interfaces
+
     public void Add(Region r)
     {
-        if (r != null && !m_regions.Contains(r))
+        if (r != null && !m_data.Regions.Contains(r))
         {
-            m_regions.Add(r);
+            m_data.Regions.Add(r);
         }
     }
 
     public void Remove(Region r) 
     {
         if (r != null)
-            m_regions.Remove(r);
+            m_data.Regions.Remove(r);
     }
 
-    /*
-    public void Rebuild() //TODO: is this even needed in future?
+    #endregion
+
+
+    private void Rebuild() //TODO: this is required when loading from file
     {
-        
-        foreach (Segment s in m_segments)
-        {
-            //TODO: some proper interface...
-            s.Vertex1.Connect(s);
-            s.Vertex2.Connect(s);
-        }
+        /*    
+            foreach (Segment s in m_data.Segments)
+            {
+                //TODO: some proper interface...
+                s.Vertex1.Connect(s);
+                s.Vertex2.Connect(s);
+            }
 
-        foreach(Vertex v in m_vertices)
-        {
-            v.ConnectedSegments = v.Connections.Count;
-        }
+            foreach(Vertex v in m_data.Vertices)
+            {
+                v.ConnectedSegments = v.Connections.Count;
+            }
+        */
     }
-    */
+
 }
 
-[Serializable]
-public class Way
-{
-    [SerializeReference]
-    private List<Vertex> m_positions;
 
-    public Way()
-    {
-        m_positions = new List<Vertex>();
-    }
 
-    public List<Vertex> Positions => m_positions;
-}
 
-[Serializable]
-public class Vertex
-{
-    [SerializeReference]
-    private Vector2 m_worldPosition;
-    private Vector2 m_screenPosition;
-    [SerializeReference]
-    private int m_connectedSegments; //for inspector only
-    [HideInInspector, SerializeReference]
-    private List<Segment> m_connections;
 
-    public Vector2 WorldPosition { get => m_worldPosition; set => m_worldPosition = value; }
-    public Vector2 ScreenPosition { get => m_screenPosition; set => m_screenPosition = value; }
-    public List<Segment> Connections { get => m_connections; set => m_connections = value; }
-    //public int ConnectedSegments { get => m_connectedSegments; set => m_connectedSegments = value; } //temp!
-
-    public Vertex(Vector2 position)
-    {
-        m_worldPosition = position;
-        m_connectedSegments = 0; //for inspector only
-        m_connections = new List<Segment>();
-    }
-
-    public void Connect(Segment s)
-    {
-        if (!m_connections.Contains(s))
-        {
-            m_connections.Add(s);
-            m_connectedSegments = m_connections.Count; //for inspector only
-        }
-    }
-
-    public void Unconnect(Segment s)
-    {
-        if (m_connections.Contains(s))
-        {
-            m_connections.Remove(s);
-            m_connectedSegments = m_connections.Count; //for inspector only
-        }
-    }
-
-    public bool IsConnected()
-    {
-        return m_connections.Count > 0;
-    }
-}
-
-[Serializable]
-public class Segment
-{
-    [SerializeReference]
-    private Vertex m_vertex1;
-    [SerializeReference]
-    private Vertex m_vertex2;
-    [SerializeReference]
-    private Region m_left;
-    [SerializeReference]
-    private Region m_right;
-
-    public Segment(Vertex v1, Vertex v2)
-    {
-        m_vertex1 = v1;
-        m_vertex2 = v2;
-        m_left = null;
-        m_right = null;
-    }
-
-    public void Flip()
-    {
-        Vertex v = m_vertex1;
-        m_vertex1 = m_vertex2;
-        m_vertex2 = v;
-    }
-
-    public Vertex Vertex1 { get => m_vertex1; }
-    public Vertex Vertex2 { get => m_vertex2; }
-    public Region Left { get => m_left; set => m_left = value; }
-    public Region Right { get => m_right; set => m_right = value; }
-}
-
-[Serializable]
-public class MapObject
-{
-    [SerializeReference]
-    private Vertex m_vertex;
-    [SerializeReference]
-    private float m_angle;
-
-    public MapObject(Vector2 position) 
-    {
-        m_vertex = new Vertex(position);
-    }
-
-    public Vertex Vertex { get => m_vertex; set => m_vertex = value; }
-    public float Angle { get => m_angle; set => m_angle = value; }
-}
-
-[Serializable]
-public class Region
-{
-    [SerializeReference]
-    private bool m_default;
-
-    //region boundaries - for multi-select
-    private Vector2 m_min;
-    private Vector2 m_max;
-
-    public Region()
-    {
-        m_default = true;
-        m_min = new Vector2(float.MaxValue, float.MaxValue);
-        m_max = new Vector2(float.MinValue, float.MinValue);
-    }
-
-    public bool Default { get => m_default; set => m_default = value; }
-    public Vector2 Min { get => m_min; set => m_min = value; }
-    public Vector2 Max { get => m_max; set => m_max = value; }
-}

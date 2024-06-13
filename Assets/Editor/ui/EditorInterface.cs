@@ -77,6 +77,11 @@ public class EditorInterface
         m_gm?.ToggleGrid(evt.newValue);
     }
 
+    public void OnLoadMapAsset(string assetName)
+    {
+        m_em?.LoadMapAsset(assetName);
+    }
+
     //Notifiers for listeners
     public void NotifyToggleSnappingListeners(bool value)
     {

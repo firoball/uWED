@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class EditorManipulator : MouseManipulator
@@ -12,30 +11,17 @@ public class EditorManipulator : MouseManipulator
     private EditorStatus.Mode m_mode;
     private List<BaseEditorMode> m_editorModes;
 
-    private MapManager m_mapManager;
     private const string c_defaultAsset = "assets/DefaultMapAsset.asset";
 
     public EditorManipulator()
     {
-        m_mapManager = new MapManager();
-        m_mapManager.Load(new MapAssetLoader(), c_defaultAsset);
-        //m_mapManager.CreateMap("assets/testmap.asset");
-        m_mapData = m_mapManager.MapData; //TEMP
-        //TEMP - this should be handled in a better way
-/*
-        m_mapData = AssetDatabase.LoadAssetAtPath<MapData>("assets/testmap.asset");
-        if (m_mapData == null)
-        {
-            m_mapData = ScriptableObject.CreateInstance<MapData>();
-            string path = AssetDatabase.GenerateUniqueAssetPath("assets/testmap.asset");
-            AssetDatabase.CreateAsset(m_mapData, path);
-            //if (m_mapData == null) //everything failed... at least allow using the editor
-            //    m_mapData = new MapData();
-        }
-*/
+        m_mapData = new MapData();
+        m_mode = EditorStatus.Mode.Segments;
+        m_constructMode = EditorStatus.Construct.Idle;
+        LoadPrefs();
         m_mouseLabel = new Label { name = "mousePosition", text = "(0,0)", pickingMode = PickingMode.Ignore };
 
-
+        //only construct modes after default map data was loaded
         m_editorModes = new List<BaseEditorMode>
         {
             new ObjectMode(m_mapData),
@@ -44,9 +30,6 @@ public class EditorManipulator : MouseManipulator
             new WayMode(m_mapData)
         };
 
-        m_mode = EditorStatus.Mode.Segments;
-        m_constructMode = EditorStatus.Construct.Idle;
-        LoadPrefs();
         ResetMode();
     }
 
@@ -244,16 +227,22 @@ public class EditorManipulator : MouseManipulator
         }
     }
 
+    public void LoadMapAsset(string assetName)
+    {
+        m_mapData?.Load(new MapAssetLoader(), assetName);
+    }
+
     public void SavePrefs()
     {
+        m_mapData?.Write(new MapAssetWriter(), c_defaultAsset);
         EditorPrefs.SetFloat("uWED::EditorManipulator::mode", (int)m_mode);
     }
 
     private void LoadPrefs()
     {
+        m_mapData?.Load(new MapAssetLoader(), c_defaultAsset);
         if (EditorPrefs.HasKey("uWED::EditorManipulator::mode"))
             m_mode = (EditorStatus.Mode)EditorPrefs.GetFloat("uWED::EditorManipulator::mode");
     }
-
 
 }
