@@ -25,7 +25,7 @@ public class UWed : EditorWindow
 
     public static void OpenMap(string assetName)
     {
-        s_instance?.m_editorView.Interface.OnLoadMapAsset(assetName);
+        s_instance?.m_editorView.Interface.OnLoadMap(new MapAssetLoader(), assetName);
     }
 
     public void CreateGUI()

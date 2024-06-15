@@ -22,12 +22,13 @@ public class MenuBinder
     private void BindFileMenu(EditorView ev, VisualElement parent, EditorWindow wnd)
     {
         ToolbarMenu toolbarMenu = parent.Q("fileMenu") as ToolbarMenu;
-        if (toolbarMenu != null)
+        if (toolbarMenu != null && ev != null)
         {
+            FileDialog fileDialog = new FileDialog(ev.Interface);
             toolbarMenu.menu.AppendAction("New", null);
-            toolbarMenu.menu.AppendAction("Load", FileDialog.Load);
-            toolbarMenu.menu.AppendAction("Save", FileDialog.Save);
-            toolbarMenu.menu.AppendAction("Save as...", FileDialog.SaveAs);
+            toolbarMenu.menu.AppendAction("Load", fileDialog.Load);
+            toolbarMenu.menu.AppendAction("Save", fileDialog.Save);
+            toolbarMenu.menu.AppendAction("Save as...", fileDialog.SaveAs);
             toolbarMenu.menu.AppendSeparator();
             toolbarMenu.menu.AppendAction("Exit", (x) => wnd?.Close());
         }

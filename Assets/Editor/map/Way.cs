@@ -8,9 +8,14 @@ public class Way
     [SerializeReference]
     private List<Vertex> m_positions;
 
-    public Way()
+    public Way() : this (null) { }
+
+    public Way (List<Vertex> positions)
     {
-        m_positions = new List<Vertex>();
+        if (positions != null)
+            m_positions = positions;
+        else
+            m_positions = new List<Vertex>();
     }
 
     public List<Vertex> Positions => m_positions;

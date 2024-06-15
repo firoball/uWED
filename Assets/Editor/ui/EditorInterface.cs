@@ -77,9 +77,14 @@ public class EditorInterface
         m_gm?.ToggleGrid(evt.newValue);
     }
 
-    public void OnLoadMapAsset(string assetName)
+    public void OnLoadMap(IMapLoader loader, string name)
     {
-        m_em?.LoadMapAsset(assetName);
+        m_em?.LoadMap(loader, name);
+    }
+
+    public void OnWriteMap(IMapWriter writer, string name)
+    {
+        m_em?.WriteMap(writer, name);
     }
 
     //Notifiers for listeners

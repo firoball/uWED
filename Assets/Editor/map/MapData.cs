@@ -35,6 +35,7 @@ public class MapData
         if ((loader != null) && loader.Load(name))
         {
             m_data = loader.Data;
+            Rebuild();
         }
     }
 
@@ -180,19 +181,18 @@ public class MapData
 
     private void Rebuild() //TODO: this is required when loading from file
     {
-        /*    
-            foreach (Segment s in m_data.Segments)
-            {
-                //TODO: some proper interface...
-                s.Vertex1.Connect(s);
-                s.Vertex2.Connect(s);
-            }
+        foreach (Vertex v in m_data.Vertices)
+        {
+            v.Connections.Clear();
+        }
 
-            foreach(Vertex v in m_data.Vertices)
-            {
-                v.ConnectedSegments = v.Connections.Count;
-            }
-        */
+        foreach (Segment s in m_data.Segments)
+        {
+            //TODO: some proper interface...
+            s.Vertex1.Connect(s);
+            s.Vertex2.Connect(s);
+        }
+
     }
 
 }

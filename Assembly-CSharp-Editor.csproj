@@ -75,6 +75,7 @@
     <Compile Include="Assets\Editor\map\Vertex.cs" />
     <Compile Include="Assets\Editor\drawers\BaseEditorDrawer.cs" />
     <Compile Include="Assets\Editor\ui\EditorView.cs" />
+    <Compile Include="Assets\Editor\map\MapWmpLoader.cs" />
     <Compile Include="Assets\Editor\drawers\WayDrawer.cs" />
     <Compile Include="Assets\Editor\map\Segment.cs" />
     <Compile Include="Assets\Editor\ui\GridManipulator.cs" />

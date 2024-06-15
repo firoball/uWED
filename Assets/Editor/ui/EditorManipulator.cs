@@ -227,9 +227,16 @@ public class EditorManipulator : MouseManipulator
         }
     }
 
-    public void LoadMapAsset(string assetName)
+    public void LoadMap(IMapLoader loader, string name)
     {
-        m_mapData?.Load(new MapAssetLoader(), assetName);
+        if (loader != null && !string.IsNullOrWhiteSpace(name))
+            m_mapData?.Load(loader, name);
+    }
+
+    public void WriteMap(IMapWriter writer, string name)
+    {
+        if (writer != null && !string.IsNullOrWhiteSpace(name))
+            m_mapData?.Write(writer, name);
     }
 
     public void SavePrefs()

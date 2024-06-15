@@ -13,12 +13,13 @@ public class Segment
     [SerializeReference]
     private Region m_right;
 
-    public Segment(Vertex v1, Vertex v2)
+    public Segment(Vertex v1, Vertex v2) : this(v1, v2, null, null) { }
+    public Segment(Vertex v1, Vertex v2, Region left, Region right)
     {
         m_vertex1 = v1;
         m_vertex2 = v2;
-        m_left = null;
-        m_right = null;
+        m_left = left;
+        m_right = right;
     }
 
     public void Flip()
