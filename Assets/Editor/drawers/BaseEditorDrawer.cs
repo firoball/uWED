@@ -50,6 +50,12 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
     //Mouse cursor related information
     protected readonly CursorInfo m_cursorInfo;
 
+    //Meshes for drawing map
+    private MeshManager m_wayVertexMgr;
+    private MeshManager m_waySegmentMgr;
+    private MeshManager m_vertexMgr;
+    private MeshManager m_segmentMgr;
+
     public CursorInfo CursorInfo => m_cursorInfo;
 
     public BaseEditorDrawer(MapData mapData) : base()
@@ -57,6 +63,12 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         //set initial values for derived class in overridden Initialize() method
         m_mapData = mapData;
         m_cursorInfo = new CursorInfo();
+
+        m_wayVertexMgr = new MeshManager(MeshTopology.Quads);
+        m_waySegmentMgr = new MeshManager(MeshTopology.Lines);
+        m_vertexMgr = new MeshManager(MeshTopology.Quads);
+        m_segmentMgr = new MeshManager(MeshTopology.Lines);
+
         this.StretchToParentSize();
 
         Initialize();
@@ -342,73 +354,170 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
 
     private void DrawWays()
     {
+        if (m_mapData.Ways.Count == 0)
+            return;
+
+        int bufferSize = 0;
+        for (int i = 0; i < m_mapData.Ways.Count; i++)
+            bufferSize += m_mapData.Ways[i].Positions.Count;
+
+        int step = 2;
+        if (m_enableDirections)
+            step = 6;
+        m_waySegmentMgr.PrepareBuffers(bufferSize * step);
+        if (m_enableWaypoints)
+            m_wayVertexMgr.PrepareBuffers(bufferSize * 4);
+
+        int sumPos = 0;
         for (int i = 0; i < m_mapData.Ways.Count; i++)
         {
             Way w = m_mapData.Ways[i];
             for (int p = 0; p < w.Positions.Count; p++)
             {
-                Color wayColor = SetWaySegmentColor(w, p);
-                Color waypointColor = SetWaypointColor(w, p);
-
-                Vector2 current = w.Positions[p].ScreenPosition;
-                int np = (p + 1) % w.Positions.Count;
-                Vector2 next = w.Positions[np].ScreenPosition;
-
-                if ((np != 0) || CloseWay(w))
-                {
-                    DrawLine(current, next, wayColor);
-                    if (m_enableDirections)
-                    {
-                        Vector2 arrowStart = Geom2D.SplitSegment(current, next);
-                        Vector2 direction = next - current;
-                        Vector2 normalStart = arrowStart - direction.normalized * c_arrowLength;
-                        Vector2 normalEnd = Geom2D.CalculateRightNormal(current, next, c_arrowLength);
-                        DrawLine(arrowStart, normalStart + normalEnd, wayColor);
-                        DrawLine(arrowStart, normalStart - normalEnd, wayColor);
-                    }
-                }
-
+                UpdateWaySegment(sumPos, w, p, step);
                 if (m_enableWaypoints)
-                {
-                    DrawPoint(current, waypointColor, c_pointSize);
-                    //Redraw first waypoint (last segment line drew over it)
-                    if (np == 0 && np != p)
-                    {
-                        Color color0 = SetWaypointColor(w, 0);
-                        DrawPoint(next, color0, c_pointSize); 
-                    }
-                }
+                    UpdateWayVertex(sumPos, w, p);
             }
+            sumPos += w.Positions.Count;
         }
+
+        m_waySegmentMgr.DrawMesh();
+        if (m_enableWaypoints)
+            m_wayVertexMgr.DrawMesh();
+    }
+
+    private void UpdateWaySegment(int arrayPos, Way w, int p, int step)
+    {
+        int idx = (arrayPos + p) * step;
+        int np = (p + 1) % w.Positions.Count;
+        //loops under construction must not be closed
+        bool draw = (np != 0) || CloseWay(w);
+
+        Vector2 current = w.Positions[p].ScreenPosition;
+        Vector2 next = w.Positions[np].ScreenPosition;
+        m_waySegmentMgr.Vertices[idx] = current;
+        if (draw)
+            m_waySegmentMgr.Vertices[idx + 1] = next;
+        else
+            m_waySegmentMgr.Vertices[idx + 1] = current; //don't draw - dummy vertex
+        m_waySegmentMgr.Indices[idx] = idx;
+        m_waySegmentMgr.Indices[idx + 1] = idx + 1;
+        m_waySegmentMgr.Colors[idx] = SetWaySegmentColor(w, p);
+        m_waySegmentMgr.Colors[idx + 1] = m_waySegmentMgr.Colors[idx];
+
+        if (m_enableDirections)
+        {
+            if (draw)
+            {
+                Vector2 arrowStart = Geom2D.SplitSegment(current, next);
+                Vector2 direction = next - current;
+                Vector2 normalStart = arrowStart - direction.normalized * c_arrowLength;
+                Vector2 normalEnd = Geom2D.CalculateRightNormal(current, next, c_arrowLength);
+                m_waySegmentMgr.Vertices[idx + 2] = arrowStart;
+                m_waySegmentMgr.Vertices[idx + 3] = normalStart + normalEnd;
+                m_waySegmentMgr.Vertices[idx + 4] = arrowStart;
+                m_waySegmentMgr.Vertices[idx + 5] = normalStart - normalEnd;
+            }
+            else
+            {
+                //don't draw - dummy vertices
+                m_waySegmentMgr.Vertices[idx + 2] = current;
+                m_waySegmentMgr.Vertices[idx + 3] = current;
+                m_waySegmentMgr.Vertices[idx + 4] = current;
+                m_waySegmentMgr.Vertices[idx + 5] = current;
+            }
+            m_waySegmentMgr.Indices[idx + 2] = idx + 2;
+            m_waySegmentMgr.Indices[idx + 3] = idx + 3;
+            m_waySegmentMgr.Indices[idx + 4] = idx + 4;
+            m_waySegmentMgr.Indices[idx + 5] = idx + 5;
+            m_waySegmentMgr.Colors[idx + 2] = m_waySegmentMgr.Colors[idx];
+            m_waySegmentMgr.Colors[idx + 3] = m_waySegmentMgr.Colors[idx];
+            m_waySegmentMgr.Colors[idx + 4] = m_waySegmentMgr.Colors[idx];
+            m_waySegmentMgr.Colors[idx + 5] = m_waySegmentMgr.Colors[idx];
+        }
+
+    }
+
+    private void UpdateWayVertex(int arrayPos, Way w, int p)
+    {
+        int idx = (arrayPos + p) * 4;
+        int halfSize = 1 + ((c_pointSize - 1) / 2);
+        m_wayVertexMgr.Vertices[idx] = w.Positions[p].ScreenPosition + new Vector2(-halfSize, halfSize);
+        m_wayVertexMgr.Vertices[idx + 1] = w.Positions[p].ScreenPosition + new Vector2(halfSize, halfSize);
+        m_wayVertexMgr.Vertices[idx + 2] = w.Positions[p].ScreenPosition + new Vector2(halfSize, -halfSize);
+        m_wayVertexMgr.Vertices[idx + 3] = w.Positions[p].ScreenPosition + new Vector2(-halfSize, -halfSize);
+        m_wayVertexMgr.Indices[idx] = idx;
+        m_wayVertexMgr.Indices[idx + 1] = idx + 1;
+        m_wayVertexMgr.Indices[idx + 2] = idx + 2;
+        m_wayVertexMgr.Indices[idx + 3] = idx + 3;
+        m_wayVertexMgr.Colors[idx] = SetWaypointColor(w, p);
+        m_wayVertexMgr.Colors[idx + 1] = m_wayVertexMgr.Colors[idx];
+        m_wayVertexMgr.Colors[idx + 2] = m_wayVertexMgr.Colors[idx];
+        m_wayVertexMgr.Colors[idx + 3] = m_wayVertexMgr.Colors[idx];
 
     }
 
     private void DrawLines()
     {
+        if (m_mapData.Segments.Count == 0)
+            return;
+
+        int step = 2;
+        if (m_enableNormals)
+            step = 4;
+
+        m_segmentMgr.PrepareBuffers(m_mapData.Segments.Count * step);
+
         for (int i = 0; i < m_mapData.Segments.Count; i++)
         {
+            int idx = i * step;
             Vector2 v1 = m_mapData.Segments[i].Vertex1.ScreenPosition;
             Vector2 v2 = m_mapData.Segments[i].Vertex2.ScreenPosition;
-            Color lineColor = SetSegmentColor(i);
-            DrawLine(v1, v2, lineColor);
+            m_segmentMgr.Vertices[idx] = v1;
+            m_segmentMgr.Vertices[idx + 1] = v2;
+            m_segmentMgr.Indices[idx] = idx;
+            m_segmentMgr.Indices[idx + 1] = idx + 1;
+            m_segmentMgr.Colors[idx] = SetSegmentColor(i);
+            m_segmentMgr.Colors[idx + 1] = m_segmentMgr.Colors[idx];
             if (m_enableNormals)
             {
                 Vector2 normalStart = Geom2D.SplitSegment(v1, v2);
                 Vector2 normalEnd = Geom2D.CalculateRightNormal(v1, v2, c_normalLength) + normalStart;
-                DrawLine(normalStart, normalEnd, lineColor);
+                m_segmentMgr.Vertices[idx + 2] = normalStart;
+                m_segmentMgr.Vertices[idx + 3] = normalEnd;
+                m_segmentMgr.Indices[idx + 2] = idx + 2;
+                m_segmentMgr.Indices[idx + 3] = idx + 3;
+                m_segmentMgr.Colors[idx + 2] = m_segmentMgr.Colors[idx];
+                m_segmentMgr.Colors[idx + 3] = m_segmentMgr.Colors[idx];
             }
         }
+        m_segmentMgr.DrawMesh();
     }
 
     private void DrawVertices()
     {
         if (m_enableVertices)
         {
+            int step = 4;
+            m_vertexMgr.PrepareBuffers(m_mapData.Vertices.Count * step);
             for (int i = 0; i < m_mapData.Vertices.Count; i++)
             {
-                Color vertexColor = SetVertexColor(i);
-                DrawPoint(m_mapData.Vertices[i].ScreenPosition, vertexColor, c_pointSize);
+                int idx = i * step;
+                int halfSize = 1 + ((c_pointSize - 1) / 2);
+                m_vertexMgr.Vertices[idx] = m_mapData.Vertices[i].ScreenPosition + new Vector2(-halfSize, halfSize);
+                m_vertexMgr.Vertices[idx + 1] = m_mapData.Vertices[i].ScreenPosition + new Vector2(halfSize, halfSize);
+                m_vertexMgr.Vertices[idx + 2] = m_mapData.Vertices[i].ScreenPosition + new Vector2(halfSize, -halfSize);
+                m_vertexMgr.Vertices[idx + 3] = m_mapData.Vertices[i].ScreenPosition + new Vector2(-halfSize, -halfSize);
+                m_vertexMgr.Indices[idx] = idx;
+                m_vertexMgr.Indices[idx + 1] = idx + 1;
+                m_vertexMgr.Indices[idx + 2] = idx + 2;
+                m_vertexMgr.Indices[idx + 3] = idx + 3;
+                m_vertexMgr.Colors[idx] = SetVertexColor(i);
+                m_vertexMgr.Colors[idx + 1] = m_vertexMgr.Colors[idx];
+                m_vertexMgr.Colors[idx + 2] = m_vertexMgr.Colors[idx];
+                m_vertexMgr.Colors[idx + 3] = m_vertexMgr.Colors[idx];
             }
+            m_vertexMgr.DrawMesh();
         }
     }
 

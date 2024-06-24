@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class RegionMode : BaseEditorMode
 {
@@ -20,29 +19,47 @@ public class RegionMode : BaseEditorMode
     public override bool StartConstruction(Vector2 mouseSnappedWorldPos)
     {
         CursorInfo ci = m_drawer.CursorInfo;
-        if (ci.HoverRegion != null) //TODO: fix broken regions
+        if (ci.HoverContour == null)
         {
             return true; //done
         }
         else
         {
-            //Add region
-            Region region = new Region();
-            m_mapData.Add(region);
+            //Get region reference
+            Region region = ci.HoverRegion; //update existing (potentially broken) region
+            if (ci.HoverRegion == null) //create new region
+            {
+                region = new Region();
+                m_mapData.Add(region);
+            }
 
-            //reference region
+            /* identify any segment referencing currently hovered counter and
+             * assign the region reference to corresponding segment side
+             * 
+             * in case the region is still assigned to a segment which is not part of 
+             * the hovered contour, this must be a leftover of some editing activity
+             * and therefore can be removed
+             */
             Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
             Vector2 max = new Vector2(float.MinValue, float.MinValue);
-            for (int i = 0; i < ci.HoverSegments.Count; i++)
+            for (int i = 0; i < m_mapData.Segments.Count; i++)
             {
-                Segment s = ci.HoverSegments[i].Item1;
-                if (ci.HoverSegments[i].Item2) //left side
+                Segment s = m_mapData.Segments[i];
+
+                //remove possible region leftovers from segments
+                if (!ci.HoverContour.Is(s.CLeft) && s.Left == region) //left side
+                    s.Left = null;
+                if (!ci.HoverContour.Is(s.CRight) && s.Right == region) //right side
+                    s.Right = null;
+
+                //assign region to segments
+                if (ci.HoverContour.Is(s.CLeft) && s.Left != region) //left side
                 {
                     s.Left = region;
                     //identify region min/max boundaries
                     SetMinMax(s.Vertex2.WorldPosition, ref min, ref max);
                 }
-                else //right side
+                if (ci.HoverContour.Is(s.CRight) && s.Right != region) //right side
                 {
                     s.Right = region;
                     //identify region min/max boundaries
@@ -51,6 +68,8 @@ public class RegionMode : BaseEditorMode
             }
             region.Min = min;
             region.Max = max;
+
+            m_drawer.MarkDirtyRepaint();
             return true; //construction immediately finished
         }
 

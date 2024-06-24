@@ -26,7 +26,7 @@ public class EditorView : GraphView
         name = "EditorView";
         this.StretchToParentSize();
         this.AddManipulator(m_gridManipulator); //must be added before Zoomer setup
-        SetupZoom(ContentZoomer.DefaultMinScale * 0.5f, ContentZoomer.DefaultMaxScale * 3.0f);
+        SetupZoom(ContentZoomer.DefaultMinScale * 0.1f, ContentZoomer.DefaultMaxScale * 4.0f);
         m_gridManipulator.RegisterCallbacksLate();//must be registered after Zoomer setup
         Add(grid);
         this.AddManipulator(new ContentDragger());

@@ -12,6 +12,10 @@ public class Segment
     private Region m_left;
     [SerializeReference]
     private Region m_right;
+    [SerializeReference]
+    private Contour m_cLeft;
+    [SerializeReference]
+    private Contour m_cRight;
 
     public Segment(Vertex v1, Vertex v2) : this(v1, v2, null, null) { }
     public Segment(Vertex v1, Vertex v2, Region left, Region right)
@@ -20,6 +24,8 @@ public class Segment
         m_vertex2 = v2;
         m_left = left;
         m_right = right;
+        m_cLeft = null;
+        m_cRight = null;
     }
 
     public void Flip()
@@ -33,4 +39,6 @@ public class Segment
     public Vertex Vertex2 { get => m_vertex2; }
     public Region Left { get => m_left; set => m_left = value; }
     public Region Right { get => m_right; set => m_right = value; }
+    public Contour CLeft { get => m_cLeft; set => m_cLeft = value; }
+    public Contour CRight { get => m_cRight; set => m_cRight = value; }
 }

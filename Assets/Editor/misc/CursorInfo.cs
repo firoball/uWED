@@ -26,7 +26,8 @@ public class CursorInfo
     //Region mode
     private Region m_hoverRegion;
     private readonly List<Region> m_selectedRegions;
-    private List<Tuple<Segment, bool>> m_hoverSegments;
+    //private List<Tuple<Segment, bool>> m_hoverSegments;
+    private Contour m_hoverContour;
 
     public CursorInfo()
     {
@@ -34,7 +35,7 @@ public class CursorInfo
         m_selectedObjects = new List<MapObject>();
         m_selectedSegments = new List<Segment>();
         m_selectedRegions = new List<Region>();
-        m_hoverSegments = new List<Tuple<Segment, bool>>();
+        //m_hoverSegments = new List<Tuple<Segment, bool>>();
         Initialize();
     }
 
@@ -56,6 +57,7 @@ public class CursorInfo
         m_waypoint = null;
 
         m_hoverRegion = null;
+        m_hoverContour = null;
         m_selectedRegions.Clear();
 
     }
@@ -85,6 +87,7 @@ public class CursorInfo
     
     public Region HoverRegion { get => m_hoverRegion; set => m_hoverRegion = value; }
     public List<Region> SelectedRegions => m_selectedRegions;
+    public Contour HoverContour { get => m_hoverContour; set => m_hoverContour = value; }
 
-    public List<Tuple<Segment, bool>> HoverSegments { get => m_hoverSegments; set => m_hoverSegments = value; }
+    //public List<Tuple<Segment, bool>> HoverSegments { get => m_hoverSegments; set => m_hoverSegments = value; }
 }

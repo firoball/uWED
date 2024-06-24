@@ -1,33 +1,141 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class ContourHelper
 {
-    public static List<Vector2> FindContour(Tuple<Segment, bool> nearest, out List<Tuple<Segment, bool>> hoveredSegments, int limit)
+    public static Contour FindContour(Tuple<Segment, bool> nearest, int limit)
     {
-        List<Vector2> hoveredContour = new List<Vector2>();
-        hoveredSegments = new List<Tuple<Segment, bool>>();
-
+        Contour contour = new Contour();
+        int rightlowest = -1;
+        int candidate;
         //iterate through connected segments
         Tuple<Segment, bool> first = nearest;
         Tuple<Segment, bool> current = first;
         do
         {
             current = FindNextSegment(current);
-            hoveredSegments.Add(current);
-            Vector2 nextPos;
+            candidate = contour.Vertices.Count;
             if (current.Item2) //left sided segment
-                nextPos = current.Item1.Vertex1.WorldPosition;
+            {
+                contour.Vertices.Add(current.Item1.Vertex1);
+                current.Item1.CLeft = contour;
+            }
+            else //right sided segment
+            {
+                contour.Vertices.Add(current.Item1.Vertex2);
+                current.Item1.CRight = contour;
+            }
+            //find most right/bottom vertex
+            if (rightlowest == -1 || (contour.Vertices[candidate].WorldPosition.y < contour.Vertices[rightlowest].WorldPosition.y))
+            {
+                rightlowest = candidate;
+            }
+            else if (contour.Vertices[candidate].WorldPosition.y == contour.Vertices[rightlowest].WorldPosition.y)
+            {
+                if (contour.Vertices[candidate].WorldPosition.x >= contour.Vertices[rightlowest].WorldPosition.x)
+                    rightlowest = candidate;
+            }
             else
-                nextPos = current.Item1.Vertex2.WorldPosition;
-            hoveredContour.Add(nextPos);
+            {
+                //nop
+            }
+
         } while (
             (current.Item1 != first.Item1 || current.Item2 != first.Item2) &&
-            hoveredSegments.Count <= limit //avoid endless loop in case of some weird error
+            contour.Vertices.Count <= limit //avoid endless loop in case of some weird error
             );
 
-        return hoveredContour;
+        IdentifyInner(contour, rightlowest);
+
+        return contour;
+    }
+
+    public static void FindInnerContour(Contour outer, List<Contour> inners)
+    {
+        /* this is a naive implementation which checks for all known inner contours whether
+         * they are contained by the outer contour.
+         * If this is the case, contour is set as parent of the inner contour.
+         * In case the inner contour already has a parent, it has to be tested whether the parent
+         * assignment needs to be updated.
+         * The parent to choose is the contour which is closest to the inner contour under investigation.
+         * This is done by checking whether the given contour is inside the parent contour of the inner contour.
+         * 
+         * Since the contains-check allows for touching segments, isolated segments which have 
+         * identical inner and outer contours (expect for direction) can lead to errors.
+         * Therefore, these cases have to be excluded. 
+         * This is done by naively matching each single Vertex of both contours.
+         * 
+         * Running this function on a high count of contours is rather SLOW and 
+         * should NOT be done at every render/repaint event.
+         */
+
+        //check all "inner" contours
+        for (int i = 0; i < inners.Count; i++)
+        {
+            //"inner" contour is inside current contour?
+            if (outer.Contains(inners[i]))
+            {
+                //"inner" contour already has some parent?
+                if (inners[i].Outer != null)
+                {
+                    //find correct parent - innermost of outer contours is the correct parent
+                    if (inners[i].Outer.Contains(outer)) //current contour is inside current parent
+                    {
+                        //isolated segment loops have identical inner/outer contours - Containment check not reliable in this case
+                        //these cases must explicitly be excluded from re-parenting
+                        if (!IsFlippedContour(inners[i], outer)) //make sure contour is not same as other (except direction)
+                        {
+                            inners[i].Outer.Inner.Remove(inners[i]); //remove child from old parent
+                            inners[i].Outer = outer; //switch parent
+                            outer.Inner.Add(inners[i]); //add child to new parent
+                        }
+                    }
+                }
+                else
+                {
+                    inners[i].Outer = outer; //set new parent
+                    outer.Inner.Add(inners[i]); //add child to parent
+                }
+            }
+        }
+    }
+
+    public static bool IsFlippedContour(Contour c1, Contour c2)
+    {
+        //different vertex count - can't be a match
+        if (c1.Vertices.Count != c2.Vertices.Count)
+            return false;
+
+        //naively match all vertices
+        for (int i = 0; i < c1.Vertices.Count; i++)
+        {
+            //Vertex not found in other contour - can't be a match
+            if (!c2.Vertices.Contains(c1.Vertices[i]))
+                return false;
+        }
+        //contours are flipped identical
+        return true;
+    }
+
+    private static void IdentifyInner(Contour contour, int rightlowest)
+    {
+        int prev = (rightlowest - 1 + contour.Vertices.Count) % contour.Vertices.Count;
+        int next = (rightlowest + 1) % contour.Vertices.Count;
+        Vector2 v0 = new Vector2(contour.Vertices[prev].WorldPosition.x, contour.Vertices[prev].WorldPosition.y);
+        Vector2 v1 = new Vector2(contour.Vertices[rightlowest].WorldPosition.x, contour.Vertices[rightlowest].WorldPosition.y);
+        Vector2 v2 = new Vector2(contour.Vertices[next].WorldPosition.x, contour.Vertices[next].WorldPosition.y);
+        if (v0 != v2) //Ccw-check is not reliable for line-shaped polygons
+        {
+            contour.IsInner = Geom2D.IsCcw(v0, v1, v2);
+        }
+        else //might be an isolated line - identfy by calculating area: 0 -> line -> always inner
+        {
+            //this is rather slow, but branch should rarely be reached
+            List<Vector2> poly = contour.Vertices.Select(x => x.WorldPosition).ToList();
+            contour.IsInner = (Geom2D.PolygonArea(poly) == 0);
+        }
     }
 
     private static Tuple<Segment, bool> FindNextSegment(Tuple<Segment, bool> t)

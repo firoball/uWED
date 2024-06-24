@@ -11,13 +11,13 @@ public class GridManipulator : MouseManipulator
     private float m_gridSpacing = 32f; //must match GridBackground --spacing:
     private Color m_lineColor;
     private Color m_thickLineColor;
-    private bool m_gridVisible = true;
     private bool m_gridEnabled = true;
 
     public float GridSpacing { get => m_gridSpacing; set => m_gridSpacing = value; }
 
-    const float c_minGridScale = 1f;
-    const float c_maxGridScale = 10f;
+    private const float c_minGridScale = 1f;
+    private const float c_maxGridScale = 10f;
+    private const float c_gridVisibilityThresholdPx = 5f;
 
     public GridManipulator(FlexibleGridBackground grid)
     {
@@ -27,6 +27,8 @@ public class GridManipulator : MouseManipulator
 
     private void OnCustomStyleResolved(CustomStyleResolvedEvent e)
     {
+        m_lineColor = m_grid.lineColor;
+        m_thickLineColor = m_grid.thickLineColor;
         //only load prefs once grid has loaded its stylesheet - otherwise it won't update correctly
         LoadPrefs();
         //pass defaults to all listeners
@@ -98,19 +100,14 @@ public class GridManipulator : MouseManipulator
 
     private void HideBackground()
     {
-        m_gridVisible = false;
-        m_lineColor = m_grid.lineColor;
-        m_thickLineColor = m_grid.thickLineColor;
         Color bg = m_grid.gridBackgroundColor;
-
         m_grid.lineColor = bg;
         m_grid.thickLineColor = bg;
-        m_grid.spacing = 10000f; //something big - renders faster
+        m_grid.spacing = 10000f; //something big - renders faster*/
     }
 
     private void ShowBackground()
     {
-        m_gridVisible = true;
         m_grid.lineColor = m_lineColor;
         m_grid.thickLineColor = m_thickLineColor;
         m_grid.spacing = m_gridSpacing;
@@ -124,20 +121,13 @@ public class GridManipulator : MouseManipulator
             Vector2 v1 = editorView.WorldtoScreenSpace(new Vector2(m_gridSpacing, 0));
             Vector2 v2 = editorView.WorldtoScreenSpace(new Vector2(0, 0));
 
-            if ((v1 - v2).x < 5f)
-            {
-                if (m_gridVisible)
-                    HideBackground();
-            }
+            if ((v1 - v2).x < c_gridVisibilityThresholdPx)
+                HideBackground();
             else
-            {
-                if (!m_gridVisible)
-                    ShowBackground();
-            }
+                ShowBackground();
         }
         else
         {
-            if (m_gridVisible)
                 HideBackground();
         }
     }
@@ -156,6 +146,5 @@ public class GridManipulator : MouseManipulator
         if (EditorPrefs.HasKey("uWED::GridManipulator::gridEnabled"))
             m_gridEnabled = EditorPrefs.GetBool("uWED::GridManipulator::gridEnabled");
     }
-
 
 }

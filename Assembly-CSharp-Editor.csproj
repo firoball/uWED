@@ -69,6 +69,7 @@
     <Compile Include="Assets\Editor\ui\MenuBinder.cs" />
     <Compile Include="Assets\Editor\map\MapAsset.cs" />
     <Compile Include="Assets\Editor\map\MapDataSet.cs" />
+    <Compile Include="Assets\Editor\map\MeshManager.cs" />
     <Compile Include="Assets\Editor\modes\RegionMode.cs" />
     <Compile Include="Assets\Editor\map\IMapWriter.cs" />
     <Compile Include="Assets\Editor\modes\SegmentMode.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Assets\Editor\map\Region.cs" />
     <Compile Include="Assets\Editor\drawers\RegionDrawer.cs" />
     <Compile Include="Assets\Editor\ui\UWed.cs" />
+    <Compile Include="Assets\Editor\map\Contour.cs" />
     <Compile Include="Assets\Editor\modes\ObjectMode.cs" />
     <Compile Include="Assets\Editor\utilities\ContourHelper.cs" />
     <Compile Include="Assets\Editor\ui\FileDialog.cs" />

@@ -94,4 +94,15 @@ public class Geom2D
         return isInside;
     }
 
+    public static float PolygonArea(List<Vector2> polygon) 
+    {
+        float area = 0;
+        int i, j, k;     // indices
+
+        for (i = 1, j = 2, k = 0; i <= polygon.Count; i++, j++, k++)
+        {
+            area += polygon[i % polygon.Count].x * (polygon[j % polygon.Count].y - polygon[k % polygon.Count].y);
+        }
+        return area / 2.0f;
+    }
 }
