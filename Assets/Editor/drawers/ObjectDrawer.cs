@@ -160,7 +160,7 @@ public class ObjectDrawer : BaseEditorDrawer
                     float angle = CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
                     Vector2 p1;
                     p1.x = length * Mathf.Cos(angle);
-                    p1.y = -(length * Mathf.Sin(angle)); //TODO -> Editorview
+                    p1.y = length * Mathf.Sin(angle);
                     Vector2 p2 = p1.normalized * c_bigObjectSize;
                     p1 += m_draggedObject.Vertex.ScreenPosition;
                     p2 += m_draggedObject.Vertex.ScreenPosition;
@@ -177,12 +177,12 @@ public class ObjectDrawer : BaseEditorDrawer
 
     }
 
-    private float CalcMouseAngle(Vector2 position)
+    private float CalcMouseAngle(Vector2 screenPosition)
     { 
         EditorView ev = parent as EditorView;
         if (ev != null)
         {
-            Vector2 v = ev.ScreenToWorldSpace(m_mousePos) - ev.ScreenToWorldSpace(position);
+            Vector2 v = m_mousePos - screenPosition;
             return ev.SnapAngle(Mathf.Atan2(v.y, v.x));
         }
         return 0.0f;

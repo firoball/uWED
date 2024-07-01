@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -55,6 +56,9 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
     private MeshManager m_waySegmentMgr;
     private MeshManager m_vertexMgr;
     private MeshManager m_segmentMgr;
+    private MeshManager m_objectMgr;
+ 
+    private Matrix4x4 m_screenMatrix;
 
     public CursorInfo CursorInfo => m_cursorInfo;
 
@@ -68,6 +72,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         m_waySegmentMgr = new MeshManager(MeshTopology.Lines);
         m_vertexMgr = new MeshManager(MeshTopology.Quads);
         m_segmentMgr = new MeshManager(MeshTopology.Lines);
+        m_objectMgr = new MeshManager(MeshTopology.Triangles);
 
         this.StretchToParentSize();
 
@@ -182,6 +187,9 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         EditorView editorView = parent as EditorView;
         if (editorView != null)
         {
+            //get updated matrix for mesh operations
+            m_screenMatrix = editorView.WorldToScreenMatrix();
+
             //calculate screen positions
             foreach (Vertex v in m_mapData.Vertices)
                 v.ScreenPosition = editorView.WorldtoScreenSpace(v.WorldPosition);
@@ -190,11 +198,8 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             foreach (MapObject o in m_mapData.Objects)
                 o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition);
 
-            //m_mapData.Vertices.ForEach(x => x.ScreenPosition = editorView.WorldtoScreenSpace(x.WorldPosition));
-            //m_mapData.Ways.ForEach(w => w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldtoScreenSpace(p.WorldPosition)));
-            //m_mapData.Objects.ForEach(o => o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition));
-
             DrawCenter();
+            string s = new string("");
             DrawWays();
             DrawLines();
             DrawVertices();
@@ -241,7 +246,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
 
     protected void DrawCircle(Vector2 point, Color color, int radius)
     {
-        int steps = 16;
+        int steps = 12;
         if (contentRect.Contains(point))
         {
             float degrees = 2 * Mathf.PI / steps;
@@ -277,7 +282,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             {
                 Vector2 p;
                 p.x = points[i].x * Mathf.Cos(angle) - points[i].y * Mathf.Sin(angle);
-                p.y = -(points[i].x * Mathf.Sin(angle) + points[i].y * Mathf.Cos(angle)); //TODO -> Editorview
+                p.y = points[i].x * Mathf.Sin(angle) + points[i].y * Mathf.Cos(angle); 
                 points[i] = point + p;
             }
 
@@ -333,29 +338,109 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             m_selectionEnd = m_mousePos;
     }
 
-    
     private void DrawObjects()
     {
+        if (m_mapData.Objects.Count == 0)
+            return;
+
+        EditorView ev = parent as EditorView;
+        float objectSize;
+        if (m_enableObjectDetails)
+            objectSize = ev.ScaleScreenToWorld(c_bigObjectSize);
+        else
+            objectSize = ev.ScaleScreenToWorld(c_smallObjectSize);
+        Vector2[] pCircle = GetDot(objectSize);
+        Vector2[] pArrow = GetArrow(objectSize);
+        int step1 = 16 * 3; //16 triangles per object
+        int step2 = 3 * 3; //3 triangles per arrow
+        int step = step1;
+        if (m_enableObjectDetails)
+            step += step2;
+        m_objectMgr.PrepareBuffers(m_mapData.Objects.Count * step);
+
+
         for (int i = 0; i < m_mapData.Objects.Count; i++)
         {
+            int idx = i * step;
             Color color = SetObjectColor(i);
-            float angle = SetObjectAngle(i);
+            Array.Fill(m_objectMgr.Colors, color, idx, step1);
+            for (int c = 0; c < pCircle.Length; c++)
+                m_objectMgr.Vertices[idx + c] = m_mapData.Objects[i].Vertex.WorldPosition + pCircle[c];
+
             if (m_enableObjectDetails)
             {
-                DrawCircle(m_mapData.Objects[i].Vertex.ScreenPosition, color, c_bigObjectSize);
-                DrawArrow(m_mapData.Objects[i].Vertex.ScreenPosition, c_objectBgColor, c_bigObjectSize, angle);
-            }
-            else
-            {
-                DrawCircle(m_mapData.Objects[i].Vertex.ScreenPosition, color, c_smallObjectSize);
+                int idxDir = idx + step1;
+                Array.Fill(m_objectMgr.Colors, c_objectBgColor, idxDir, step2);
+                float angle = SetObjectAngle(i);
+                RotateArrow(m_objectMgr.Vertices, idxDir, pArrow, m_mapData.Objects[i].Vertex.WorldPosition, angle);
             }
         }
+
+        m_objectMgr.DrawMesh(m_screenMatrix);
+    }
+
+    private Vector2[] GetArrow(float size)
+    {
+        int triangles = 3;
+        int step = 3;
+        int count = triangles * step;
+        Vector2[] points = new Vector2[count];
+
+        points[0] = new Vector3(-0.7f * size, -0.3f * size);
+        points[1] = new Vector3(-0.7f * size, 0.3f * size);
+        points[2] = new Vector3(0.1f * size, 0.3f * size);
+
+        points[3] = new Vector3(-0.7f * size, -0.3f * size);
+        points[4] = new Vector3(0.1f * size, -0.3f * size);
+        points[5] = new Vector3(0.1f * size, 0.3f * size);
+
+        points[6] = new Vector3(0.1f * size, -0.7f * size);
+        points[7] = new Vector3(0.1f * size, 0.7f * size);
+        points[8] = new Vector3(0.8f * size, 0);
+
+        return points;
+    }
+
+    private void RotateArrow(Vector3[] points, int startIndex, Vector2[] arrow, Vector3 position, float angle)
+    {
+        for (int i = 0; i < arrow.Length; i++)
+        {
+            points[startIndex + i].x = position.x + (arrow[i].x * Mathf.Cos(angle) - arrow[i].y * Mathf.Sin(angle));
+            points[startIndex + i].y = position.y - (arrow[i].x * Mathf.Sin(angle) + arrow[i].y * Mathf.Cos(angle));
+            points[startIndex + i].z = 0;
+        }
+    }
+
+
+    private Vector2[] GetDot(float radius)
+    {
+        int triangles = 12;
+        int step = 3;
+        int count = triangles * step;
+        Vector2[] points = new Vector2[count];
+        float degrees = 2 * Mathf.PI / triangles;
+        float x = radius; //cos(0)
+        float y = 0f; //sin(0)
+        for (int i = 0; i < triangles; i++)
+        {
+            points[i * step] = new Vector3(x, y);
+            x = radius * Mathf.Cos((i + 1) * degrees);
+            y = radius * Mathf.Sin((i + 1) * degrees);
+            points[i * step + 1] = new Vector3(x, y);
+            points[i * step + 2] = Vector3.zero;
+        }
+
+        return points;
     }
 
     private void DrawWays()
     {
         if (m_mapData.Ways.Count == 0)
             return;
+
+        EditorView ev = parent as EditorView;
+        float arrowLength = ev.ScaleScreenToWorld(c_arrowLength);
+        float vertexHalfSize = ev.ScaleScreenToWorld(1 + ((c_pointSize - 1) / 2));
 
         int bufferSize = 0;
         for (int i = 0; i < m_mapData.Ways.Count; i++)
@@ -374,36 +459,34 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             Way w = m_mapData.Ways[i];
             for (int p = 0; p < w.Positions.Count; p++)
             {
-                UpdateWaySegment(sumPos, w, p, step);
+                UpdateWaySegment(sumPos, w, p, step, arrowLength);
                 if (m_enableWaypoints)
-                    UpdateWayVertex(sumPos, w, p);
+                    UpdateWayVertex(sumPos, w, p, vertexHalfSize);
             }
             sumPos += w.Positions.Count;
         }
 
-        m_waySegmentMgr.DrawMesh();
+        m_waySegmentMgr.DrawMesh(m_screenMatrix);
         if (m_enableWaypoints)
-            m_wayVertexMgr.DrawMesh();
+            m_wayVertexMgr.DrawMesh(m_screenMatrix);
     }
 
-    private void UpdateWaySegment(int arrayPos, Way w, int p, int step)
+    private void UpdateWaySegment(int arrayPos, Way w, int p, int step, float arrowLength)
     {
         int idx = (arrayPos + p) * step;
         int np = (p + 1) % w.Positions.Count;
+        Color color = SetWaySegmentColor(w, p);
         //loops under construction must not be closed
         bool draw = (np != 0) || CloseWay(w);
 
-        Vector2 current = w.Positions[p].ScreenPosition;
-        Vector2 next = w.Positions[np].ScreenPosition;
+        Vector2 current = w.Positions[p].WorldPosition;
+        Vector2 next = w.Positions[np].WorldPosition;
         m_waySegmentMgr.Vertices[idx] = current;
         if (draw)
             m_waySegmentMgr.Vertices[idx + 1] = next;
         else
             m_waySegmentMgr.Vertices[idx + 1] = current; //don't draw - dummy vertex
-        m_waySegmentMgr.Indices[idx] = idx;
-        m_waySegmentMgr.Indices[idx + 1] = idx + 1;
-        m_waySegmentMgr.Colors[idx] = SetWaySegmentColor(w, p);
-        m_waySegmentMgr.Colors[idx + 1] = m_waySegmentMgr.Colors[idx];
+        Array.Fill(m_waySegmentMgr.Colors, color, idx, step);
 
         if (m_enableDirections)
         {
@@ -411,8 +494,8 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             {
                 Vector2 arrowStart = Geom2D.SplitSegment(current, next);
                 Vector2 direction = next - current;
-                Vector2 normalStart = arrowStart - direction.normalized * c_arrowLength;
-                Vector2 normalEnd = Geom2D.CalculateRightNormal(current, next, c_arrowLength);
+                Vector2 normalStart = arrowStart - direction.normalized * arrowLength;
+                Vector2 normalEnd = Geom2D.CalculateRightNormal(current, next, arrowLength);
                 m_waySegmentMgr.Vertices[idx + 2] = arrowStart;
                 m_waySegmentMgr.Vertices[idx + 3] = normalStart + normalEnd;
                 m_waySegmentMgr.Vertices[idx + 4] = arrowStart;
@@ -421,40 +504,21 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             else
             {
                 //don't draw - dummy vertices
-                m_waySegmentMgr.Vertices[idx + 2] = current;
-                m_waySegmentMgr.Vertices[idx + 3] = current;
-                m_waySegmentMgr.Vertices[idx + 4] = current;
-                m_waySegmentMgr.Vertices[idx + 5] = current;
+                Array.Fill(m_waySegmentMgr.Vertices, current, idx + 2, 4);
             }
-            m_waySegmentMgr.Indices[idx + 2] = idx + 2;
-            m_waySegmentMgr.Indices[idx + 3] = idx + 3;
-            m_waySegmentMgr.Indices[idx + 4] = idx + 4;
-            m_waySegmentMgr.Indices[idx + 5] = idx + 5;
-            m_waySegmentMgr.Colors[idx + 2] = m_waySegmentMgr.Colors[idx];
-            m_waySegmentMgr.Colors[idx + 3] = m_waySegmentMgr.Colors[idx];
-            m_waySegmentMgr.Colors[idx + 4] = m_waySegmentMgr.Colors[idx];
-            m_waySegmentMgr.Colors[idx + 5] = m_waySegmentMgr.Colors[idx];
         }
 
     }
 
-    private void UpdateWayVertex(int arrayPos, Way w, int p)
+    private void UpdateWayVertex(int arrayPos, Way w, int p, float halfSize)
     {
         int idx = (arrayPos + p) * 4;
-        int halfSize = 1 + ((c_pointSize - 1) / 2);
-        m_wayVertexMgr.Vertices[idx] = w.Positions[p].ScreenPosition + new Vector2(-halfSize, halfSize);
-        m_wayVertexMgr.Vertices[idx + 1] = w.Positions[p].ScreenPosition + new Vector2(halfSize, halfSize);
-        m_wayVertexMgr.Vertices[idx + 2] = w.Positions[p].ScreenPosition + new Vector2(halfSize, -halfSize);
-        m_wayVertexMgr.Vertices[idx + 3] = w.Positions[p].ScreenPosition + new Vector2(-halfSize, -halfSize);
-        m_wayVertexMgr.Indices[idx] = idx;
-        m_wayVertexMgr.Indices[idx + 1] = idx + 1;
-        m_wayVertexMgr.Indices[idx + 2] = idx + 2;
-        m_wayVertexMgr.Indices[idx + 3] = idx + 3;
-        m_wayVertexMgr.Colors[idx] = SetWaypointColor(w, p);
-        m_wayVertexMgr.Colors[idx + 1] = m_wayVertexMgr.Colors[idx];
-        m_wayVertexMgr.Colors[idx + 2] = m_wayVertexMgr.Colors[idx];
-        m_wayVertexMgr.Colors[idx + 3] = m_wayVertexMgr.Colors[idx];
-
+        Color color = SetWaypointColor(w, p);
+        m_wayVertexMgr.Vertices[idx] = w.Positions[p].WorldPosition + new Vector2(-halfSize, halfSize);
+        m_wayVertexMgr.Vertices[idx + 1] = w.Positions[p].WorldPosition + new Vector2(halfSize, halfSize);
+        m_wayVertexMgr.Vertices[idx + 2] = w.Positions[p].WorldPosition + new Vector2(halfSize, -halfSize);
+        m_wayVertexMgr.Vertices[idx + 3] = w.Positions[p].WorldPosition + new Vector2(-halfSize, -halfSize);
+        Array.Fill(m_wayVertexMgr.Colors, color, idx, 4);
     }
 
     private void DrawLines()
@@ -462,64 +526,67 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         if (m_mapData.Segments.Count == 0)
             return;
 
+        EditorView ev = parent as EditorView;
+        float normalLength = ev.ScaleScreenToWorld(c_normalLength);
+
         int step = 2;
         if (m_enableNormals)
             step = 4;
-
         m_segmentMgr.PrepareBuffers(m_mapData.Segments.Count * step);
 
+        Vector2 v1;
+        Vector2 v2;
+        Vector2 normalStart;
+        Vector2 normalEnd;
+        Color color;
+        int idx;
         for (int i = 0; i < m_mapData.Segments.Count; i++)
         {
-            int idx = i * step;
-            Vector2 v1 = m_mapData.Segments[i].Vertex1.ScreenPosition;
-            Vector2 v2 = m_mapData.Segments[i].Vertex2.ScreenPosition;
+            idx = i * step;
+            color = SetSegmentColor(i);
+            v1 = m_mapData.Segments[i].Vertex1.WorldPosition;
+            v2 = m_mapData.Segments[i].Vertex2.WorldPosition;
             m_segmentMgr.Vertices[idx] = v1;
             m_segmentMgr.Vertices[idx + 1] = v2;
-            m_segmentMgr.Indices[idx] = idx;
-            m_segmentMgr.Indices[idx + 1] = idx + 1;
-            m_segmentMgr.Colors[idx] = SetSegmentColor(i);
-            m_segmentMgr.Colors[idx + 1] = m_segmentMgr.Colors[idx];
+            Array.Fill(m_segmentMgr.Colors, color, idx, step);
             if (m_enableNormals)
             {
-                Vector2 normalStart = Geom2D.SplitSegment(v1, v2);
-                Vector2 normalEnd = Geom2D.CalculateRightNormal(v1, v2, c_normalLength) + normalStart;
+                normalStart = Geom2D.SplitSegment(v1, v2);
+                normalEnd = Geom2D.CalculateRightNormal(v1, v2, normalLength) + normalStart;
                 m_segmentMgr.Vertices[idx + 2] = normalStart;
                 m_segmentMgr.Vertices[idx + 3] = normalEnd;
-                m_segmentMgr.Indices[idx + 2] = idx + 2;
-                m_segmentMgr.Indices[idx + 3] = idx + 3;
-                m_segmentMgr.Colors[idx + 2] = m_segmentMgr.Colors[idx];
-                m_segmentMgr.Colors[idx + 3] = m_segmentMgr.Colors[idx];
             }
         }
-        m_segmentMgr.DrawMesh();
+        m_segmentMgr.DrawMesh(m_screenMatrix);
     }
 
     private void DrawVertices()
     {
         if (m_enableVertices)
         {
+            EditorView ev = parent as EditorView;
+            float halfSize = ev.ScaleScreenToWorld(1 + ((c_pointSize - 1) / 2));
+            Vector2 p0 = new Vector2(-halfSize, halfSize);
+            Vector2 p1 = new Vector2(halfSize, halfSize);
+            Vector2 p2 = new Vector2(halfSize, -halfSize);
+            Vector2 p3 = new Vector2(-halfSize, -halfSize);
+
             int step = 4;
+            Color color;
+            int idx;
             m_vertexMgr.PrepareBuffers(m_mapData.Vertices.Count * step);
             for (int i = 0; i < m_mapData.Vertices.Count; i++)
             {
-                int idx = i * step;
-                int halfSize = 1 + ((c_pointSize - 1) / 2);
-                m_vertexMgr.Vertices[idx] = m_mapData.Vertices[i].ScreenPosition + new Vector2(-halfSize, halfSize);
-                m_vertexMgr.Vertices[idx + 1] = m_mapData.Vertices[i].ScreenPosition + new Vector2(halfSize, halfSize);
-                m_vertexMgr.Vertices[idx + 2] = m_mapData.Vertices[i].ScreenPosition + new Vector2(halfSize, -halfSize);
-                m_vertexMgr.Vertices[idx + 3] = m_mapData.Vertices[i].ScreenPosition + new Vector2(-halfSize, -halfSize);
-                m_vertexMgr.Indices[idx] = idx;
-                m_vertexMgr.Indices[idx + 1] = idx + 1;
-                m_vertexMgr.Indices[idx + 2] = idx + 2;
-                m_vertexMgr.Indices[idx + 3] = idx + 3;
-                m_vertexMgr.Colors[idx] = SetVertexColor(i);
-                m_vertexMgr.Colors[idx + 1] = m_vertexMgr.Colors[idx];
-                m_vertexMgr.Colors[idx + 2] = m_vertexMgr.Colors[idx];
-                m_vertexMgr.Colors[idx + 3] = m_vertexMgr.Colors[idx];
+                idx = i * step;
+                color = SetVertexColor(i);
+                m_vertexMgr.Vertices[idx] = m_mapData.Vertices[i].WorldPosition + p0;
+                m_vertexMgr.Vertices[idx + 1] = m_mapData.Vertices[i].WorldPosition + p1;
+                m_vertexMgr.Vertices[idx + 2] = m_mapData.Vertices[i].WorldPosition + p2;
+                m_vertexMgr.Vertices[idx + 3] = m_mapData.Vertices[i].WorldPosition + p3;
+                Array.Fill(m_vertexMgr.Colors, color, idx, step);
             }
-            m_vertexMgr.DrawMesh();
+            m_vertexMgr.DrawMesh(m_screenMatrix);
         }
     }
-
 
 }

@@ -58,6 +58,26 @@ public class EditorView : GraphView
         Debug.Log("GenerateVisualContent");
     }*/
 
+    public Matrix4x4 WorldToScreenMatrix()
+    {
+        //layout offset - this is already in screen coordinates
+        Vector3 layoutTranslate = new Vector3(contentViewContainer.layout.position.x, contentViewContainer.layout.position.y);
+        //TRS of content container
+        Vector3 translate = contentViewContainer.transform.position;
+        Quaternion rotate = contentViewContainer.transform.rotation;
+        Vector3 scale = contentViewContainer.transform.scale;
+        //invert y if configured
+        if (c_invertYPosition)
+        {
+            layoutTranslate.y *= -1;
+            scale.y *= -1;
+        }
+        //configured pixel resolution
+        Vector3 pixelScale = new Vector3(c_pixelsPerUnit, c_pixelsPerUnit);
+        //build actual world to screen matrix
+        return Matrix4x4.TRS(translate, rotate, scale) * Matrix4x4.Translate(layoutTranslate) * Matrix4x4.Scale(pixelScale);
+    }
+
     public Vector2 WorldtoScreenSpace(Vector2 pos)
     {
         var position = pos * c_pixelsPerUnit - contentViewContainer.layout.position;
@@ -70,6 +90,12 @@ public class EditorView : GraphView
         Vector2 position = contentViewContainer.transform.matrix.inverse.MultiplyPoint3x4(pos);
         if (c_invertYPosition) position.y = -position.y;
         return (position + contentViewContainer.layout.position) / c_pixelsPerUnit;
+    }
+
+    public float ScaleScreenToWorld(float length)
+    {
+        //Debug.Log(length + " " + contentViewContainer.transform.scale.x + " " + length / contentViewContainer.transform.scale.x);
+        return length / contentViewContainer.transform.scale.x / c_pixelsPerUnit;
     }
 
     public Vector2 SnapWorldPos(Vector2 pos)

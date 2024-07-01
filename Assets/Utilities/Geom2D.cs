@@ -24,7 +24,7 @@ public class Geom2D
 
     public static Vector2 CalculateRightNormal(Vector2 p1, Vector2 p2, float length)
     {
-        Vector2 normal = new Vector2(-(p2.y - p1.y), p2.x - p1.x);
+        Vector2 normal = new Vector2(p2.y - p1.y, -(p2.x - p1.x));
         normal.Normalize();
         normal *= length;
         return normal;

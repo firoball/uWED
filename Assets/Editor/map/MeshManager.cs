@@ -29,15 +29,25 @@ public class MeshManager
             m_indices = new int[count];
             m_colors = new Color[count];
             m_count = count;
+            //index buffer is always the same: 0..count-1
+            for (int i = 0; i < count; i++)
+                m_indices[i] = i;
+
+            m_mesh.Clear(); //buffer size changed - mesh needs to be rebuilt
+            m_mesh.vertices = m_vertices;
+            m_mesh.SetIndices(m_indices, m_topology, 0);
         }
     }
 
     public void DrawMesh()
     {
-        m_mesh.Clear();
+        DrawMesh(Matrix4x4.identity);
+    }
+
+    public void DrawMesh(Matrix4x4 matrix)
+    {
         m_mesh.vertices = m_vertices;
         m_mesh.colors = m_colors;
-        m_mesh.SetIndices(m_indices, m_topology, 0);
-        Graphics.DrawMeshNow(m_mesh, Matrix4x4.identity);
+        Graphics.DrawMeshNow(m_mesh, matrix);
     }
 }

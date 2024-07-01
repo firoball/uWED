@@ -68,10 +68,10 @@ public class MapWmpLoader : IMapLoader
             {
                 objects.Add(
                     new MapObject(
-                        new Vector2(map.PlayerStarts[cntP].X, map.PlayerStarts[cntP].Y)* m_scale
+                        new Vector2(map.PlayerStarts[cntP].X, map.PlayerStarts[cntP].Y) * m_scale
                         )
                     {
-                        Angle = map.PlayerStarts[cntP].Angle * Mathf.PI / 180f
+                        Angle = (map.PlayerStarts[cntP].Angle - 90f) * Mathf.PI / 180f
                     }
                     );
                 cntP++;
@@ -83,7 +83,7 @@ public class MapWmpLoader : IMapLoader
                         new Vector2(map.Things[cntT].X, map.Things[cntT].Y) * m_scale
                         )
                     {
-                        Angle = map.Things[cntT].Angle * Mathf.PI / 180f
+                        Angle = (map.Things[cntT].Angle - 90f) * Mathf.PI / 180f
                     }
                     );
                 cntT++;
@@ -95,7 +95,7 @@ public class MapWmpLoader : IMapLoader
                         new Vector2(map.Actors[cntA].X, map.Actors[cntA].Y) * m_scale
                         )
                     {
-                        Angle = map.Actors[cntA].Angle * Mathf.PI / 180f
+                        Angle = (map.Actors[cntA].Angle - 90f) * Mathf.PI / 180f
                     }
                     );
                 cntA++;
