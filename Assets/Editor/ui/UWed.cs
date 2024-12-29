@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -50,6 +51,11 @@ public class UWed : EditorWindow
 
         MenuBinder binder = new MenuBinder(m_editorView, menu, this);
         AssemblyReloadEvents.beforeAssemblyReload += m_editorView.SavePrefs;
+    }
+
+    public void OnEnable()
+    {
+        this.SetAntiAliasing(4);
     }
 
     public void OnDestroy()

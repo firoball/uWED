@@ -1,9 +1,8 @@
 ﻿using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class EditorView : GraphView
+public class EditorView : GridView
 {
     const float c_pixelsPerUnit = 1f;
     const bool c_invertYPosition = true;
@@ -19,7 +18,7 @@ public class EditorView : GraphView
     public EditorView()
     {
         m_enableSnapping = true;
-        FlexibleGridBackground grid = new FlexibleGridBackground();
+        GridBackground grid = new GridBackground();
         m_gridManipulator = new GridManipulator(grid);
         m_editorManipulator = new EditorManipulator();
         m_interface = new EditorInterface(this, m_gridManipulator, m_editorManipulator);
@@ -49,10 +48,6 @@ public class EditorView : GraphView
         });
     }
 
-    public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
-    {
-        evt.menu.ClearItems(); //context menu SHUT UP!
-    }
     /*void GenerateVisualContent(MeshGenerationContext m) //TODO: use this hook for drawing textured regions
     {
         Debug.Log("GenerateVisualContent");

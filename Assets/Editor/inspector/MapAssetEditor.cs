@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEngine.UIElements;
 
 [CustomEditor(typeof(MapAsset))]
 public class MapAssetEditor : Editor
@@ -22,6 +23,20 @@ public class MapAssetEditor : Editor
         GUILayout.EndHorizontal();
         base.OnInspectorGUI();
 
+    }
+
+    public override VisualElement CreateInspectorGUI()
+    {
+        MapAsset map = (MapAsset)target;
+        VisualElement myInspector = new VisualElement();
+        Button clear = new Button();
+        clear.text = "Clear";
+        clear.RegisterCallback<ClickEvent>((ClickEvent evt) => { map.Data.Clear(); });
+        myInspector.Add(clear);
+        myInspector.Add(new Label("This is a custom Inspector"));
+        //myInspector.Add(base.CreateInspectorGUI());
+        //return myInspector;
+        return myInspector;
     }
 
     [OnOpenAsset]

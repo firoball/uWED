@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\modes\WayMode.cs" />
+    <Compile Include="Assets\Editor\ui\GridView.cs" />
     <Compile Include="Assets\Editor\misc\CursorInfo.cs" />
     <Compile Include="Assets\Editor\map\MapAssetLoader.cs" />
     <Compile Include="Assets\Editor\drawers\SegmentDrawer.cs" />
@@ -73,8 +74,10 @@
     <Compile Include="Assets\Editor\modes\RegionMode.cs" />
     <Compile Include="Assets\Editor\map\IMapWriter.cs" />
     <Compile Include="Assets\Editor\modes\SegmentMode.cs" />
+    <Compile Include="Assets\Editor\ui\GridBackground.cs" />
     <Compile Include="Assets\Editor\map\Vertex.cs" />
     <Compile Include="Assets\Editor\drawers\BaseEditorDrawer.cs" />
+    <Compile Include="Assets\Editor\ui\ContentZoomer.cs" />
     <Compile Include="Assets\Editor\ui\EditorView.cs" />
     <Compile Include="Assets\Editor\map\MapWmpLoader.cs" />
     <Compile Include="Assets\Editor\drawers\WayDrawer.cs" />
@@ -82,10 +85,10 @@
     <Compile Include="Assets\Editor\ui\GridManipulator.cs" />
     <Compile Include="Assets\Editor\drawers\ObjectDrawer.cs" />
     <Compile Include="Assets\Editor\misc\EditorStatus.cs" />
-    <Compile Include="Assets\Editor\ui\FlexibleGridBackground.cs" />
     <Compile Include="Assets\Editor\modes\BaseEditorMode.cs" />
     <Compile Include="Assets\Editor\map\Way.cs" />
     <Compile Include="Assets\Editor\map\MapObject.cs" />
+    <Compile Include="Assets\Editor\ui\ContentDragger.cs" />
     <Compile Include="Assets\Editor\ui\EditorManipulator.cs" />
     <Compile Include="Assets\Editor\inspector\MapAssetEditor.cs" />
     <Compile Include="Assets\Editor\map\Region.cs" />

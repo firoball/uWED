@@ -54,16 +54,16 @@ public class RegionDrawer : BaseEditorDrawer
     protected override Color SetSegmentColor(int i)
     {
         Color color;
-        if ((m_cursorInfo.HoverRegion != null) &&
+        /*if ((m_cursorInfo.HoverRegion != null) &&
             (m_mapData.Segments[i].Left == m_cursorInfo.HoverRegion || m_mapData.Segments[i].Right == m_cursorInfo.HoverRegion)
             )//existing region
-            color = c_hoverColor;
+            color = c_hoverColor;*/
         /*else if (m_nearest != null && m_nearest.Item1 == m_mapData.Segments[i] && m_nearest.Item2) //TODO: temp - for testing only
             color = Color.white;
         else if (m_nearest != null && m_nearest.Item1 == m_mapData.Segments[i] && !m_nearest.Item2) //TODO: temp - for testing only
             color = Color.blue;
         */
-        else if (m_cursorInfo.SelectedRegions.Contains(m_mapData.Segments[i].Left) || m_cursorInfo.SelectedRegions.Contains(m_mapData.Segments[i].Right))
+        /*else*/ if (m_cursorInfo.SelectedRegions.Contains(m_mapData.Segments[i].Left) || m_cursorInfo.SelectedRegions.Contains(m_mapData.Segments[i].Right))
             color = c_selectColor;
         else if (m_cursorInfo.HoverContour != null && //segment is part of contour
                 (m_cursorInfo.HoverContour.Is(m_mapData.Segments[i].CLeft) || m_cursorInfo.HoverContour.Is(m_mapData.Segments[i].CRight)) 
@@ -171,5 +171,4 @@ public class RegionDrawer : BaseEditorDrawer
                 m_mapData.Contours.Add(c);
         }
     }
-
 }

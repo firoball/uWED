@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class GridManipulator : MouseManipulator
 {
-    FlexibleGridBackground m_grid;
+    GridBackground m_grid;
     private float m_gridScale = 5f; //2^m_gridScale must be m_gridSpacing
     private float m_gridSpacing = 32f; //must match GridBackground --spacing:
     private Color m_lineColor;
@@ -19,7 +19,7 @@ public class GridManipulator : MouseManipulator
     private const float c_maxGridScale = 10f;
     private const float c_gridVisibilityThresholdPx = 5f;
 
-    public GridManipulator(FlexibleGridBackground grid)
+    public GridManipulator(GridBackground grid)
     {
         m_grid = grid;
         m_grid.RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
@@ -27,8 +27,8 @@ public class GridManipulator : MouseManipulator
 
     private void OnCustomStyleResolved(CustomStyleResolvedEvent e)
     {
-        m_lineColor = m_grid.lineColor;
-        m_thickLineColor = m_grid.thickLineColor;
+        m_lineColor = m_grid.LineColor;
+        m_thickLineColor = m_grid.ThickLineColor;
         //only load prefs once grid has loaded its stylesheet - otherwise it won't update correctly
         LoadPrefs();
         //pass defaults to all listeners
@@ -93,24 +93,24 @@ public class GridManipulator : MouseManipulator
             ev?.Interface.NotifyScaleGridListeners(m_gridScale);
         }
         float spacing = (1 << (int)m_gridScale);
-        m_grid.spacing = spacing;
+        m_grid.Spacing = spacing;
         m_gridSpacing = spacing;
         UpdateBackground();
     }
 
     private void HideBackground()
     {
-        Color bg = m_grid.gridBackgroundColor;
-        m_grid.lineColor = bg;
-        m_grid.thickLineColor = bg;
-        m_grid.spacing = 10000f; //something big - renders faster*/
+        Color bg = m_grid.GridBackgroundColor;
+        m_grid.LineColor = bg;
+        m_grid.ThickLineColor = bg;
+        m_grid.Spacing = 10000f; //something big - renders faster*/
     }
 
     private void ShowBackground()
     {
-        m_grid.lineColor = m_lineColor;
-        m_grid.thickLineColor = m_thickLineColor;
-        m_grid.spacing = m_gridSpacing;
+        m_grid.LineColor = m_lineColor;
+        m_grid.ThickLineColor = m_thickLineColor;
+        m_grid.Spacing = m_gridSpacing;
     }
 
     private void UpdateBackground()
