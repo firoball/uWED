@@ -1,3 +1,6 @@
 [submodule "Assets/ext/WMPio"]
 	path = Assets/ext/WMPio
 	url = git@github.com:firoball/WMPio.git
+[submodule "Assets/ext/WDL2CS"]
+	path = Assets/ext/WDL2CS
+	url = git@github.com:firoball/WDL2CS.git

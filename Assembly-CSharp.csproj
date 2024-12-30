@@ -60,23 +60,54 @@
     <Analyzer Include="D:\Apps\2022.3.22f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ext\WDL2CS\code\Static\NodeFormatter.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Util\Node.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Util\Registry.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Nodes\Instruction.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\PropertyList.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Program.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\Assets.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\Formatter.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Actor.cs" />
     <Compile Include="Assets\Utilities\Geom2D.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Wall.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Point.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\WMPObject.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\Objects.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Nodes\Object.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Vertex.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\Sections.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Region.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\Script.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Parser.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\Identifier.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\Actions.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Util\ISection.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Nodes\Action.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Static\Globals.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Thing.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Util\Identifier.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Nodes\Asset.cs" />
     <Compile Include="Assets\MapTest.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Nodes\Global.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Way.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Formatter.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Util\ObjectData.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\Map.cs" />
     <Compile Include="Assets\ext\WMPio\code\src\PlayerStart.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Util\Preprocessor.cs" />
+    <Compile Include="Assets\ext\WDL2CS\code\Nodes\Property.cs" />
     <Compile Include="Assets\ext\WMPio\code\sample\Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ext\WMPio\license.txt" />
+    <None Include="Assets\ext\WDL2CS\meta\manual\neu39.txt" />
+    <None Include="Assets\ext\WDL2CS\kfg\parser.txt" />
+    <None Include="Assets\ext\WDL2CS\meta\manual\new39.txt" />
+    <None Include="Assets\ext\WDL2CS\license.txt" />
+    <None Include="Assets\ext\WDL2CS\vcc\parser_vcc.xml" />
+    <None Include="Assets\ext\WDL2CS\meta\regex_helpers\regex_npp_macro.xml" />
+    <None Include="Assets\ext\WDL2CS\vcc\regex.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
