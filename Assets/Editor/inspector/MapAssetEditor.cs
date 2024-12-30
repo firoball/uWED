@@ -1,42 +1,38 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 [CustomEditor(typeof(MapAsset))]
 public class MapAssetEditor : Editor
 {
-    public override void OnInspectorGUI()
-    {
-        MapAsset map = (MapAsset)target;
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Clear", GUILayout.Height(26)))
-        {
-            map.Data.Clear();
-        }
-        /*if (GUILayout.Button("Edit", GUILayout.Height(26)))
-        {
-            uWED.OpenWindow();
-        }*/
-        GUILayout.EndHorizontal();
-        base.OnInspectorGUI();
-
-    }
+    private MapAssetViewer m_viewer;
+    private MapAssetStatistics m_stats;
 
     public override VisualElement CreateInspectorGUI()
     {
-        MapAsset map = (MapAsset)target;
-        VisualElement myInspector = new VisualElement();
-        Button clear = new Button();
-        clear.text = "Clear";
-        clear.RegisterCallback<ClickEvent>((ClickEvent evt) => { map.Data.Clear(); });
-        myInspector.Add(clear);
-        myInspector.Add(new Label("This is a custom Inspector"));
-        //myInspector.Add(base.CreateInspectorGUI());
-        //return myInspector;
-        return myInspector;
+        MapAsset mapAsset = (MapAsset)target;
+        VisualElement inspector = new VisualElement();
+        
+        SerializedProperty properties = serializedObject.FindProperty("m_data");
+        BindingExtensions.TrackPropertyValue(inspector, properties, OnPropertyChanged);
+        
+        Label info = new Label("Info: Active inspector may cause performance issues");
+        inspector.Add(info);
+
+        m_viewer = new MapAssetViewer(mapAsset);
+        inspector.Add(m_viewer.Foldout); //wrap preview map in its foldout
+        
+        m_stats = new MapAssetStatistics(mapAsset);
+        inspector.Add(m_stats);
+        
+        MapAssetCleaner cleaner = new MapAssetCleaner(mapAsset);
+        inspector.Add(cleaner);
+
+        inspector.RegisterCallback<GeometryChangedEvent>(OnWindowSizeChanged);
+
+        return inspector;
     }
 
     [OnOpenAsset]
@@ -58,4 +54,18 @@ public class MapAssetEditor : Editor
             return false;
         }
     }
+
+    private void OnWindowSizeChanged(GeometryChangedEvent evt)
+    {
+        m_viewer?.UpdateRect();
+    }
+
+    private void OnPropertyChanged(SerializedProperty property)
+    {
+        m_viewer?.UpdateMap();
+        m_stats?.Update();
+    }
+
 }
+
+
