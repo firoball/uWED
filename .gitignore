@@ -371,5 +371,5 @@ Assembly-CSharp-Editor.csproj
 
 
 # Rider
-.idea
+.idea/
 
