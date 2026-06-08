@@ -137,8 +137,10 @@ public class ContentZoomer : Manipulator
         if (panel.GetCapturingElement(PointerId.mousePointerId) != null)
             return;
 
+#pragma warning disable CS0618 // Type or member is obsolete
         Vector3 position = gridView.viewTransform.position;
         Vector3 scale = gridView.viewTransform.scale;
+#pragma warning restore CS0618 // Type or member is obsolete
 
         Vector2 zoomCenter = gridView.viewTransform.matrix.inverse.MultiplyPoint3x4(evt.localMousePosition);
         float x = zoomCenter.x + gridView.contentViewContainer.layout.x;

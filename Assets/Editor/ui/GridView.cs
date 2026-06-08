@@ -34,7 +34,9 @@ public abstract class GridView : VisualElement
 
     public ITransform viewTransform
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         get { return contentViewContainer.transform; }
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     protected GridView()
@@ -95,7 +97,9 @@ public abstract class GridView : VisualElement
 
     public float scale
     {
+#pragma warning disable CS0618 // Type or member is obsolete
         get { return viewTransform.scale.x; }
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     public void SetupZoom(float minScaleSetup, float maxScaleSetup)
@@ -123,8 +127,10 @@ public abstract class GridView : VisualElement
         newPosition.x = RoundToPixelGrid(newPosition.x);
         newPosition.y = RoundToPixelGrid(newPosition.y);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         contentViewContainer.transform.position = newPosition;
         contentViewContainer.transform.scale = newScale;
+#pragma warning restore CS0618 // Type or member is obsolete
 
         if (viewTransformChanged != null)
             viewTransformChanged(this);
@@ -169,12 +175,16 @@ public abstract class GridView : VisualElement
     {
         if (contentViewContainer == null)
             return;
+#pragma warning disable CS0618 // Type or member is obsolete
         Vector3 transformScale = viewTransform.scale;
+#pragma warning restore CS0618 // Type or member is obsolete
 
         transformScale.x = Mathf.Clamp(transformScale.x, minScale, maxScale);
         transformScale.y = Mathf.Clamp(transformScale.y, minScale, maxScale);
 
+#pragma warning disable CS0618 // Type or member is obsolete
         viewTransform.scale = transformScale;
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
 }

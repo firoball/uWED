@@ -16,7 +16,7 @@ public class MapAssetEditor : Editor
         VisualElement inspector = new VisualElement();
         
         SerializedProperty properties = serializedObject.FindProperty("m_data");
-        BindingExtensions.TrackPropertyValue(inspector, properties, OnPropertyChanged);
+        inspector.TrackPropertyValue(properties, OnPropertyChanged);
         
         Label info = new Label("Info: Active inspector may cause performance issues");
         inspector.Add(info);
@@ -36,13 +36,13 @@ public class MapAssetEditor : Editor
     }
 
     [OnOpenAsset]
-    public static bool OnOpenAsset(int instanceID, int line)
+    public static bool OnOpenAsset(EntityId entityId, int line)
     {
-        Object target = EditorUtility.InstanceIDToObject(instanceID);
+        Object target = EditorUtility.EntityIdToObject(entityId);
 
         if (target is MapAsset)
         {
-            var map = AssetDatabase.GetAssetPath(instanceID);
+            var map = AssetDatabase.GetAssetPath(entityId);
 
             Selection.activeObject = target;
             UWed.OpenWindow();

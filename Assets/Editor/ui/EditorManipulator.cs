@@ -70,7 +70,9 @@ public class EditorManipulator : MouseManipulator
     private void OnMouseMove(MouseMoveEvent evt)
     {
         var t = target as EditorView;
-        m_mouseLabel.transform.position = evt.localMousePosition + Vector2.up * 20;
+#pragma warning disable CS0618 // Type or member is obsolete
+        m_mouseLabel.transform.position = new Vector2(evt.localMousePosition.x, evt.localMousePosition.y - t.layout.height) + Vector2.up * 30;
+#pragma warning restore CS0618 // Type or member is obsolete
         m_mouseLabel.text = t.ScreenToWorldSpace(evt.localMousePosition).ToString() + " " + m_constructMode;
         //m_mouseLabel.text = t.ScreenToWorldSpace(evt.localMousePosition).ToString();
 

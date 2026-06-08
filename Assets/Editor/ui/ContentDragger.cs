@@ -85,8 +85,10 @@ public class ContentDragger : MouseManipulator
         Vector2 diff = gridView.ChangeCoordinatesTo(gridView.contentViewContainer, e.localMousePosition) - m_Start;
 
         // During the drag update only the view
+#pragma warning disable CS0618 // Type or member is obsolete
         Vector3 s = gridView.contentViewContainer.transform.scale;
         gridView.viewTransform.position += Vector3.Scale(diff, s);
+#pragma warning restore CS0618 // Type or member is obsolete
 
         e.StopPropagation();
     }
@@ -100,8 +102,10 @@ public class ContentDragger : MouseManipulator
         if (gridView == null)
             return;
 
+#pragma warning disable CS0618 // Type or member is obsolete
         Vector3 p = gridView.contentViewContainer.transform.position;
         Vector3 s = gridView.contentViewContainer.transform.scale;
+#pragma warning restore CS0618 // Type or member is obsolete
 
         gridView.UpdateViewTransform(p, s);
 
