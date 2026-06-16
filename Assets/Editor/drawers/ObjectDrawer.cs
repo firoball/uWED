@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectDrawer : BaseEditorDrawer
@@ -80,10 +79,7 @@ public class ObjectDrawer : BaseEditorDrawer
         Color color;
         if (m_dragging && m_mapData.Objects[i] == m_draggedObject)
         {
-            if (m_rotating)
-                color = c_hoverColor;
-            else
-                color = c_objectDragColor;
+            color = m_rotating ? c_hoverColor : c_objectDragColor;
         }
         else if (!m_dragging && m_mapData.Objects[i] == m_cursorInfo.HoverObject)
             color = c_hoverColor;
@@ -160,11 +156,12 @@ public class ObjectDrawer : BaseEditorDrawer
                     float angle = CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
                     Vector2 p1;
                     p1.x = length * Mathf.Cos(angle);
-                    p1.y = length * Mathf.Sin(angle);
+                    p1.y = length * -Mathf.Sin(angle);
                     Vector2 p2 = p1.normalized * c_bigObjectSize;
+                    p1 = ev.TransformScreenPos(p1);
+                    p2 = ev.TransformScreenPos(p2);
                     p1 += m_draggedObject.Vertex.ScreenPosition;
                     p2 += m_draggedObject.Vertex.ScreenPosition;
-
                     DrawLine(p2, p1, c_validColor);
                 }
             }
@@ -182,8 +179,8 @@ public class ObjectDrawer : BaseEditorDrawer
         EditorView ev = parent as EditorView;
         if (ev != null)
         {
-            Vector2 v = m_mousePos - screenPosition;
-            return ev.SnapAngle(Mathf.Atan2(v.y, v.x));
+            Vector2 v = ev.TransformScreenPos(m_mousePos - screenPosition);
+            return ev.SnapAngle(Mathf.Atan2(-v.y, v.x));
         }
         return 0.0f;
     }

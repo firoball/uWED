@@ -199,7 +199,6 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
                 o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition);
 
             DrawCenter();
-            string s = new string("");
             DrawWays();
             DrawLines();
             DrawVertices();
@@ -344,6 +343,9 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             return;
 
         EditorView ev = parent as EditorView;
+        if (ev == null)
+            return;
+        
         float objectSize;
         if (m_enableObjectDetails)
             objectSize = ev.ScaleScreenToWorld(c_bigObjectSize);
@@ -439,6 +441,9 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             return;
 
         EditorView ev = parent as EditorView;
+        if (ev == null)
+            return;
+
         float arrowLength = ev.ScaleScreenToWorld(c_arrowLength);
         float vertexHalfSize = ev.ScaleScreenToWorld(1 + ((c_pointSize - 1) / 2));
 
@@ -527,6 +532,9 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             return;
 
         EditorView ev = parent as EditorView;
+        if (ev == null)
+            return;
+        
         float normalLength = ev.ScaleScreenToWorld(c_normalLength);
 
         int step = 2;
@@ -565,6 +573,9 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         if (m_enableVertices)
         {
             EditorView ev = parent as EditorView;
+            if (ev == null)
+                return;
+        
             float halfSize = ev.ScaleScreenToWorld(1 + ((c_pointSize - 1) / 2));
             Vector2 p0 = new Vector2(-halfSize, halfSize);
             Vector2 p1 = new Vector2(halfSize, halfSize);

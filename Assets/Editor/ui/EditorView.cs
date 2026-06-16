@@ -26,7 +26,7 @@ public class EditorView : GridView
         this.StretchToParentSize();
         this.AddManipulator(m_gridManipulator); //must be added before Zoomer setup
         SetupZoom(ContentZoomer.DefaultMinScale * 0.1f, ContentZoomer.DefaultMaxScale * 4.0f);
-        m_gridManipulator.RegisterCallbacksLate();//must be registered after Zoomer setup
+        m_gridManipulator.RegisterCallbacksLate(); //must be registered after Zoomer setup
         Add(grid);
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(m_editorManipulator);
@@ -42,9 +42,7 @@ public class EditorView : GridView
         //TODO: only perform schedule.Execute when prefs were not found/loaded (e.g. new map)
         schedule.Execute(() =>
         {
-#pragma warning disable CS0618 // Type or member is obsolete
-            contentViewContainer.transform.position = parent.worldBound.size / 2f;
-#pragma warning restore CS0618 // Type or member is obsolete
+            contentViewContainer.style.translate = parent.worldBound.size / 2f;
             //TODO: don't load transform prefs when map is new or has changed
             LoadPrefs();
         });
@@ -58,49 +56,41 @@ public class EditorView : GridView
     public Matrix4x4 WorldToScreenMatrix()
     {
         //layout offset - this is already in screen coordinates
-        Vector3 layoutTranslate = new Vector3(contentViewContainer.layout.position.x, contentViewContainer.layout.position.y);
-        //TRS of content container
-#pragma warning disable CS0618 // Type or member is obsolete
-        Vector3 translate = contentViewContainer.transform.position;
-        Quaternion rotate = contentViewContainer.transform.rotation;
-        Vector3 scale = contentViewContainer.transform.scale;
-#pragma warning restore CS0618 // Type or member is obsolete
+        Vector3 layoutTranslate =
+            new Vector3(contentViewContainer.layout.position.x, contentViewContainer.layout.position.y);
         //invert y if configured
+        Vector3 s = new Vector3(1, 1, 1);
         if (c_invertYPosition)
-        {
-            layoutTranslate.y *= -1;
-            scale.y *= -1;
-        }
+            s.y = -s.y;
         //configured pixel resolution
         Vector3 pixelScale = new Vector3(c_pixelsPerUnit, c_pixelsPerUnit);
         //build actual world to screen matrix
-        return Matrix4x4.TRS(translate, rotate, scale) * Matrix4x4.Translate(layoutTranslate) * Matrix4x4.Scale(pixelScale);
+        return GetViewContainerMatrix() * Matrix4x4.Translate(layoutTranslate) * Matrix4x4.Scale(s) *
+               Matrix4x4.Scale(pixelScale);
     }
 
     public Vector2 WorldtoScreenSpace(Vector2 pos)
     {
-        var position = pos * c_pixelsPerUnit - contentViewContainer.layout.position;
-        if (c_invertYPosition) position.y = -position.y;
-#pragma warning disable CS0618 // Type or member is obsolete
-        return contentViewContainer.transform.matrix.MultiplyPoint3x4(position);
-#pragma warning restore CS0618 // Type or member is obsolete
+        var position = TransformScreenPos(pos * c_pixelsPerUnit - contentViewContainer.layout.position);
+        return GetViewContainerMatrix().MultiplyPoint3x4(position);
+    }
+
+    public Vector2 TransformScreenPos(Vector2 pos)
+    {
+        if (c_invertYPosition)
+            pos.y = -pos.y;
+        return pos;
     }
 
     public Vector2 ScreenToWorldSpace(Vector2 pos)
     {
-#pragma warning disable CS0618 // Type or member is obsolete
-        Vector2 position = contentViewContainer.transform.matrix.inverse.MultiplyPoint3x4(pos);
-#pragma warning restore CS0618 // Type or member is obsolete
-        if (c_invertYPosition) position.y = -position.y;
+        Vector2 position = TransformScreenPos(GetViewContainerMatrix().inverse.MultiplyPoint3x4(pos));
         return (position + contentViewContainer.layout.position) / c_pixelsPerUnit;
     }
 
     public float ScaleScreenToWorld(float length)
     {
-        //Debug.Log(length + " " + contentViewContainer.transform.scale.x + " " + length / contentViewContainer.transform.scale.x);
-#pragma warning disable CS0618 // Type or member is obsolete
-        return length / contentViewContainer.transform.scale.x / c_pixelsPerUnit;
-#pragma warning restore CS0618 // Type or member is obsolete
+        return length / contentViewContainer.resolvedStyle.scale.value.x / c_pixelsPerUnit;
     }
 
     public Vector2 SnapWorldPos(Vector2 pos)
@@ -171,12 +161,10 @@ public class EditorView : GridView
         m_editorManipulator?.SavePrefs();
         EditorPrefs.SetBool("uWED::EditorView::enableSnapping", m_enableSnapping);
         EditorPrefs.SetFloat("uWED::EditorView::lockAngle", m_lockAngle);
-#pragma warning disable CS0618 // Type or member is obsolete
-        EditorPrefs.SetFloat("uWED::EditorView::transform.position.x", contentViewContainer.transform.position.x);
-        EditorPrefs.SetFloat("uWED::EditorView::transform.position.y", contentViewContainer.transform.position.y);
-        EditorPrefs.SetFloat("uWED::EditorView::transform.scale.x", contentViewContainer.transform.scale.y);
-        EditorPrefs.SetFloat("uWED::EditorView::transform.scale.y", contentViewContainer.transform.scale.y);
-#pragma warning restore CS0618 // Type or member is obsolete
+        EditorPrefs.SetFloat("uWED::EditorView::transform.position.x", contentViewContainer.resolvedStyle.translate.x);
+        EditorPrefs.SetFloat("uWED::EditorView::transform.position.y", contentViewContainer.resolvedStyle.translate.y);
+        EditorPrefs.SetFloat("uWED::EditorView::transform.scale.x", contentViewContainer.resolvedStyle.scale.value.x);
+        EditorPrefs.SetFloat("uWED::EditorView::transform.scale.y", contentViewContainer.resolvedStyle.scale.value.y);
     }
 
     private void LoadPrefs()
@@ -187,26 +175,29 @@ public class EditorView : GridView
             m_lockAngle = EditorPrefs.GetFloat("uWED::EditorView::lockAngle");
 
         //TODO: load pos and scale only if map has not changed
-#pragma warning disable CS0618 // Type or member is obsolete
-        Vector3 pos = contentViewContainer.transform.position;
-#pragma warning restore CS0618 // Type or member is obsolete
+        Vector3 pos = contentViewContainer.resolvedStyle.translate;
         if (EditorPrefs.HasKey("uWED::EditorView::transform.position.x"))
             pos.x = EditorPrefs.GetFloat("uWED::EditorView::transform.position.x");
         if (EditorPrefs.HasKey("uWED::EditorView::transform.position.y"))
             pos.y = EditorPrefs.GetFloat("uWED::EditorView::transform.position.y");
-#pragma warning disable CS0618 // Type or member is obsolete
-        contentViewContainer.transform.position = pos;
-#pragma warning restore CS0618 // Type or member is obsolete
+        contentViewContainer.style.translate = pos;
 
-#pragma warning disable CS0618 // Type or member is obsolete
-        Vector3 scale = contentViewContainer.transform.scale;
-#pragma warning restore CS0618 // Type or member is obsolete
+        Vector3 scale = contentViewContainer.resolvedStyle.scale.value;
         if (EditorPrefs.HasKey("uWED::EditorView::transform.scale.x"))
             scale.x = EditorPrefs.GetFloat("uWED::EditorView::transform.scale.x");
         if (EditorPrefs.HasKey("uWED::EditorView::transform.scale.y"))
             scale.y = EditorPrefs.GetFloat("uWED::EditorView::transform.scale.y");
-#pragma warning disable CS0618 // Type or member is obsolete
-        contentViewContainer.transform.scale = scale;
-#pragma warning restore CS0618 // Type or member is obsolete
+        Scale s = new Scale(scale);
+        contentViewContainer.style.scale = s;
+    }
+
+    private Matrix4x4 GetViewContainerMatrix()
+    {
+        Vector3 t = contentViewContainer.resolvedStyle.translate;
+        Quaternion r = Quaternion.Euler(contentViewContainer.resolvedStyle.rotate.angle.ToDegrees(), 0, 0);
+        Vector3 s = contentViewContainer.resolvedStyle.scale.value;
+
+        //build actual world to screen matrix
+        return Matrix4x4.TRS(t, r, s);
     }
 }
