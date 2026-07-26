@@ -4,3 +4,6 @@
 [submodule "Assets/ext/WDL2CS"]
 	path = Assets/ext/WDL2CS
 	url = git@github.com:firoball/WDL2CS.git
+[submodule "Assets/ext/Triangulator"]
+	path = Assets/ext/Triangulator
+	url = git@github.com:firoball/Triangulator.git
