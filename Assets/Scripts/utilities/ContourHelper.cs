@@ -5,51 +5,33 @@ using UnityEngine;
 
 public static class ContourHelper
 {
-    public static Contour FindContour(Tuple<Segment, bool> nearest, int limit)
+    public static List<Vertex> FindContour(Contour contour, Tuple<Segment, bool> nearest, int limit)
     {
-        Contour contour = new Contour();
-        int rightlowest = -1;
-        int candidate;
+        List<Vertex> vertices = new List<Vertex>();
+
         //iterate through connected segments
         Tuple<Segment, bool> first = nearest;
         Tuple<Segment, bool> current = first;
         do
         {
             current = FindNextSegment(current);
-            candidate = contour.Vertices.Count;
             if (current.Item2) //left sided segment
             {
-                contour.Vertices.Add(current.Item1.Vertex1);
+                vertices.Add(current.Item1.Vertex1);
                 current.Item1.CLeft = contour;
             }
             else //right sided segment
             {
-                contour.Vertices.Add(current.Item1.Vertex2);
+                vertices.Add(current.Item1.Vertex2);
                 current.Item1.CRight = contour;
-            }
-            //find most right/bottom vertex
-            if (rightlowest == -1 || (contour.Vertices[candidate].WorldPosition.y < contour.Vertices[rightlowest].WorldPosition.y))
-            {
-                rightlowest = candidate;
-            }
-            else if (contour.Vertices[candidate].WorldPosition.y == contour.Vertices[rightlowest].WorldPosition.y)
-            {
-                if (contour.Vertices[candidate].WorldPosition.x >= contour.Vertices[rightlowest].WorldPosition.x)
-                    rightlowest = candidate;
-            }
-            else
-            {
-                //nop
             }
 
         } while (
             (current.Item1 != first.Item1 || current.Item2 != first.Item2) &&
-            contour.Vertices.Count <= limit //avoid endless loop in case of some weird error
+            vertices.Count <= limit //avoid endless loop in case of some weird error
             );
 
-        IdentifyInner(contour, rightlowest);
-
-        return contour;
+        return vertices;
     }
 
     public static void FindInnerContour(Contour outer, List<Contour> inners)
@@ -87,19 +69,39 @@ public static class ContourHelper
                         //these cases must explicitly be excluded from re-parenting
                         if (!IsFlippedContour(inners[i], outer)) //make sure contour is not same as other (except direction)
                         {
-                            inners[i].Outer.Inner.Remove(inners[i]); //remove child from old parent
+                            inners[i].Outer.Unlink(inners[i]); //remove child from old parent
                             inners[i].Outer = outer; //switch parent
-                            outer.Inner.Add(inners[i]); //add child to new parent
+                            outer.Link(inners[i]); //add child to new parent
                         }
                     }
                 }
                 else
                 {
                     inners[i].Outer = outer; //set new parent
-                    outer.Inner.Add(inners[i]); //add child to parent
+                    outer.Link(inners[i]); //add child to parent
                 }
             }
         }
+    }
+
+    public static bool IsInside(List<Vertex> polygon, Vertex point)
+    {
+        bool isInside = false;
+        for (int i = 0; i < polygon.Count; i++)
+        {
+            int j = (i + 1) % polygon.Count;
+            if (polygon[i].Y < point.Y && polygon[j].Y >= point.Y || 
+                polygon[j].Y < point.Y && polygon[i].Y >= point.Y)
+            {
+                if (polygon[i].X + (point.Y - polygon[i].Y) /
+                    (polygon[j].Y - polygon[i].Y) *
+                    (polygon[j].X - polygon[i].X) < point.X)
+                {
+                    isInside = !isInside;
+                }
+            }
+        }
+        return isInside;
     }
 
     public static bool IsFlippedContour(Contour c1, Contour c2)
@@ -118,26 +120,7 @@ public static class ContourHelper
         //contours are flipped identical
         return true;
     }
-
-    private static void IdentifyInner(Contour contour, int rightlowest)
-    {
-        int prev = (rightlowest - 1 + contour.Vertices.Count) % contour.Vertices.Count;
-        int next = (rightlowest + 1) % contour.Vertices.Count;
-        Vector2 v0 = new Vector2(contour.Vertices[prev].WorldPosition.x, contour.Vertices[prev].WorldPosition.y);
-        Vector2 v1 = new Vector2(contour.Vertices[rightlowest].WorldPosition.x, contour.Vertices[rightlowest].WorldPosition.y);
-        Vector2 v2 = new Vector2(contour.Vertices[next].WorldPosition.x, contour.Vertices[next].WorldPosition.y);
-        if (v0 != v2) //Ccw-check is not reliable for line-shaped polygons
-        {
-            contour.IsInner = Geom2D.IsCcw(v0, v1, v2);
-        }
-        else //might be an isolated line - identfy by calculating area: 0 -> line -> always inner
-        {
-            //this is rather slow, but branch should rarely be reached
-            List<Vector2> poly = contour.Vertices.Select(x => x.WorldPosition).ToList();
-            contour.IsInner = (Geom2D.PolygonArea(poly) == 0);
-        }
-    }
-
+    
     private static Tuple<Segment, bool> FindNextSegment(Tuple<Segment, bool> t)
     {
         if (t != null && t.Item1 != null)
@@ -173,7 +156,7 @@ public static class ContourHelper
 
     private static Tuple<Segment, bool> PickClosestSegment(Segment segment, Vertex v1, Vertex v2)
     {
-        //clowise (in front)
+        //clockwise (in front)
         float cw = float.MaxValue;
         Segment scw = null;
         bool scwLeft = false;
@@ -183,35 +166,35 @@ public static class ContourHelper
         Segment sccw = null;
         bool sccwLeft = false;
 
-        Vector2 lhs = (v2.WorldPosition - v1.WorldPosition).normalized;
+        Vector2 lhs = ((Vector2)v2 - v1).normalized;
         for (int i = 0; i < v2.Connections.Count; i++)
         {
             if (v2.Connections[i] != segment) //skip current segment
             {
                 Vector2 rhs;
-                bool side;
+                bool isLeftOfSegment;
                 bool nextLeft;
                 if (v2.Connections[i].Vertex1 == v2) //use right side of connected segment 
                 {
-                    rhs = (v2.Connections[i].Vertex2.WorldPosition - v2.WorldPosition).normalized;
-                    side = Geom2D.IsCcw(v1.WorldPosition, v2.WorldPosition, v2.Connections[i].Vertex2.WorldPosition);
+                    rhs = ((Vector2)v2.Connections[i].Vertex2- v2).normalized;
+                    isLeftOfSegment = Geom2D.IsCcw(v1, v2, v2.Connections[i].Vertex2);
                     nextLeft = false;
                 }
                 else //use left side of connected segment 
                 {
-                    rhs = (v2.Connections[i].Vertex1.WorldPosition - v2.WorldPosition).normalized;
-                    side = Geom2D.IsCcw(v1.WorldPosition, v2.WorldPosition, v2.Connections[i].Vertex1.WorldPosition);
+                    rhs = ((Vector2)v2.Connections[i].Vertex1 - v2).normalized;
+                    isLeftOfSegment = Geom2D.IsCcw(v1, v2, v2.Connections[i].Vertex1);
                     nextLeft = true;
                 }
 
                 float newdot = Vector2.Dot(lhs, rhs);
-                if (!side && newdot < cw) //angle is smallest and < 180° (in front of current segment)
+                if (!isLeftOfSegment && newdot < cw) //angle is smallest and < 180ï¿½ (in front of current segment)
                 {
                     cw = newdot;
                     scw = v2.Connections[i];
                     scwLeft = nextLeft;
                 }
-                if (side && newdot > ccw) //angle is greatest and > 180° (behind current segment)
+                if (isLeftOfSegment && newdot > ccw) //angle is greatest and > 180ï¿½ (behind current segment)
                 {
                     ccw = newdot;
                     sccw = v2.Connections[i];

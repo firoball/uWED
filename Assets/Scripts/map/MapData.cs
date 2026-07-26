@@ -25,13 +25,13 @@ public class MapData
         }
     }
 
-    public IList<MapObject> Objects => m_data.Objects.AsReadOnly();
-    public IList<Way> Ways => m_data.Ways.AsReadOnly();
-    public IList<Vertex> Vertices => m_data.Vertices.AsReadOnly(); 
-    public IList<Segment> Segments => m_data.Segments.AsReadOnly();
-    public IList<Region> Regions => m_data.Regions.AsReadOnly();
+    public IReadOnlyList<MapObject> Objects => m_data.Objects;
+    public IReadOnlyList<Way> Ways => m_data.Ways;
+    public IReadOnlyList<Vertex> Vertices => m_data.Vertices; 
+    public IReadOnlyList<Segment> Segments => m_data.Segments;
+    public IReadOnlyList<Region> Regions => m_data.Regions;
     //public IList<Contour> Contours => m_contours.AsReadOnly();
-    public List<Contour> Contours => m_contours;
+    public List<Contour> Contours => m_contours; //TODO: this is not really map data... can't be readonly here
 
     public MapDataSet Data { get => m_data; }
 

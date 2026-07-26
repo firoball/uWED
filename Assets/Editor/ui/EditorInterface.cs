@@ -79,6 +79,7 @@ public class EditorInterface
 
     public void OnLoadMap(IMapLoader loader, string name)
     {
+        Debug.Log("OnLoadMap");
         m_em?.LoadMap(loader, name);
     }
 

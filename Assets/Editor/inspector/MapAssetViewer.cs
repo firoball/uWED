@@ -78,8 +78,8 @@ public class MapAssetViewer : ImmediateModeElement
         for (int i = 0; i < m_mapData.Segments.Count; i++)
         {
             idx = i * step;
-            v1 = m_mapData.Segments[i].Vertex1.WorldPosition;
-            v2 = m_mapData.Segments[i].Vertex2.WorldPosition;
+            v1 = m_mapData.Segments[i].Vertex1;
+            v2 = m_mapData.Segments[i].Vertex2;
             m_segmentMgr.Vertices[idx] = v1;
             m_segmentMgr.Vertices[idx + 1] = v2;
             System.Array.Fill(m_segmentMgr.Colors, color, idx, step);
@@ -122,16 +122,16 @@ public class MapAssetViewer : ImmediateModeElement
     private Vector2 Min()
     {
         Vector2 min;
-        min.x = m_mapData.Vertices.Min(x => x.WorldPosition.x);
-        min.y = m_mapData.Vertices.Min(x => x.WorldPosition.y);
+        min.x = (float)m_mapData.Vertices.Min(v => v.X);
+        min.y = (float)m_mapData.Vertices.Min(v => v.Y);
         return min;
     }
 
     private Vector2 Max()
     {
         Vector2 max;
-        max.x = m_mapData.Vertices.Max(x => x.WorldPosition.x);
-        max.y = m_mapData.Vertices.Max(x => x.WorldPosition.y);
+        max.x = (float)m_mapData.Vertices.Max(v => v.X);
+        max.y = (float)m_mapData.Vertices.Max(v => v.Y);
         return max;
     }
 

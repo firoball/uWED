@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using Triangulator;
 using UnityEngine;
 
 public class RegionMode : BaseEditorMode
@@ -79,6 +81,15 @@ public class RegionMode : BaseEditorMode
     public override void EditObject()
     {
         //TODO: implement
+        
+        //TEMP
+        //Debug.Log(DecomposerDebug.Dump(m_cursorInfo.HoverContour));
+        if (m_drawer.CursorInfo.HoverContour != null)
+        {
+            File.WriteAllText(Path.Combine(".", "DecomposerDebug.Dump.txt"), DecomposerDebug.Dump(m_drawer.CursorInfo.HoverContour));
+            Debug.Log(Path.Combine(".", "DecomposerDebug.Dump.txt") + " written.");
+        }
+
     }
 
     public override void DeleteObject()

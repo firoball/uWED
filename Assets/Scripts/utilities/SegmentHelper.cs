@@ -5,7 +5,7 @@ using UnityEngine;
 public static class SegmentHelper
 {
 
-    public static Tuple<Segment, bool> FindNearestSegment(IList<Segment> segments, Vector2 worldPos)
+    public static Tuple<Segment, bool> FindNearestSegment(IReadOnlyList<Segment> segments, Vector2 worldPos)
     {
         if (segments == null) return null;
 
@@ -13,8 +13,8 @@ public static class SegmentHelper
         float minDist = float.MaxValue;
         for (int i = 0; i < segments.Count; i++)
         {
-            Vector2 v1 = segments[i].Vertex1.WorldPosition;
-            Vector2 v2 = segments[i].Vertex2.WorldPosition;
+            Vector2 v1 = segments[i].Vertex1;
+            Vector2 v2 = segments[i].Vertex2;
 
             float sqrDist = Geom2D.PointToLineSqrDist(worldPos, v1, v2);
             if (sqrDist < minDist)
@@ -30,27 +30,27 @@ public static class SegmentHelper
                 Vector2 next;
                 if (segment.Vertex2 == segments[i].Vertex1)
                 {
-                    connection = segment.Vertex2.WorldPosition;
-                    current = segment.Vertex1.WorldPosition;
-                    next = segments[i].Vertex2.WorldPosition;
+                    connection = segment.Vertex2;
+                    current = segment.Vertex1;
+                    next = segments[i].Vertex2;
                 }
                 else if (segment.Vertex1 == segments[i].Vertex1)
                 {
-                    connection = segment.Vertex1.WorldPosition;
-                    current = segment.Vertex2.WorldPosition;
-                    next = segments[i].Vertex2.WorldPosition;
+                    connection = segment.Vertex1;
+                    current = segment.Vertex2;
+                    next = segments[i].Vertex2;
                 }
                 else if (segment.Vertex2 == segments[i].Vertex2)
                 {
-                    connection = segment.Vertex2.WorldPosition;
-                    current = segment.Vertex1.WorldPosition;
-                    next = segments[i].Vertex1.WorldPosition;
+                    connection = segment.Vertex2;
+                    current = segment.Vertex1;
+                    next = segments[i].Vertex1;
                 }
                 else
                 {
-                    connection = segment.Vertex1.WorldPosition;
-                    current = segment.Vertex2.WorldPosition;
-                    next = segments[i].Vertex1.WorldPosition;
+                    connection = segment.Vertex1;
+                    current = segment.Vertex2;
+                    next = segments[i].Vertex1;
                 }
 
                 Vector2 lhs = (connection - worldPos).normalized;
@@ -71,7 +71,7 @@ public static class SegmentHelper
         Tuple<Segment, bool> nearest = null;
         if (segment != null)
         {
-            bool left = Geom2D.IsCcw(segment.Vertex1.WorldPosition, segment.Vertex2.WorldPosition, worldPos);
+            bool left = Geom2D.IsCcw(segment.Vertex1, segment.Vertex2, worldPos);
             nearest = new Tuple<Segment, bool>(segment, left);
         }
 

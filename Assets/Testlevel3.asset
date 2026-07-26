@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fdca80b7ade7e94bb92f8cec60a72cf, type: 3}
-  m_Name: DefaultMapAsset
+  m_Name: Testlevel3
   m_EditorClassIdentifier: 
   m_data:
     rid: 8557302749475112363

@@ -97,11 +97,12 @@ public class Geom2D
     public static float PolygonArea(List<Vector2> polygon) 
     {
         float area = 0;
-        int i, j, k;     // indices
 
-        for (i = 1, j = 2, k = 0; i <= polygon.Count; i++, j++, k++)
+        for (int i = 0; i < polygon.Count; i++)
         {
-            area += polygon[i % polygon.Count].x * (polygon[j % polygon.Count].y - polygon[k % polygon.Count].y);
+            Vector2 p1 = polygon[i];
+            Vector2 p2 = polygon[(i + 1) % polygon.Count];
+            area += p1.x * p2.y - p2.x * p1.y;
         }
         return area / 2.0f;
     }

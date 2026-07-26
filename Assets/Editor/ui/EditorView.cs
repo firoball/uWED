@@ -187,8 +187,7 @@ public class EditorView : GridView
             scale.x = EditorPrefs.GetFloat("uWED::EditorView::transform.scale.x");
         if (EditorPrefs.HasKey("uWED::EditorView::transform.scale.y"))
             scale.y = EditorPrefs.GetFloat("uWED::EditorView::transform.scale.y");
-        Scale s = new Scale(scale);
-        contentViewContainer.style.scale = s;
+        contentViewContainer.style.scale = scale;
     }
 
     private Matrix4x4 GetViewContainerMatrix()
