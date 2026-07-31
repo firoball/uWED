@@ -9,11 +9,12 @@ public class MenuBinder
     private Label m_gridSizeValue;
     private Label m_angleSizeValue;
 
-    public MenuBinder(EditorView ev, VisualElement parent, EditorWindow wnd)
+    public MenuBinder(EditorView ev, EditorHelp eh, VisualElement parent, EditorWindow wnd)
     {
         BindFileMenu(ev, parent, wnd);
-        BindEditorMode(ev, parent);
+        BindEditorMode(ev, eh, parent);
         BindSnapControl(ev, parent);
+        BindHelpButton(eh, parent);
 
         //Update initial values of all controls
         ev.Interface.RefreshListeners();
@@ -36,13 +37,14 @@ public class MenuBinder
             Debug.LogError("Element 'fileMenu' not found.");
     }
 
-    private void BindEditorMode(EditorView ev, VisualElement parent)
+    private void BindEditorMode(EditorView ev, EditorHelp eh, VisualElement parent)
     {
         DropdownField editorModes = parent.Q("editorModes") as DropdownField;
         if (editorModes != null)
         {
             ev.Interface.SetModeListeners.Add(editorModes);
             editorModes.RegisterCallback<ChangeEvent<string>>(ev.Interface.OnSetMode);
+            editorModes.RegisterCallback<ChangeEvent<string>>(eh.OnSetMode);
         }
         else
             Debug.LogError("Element 'editorModes' not found.");
@@ -91,6 +93,17 @@ public class MenuBinder
         }
         else
             Debug.LogError("Element 'enableSnap' not found.");
+    }
+
+    private void BindHelpButton(EditorHelp eh, VisualElement parent)
+    {
+        Button helpButton = parent.Q("help") as Button;
+        DropdownField editorModes = parent.Q("editorModes") as DropdownField;
+
+        if (helpButton != null && editorModes != null)
+        {
+            helpButton.RegisterCallback<ClickEvent>(eh.OnOpenHelp);
+        }
     }
 
     private void OnGridSizeChange(ChangeEvent<int> evt)

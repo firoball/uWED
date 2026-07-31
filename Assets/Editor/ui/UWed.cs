@@ -12,7 +12,13 @@ public class UWed : EditorWindow
     [SerializeField]
     private StyleSheet m_StyleSheet = default;
 
+    [SerializeField]
+    private VisualTreeAsset m_helpUxml = default;
+    [SerializeField]
+    private StyleSheet m_helpStyleSheet = default;
+
     private EditorView m_editorView;
+    private EditorHelp m_editorHelp;
 
     private static UWed s_instance = null;
 
@@ -43,13 +49,17 @@ public class UWed : EditorWindow
 
         m_editorView = new EditorView();
         m_editorView.styleSheets.Add(m_StyleSheet);
-        editor.Add(m_editorView);
+        editor?.Add(m_editorView);
+        
+        m_editorHelp = new EditorHelp(ui, m_helpUxml);
+        m_editorHelp.styleSheets.Add(m_helpStyleSheet);
+        ui.Add(m_editorHelp);
 
         // VisualElements objects can contain other VisualElement following a tree hierarchy.
         VisualElement label = new Label("A wild uWED appears.");
-        inspector.Add(label);
+        inspector?.Add(label);
 
-        MenuBinder binder = new MenuBinder(m_editorView, menu, this); //TODO: also pass inspector
+        MenuBinder binder = new MenuBinder(m_editorView, m_editorHelp, menu, this); //TODO: also pass inspector
         AssemblyReloadEvents.beforeAssemblyReload += m_editorView.SavePrefs;
     }
 

@@ -1,0 +1,312 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="EditorHelp.uss" />
+
+    <!--
+        EditorHelp overlay.
+        Instantiate this VisualTreeAsset and add it as the LAST child of the root
+        VisualElement (document root), NOT inside the "menu" container, so it renders
+        above every other UI. Toggle visibility via the "?" button in "menu" (see
+        wiring snippet). "help-close-button" closes it again.
+
+        Root fills the whole parent (position: absolute, all edges 0) and centers a
+        width-capped panel with a max-height. The TabView itself is NOT inside a
+        ScrollView - the tab header strip must stay fixed. Instead, each individual
+        Tab wraps its own content in a "help-tab-scroll" ScrollView, so switching
+        tabs never scrolls the header row out of view and each tab keeps its own
+        scroll position.
+
+        Content inside larger tabs is laid out in two "help-column" children of a
+        "help-columns" row wrapper, purely for better use of horizontal space.
+        The split is manual (author-assigned per section/row), not auto-flowing,
+        since UI Toolkit has no CSS multi-column layout.
+    -->
+    <ui:VisualElement name="EditorHelpRoot" class="help-root">
+        <ui:VisualElement name="EditorHelpPanel" class="help-panel">
+
+            <ui:VisualElement name="help-header" class="help-header">
+                <ui:Label text="Editor Help" name="help-title" class="help-title" />
+                <ui:Button text="X" name="help-close-button" class="help-close-button" />
+            </ui:VisualElement>
+
+            <ui:TabView name="help-tabview" class="help-tabview">
+
+                <!-- ================= GENERAL TAB ================= -->
+                <ui:Tab label="General" name="tab-general">
+                    <ui:ScrollView name="scroll-general" class="help-tab-scroll"
+                                    vertical-scroller-visibility="Auto"
+                                    horizontal-scroller-visibility="Hidden">
+                        <ui:VisualElement class="help-columns">
+
+                            <ui:VisualElement class="help-column">
+                                <ui:Label text="Editor Modes" class="help-section-title" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="O" class="help-key" />
+                                    <ui:Label text="Objects" name="desc-mode-objects" class="help-desc" />
+                                    <ui:Label text="" name="extra-mode-objects" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="S" class="help-key" />
+                                    <ui:Label text="Segments" name="desc-mode-segments" class="help-desc" />
+                                    <ui:Label text="" name="extra-mode-segments" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="R" class="help-key" />
+                                    <ui:Label text="Regions" name="desc-mode-regions" class="help-desc" />
+                                    <ui:Label text="" name="extra-mode-regions" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="W" class="help-key" />
+                                    <ui:Label text="Ways" name="desc-mode-ways" class="help-desc" />
+                                    <ui:Label text="" name="extra-mode-ways" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="D" class="help-key" />
+                                    <ui:Label text="Toggle Design Mode" name="desc-toggle-design" class="help-desc" />
+                                    <ui:Label text="" name="extra-toggle-design" class="help-desc-extra" />
+                                </ui:VisualElement>
+
+                                <ui:Label text="Editor View" class="help-section-title" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="G" class="help-key" />
+                                    <ui:Label text="Grid On / Off" name="desc-grid" class="help-desc" />
+                                    <ui:Label text="" name="extra-grid" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="C" class="help-key" />
+                                    <ui:Label text="Center Editor View" name="desc-center-view" class="help-desc" />
+                                    <ui:Label text="" name="extra-center-view" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="+" class="help-key" />
+                                    <ui:Label text="Zoom In View" name="desc-zoom-in-key" class="help-desc" />
+                                    <ui:Label text="" name="extra-zoom-in-key" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="-" class="help-key" />
+                                    <ui:Label text="Zoom Out View" name="desc-zoom-out-key" class="help-desc" />
+                                    <ui:Label text="" name="extra-zoom-out-key" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="DEL" class="help-key" />
+                                    <ui:Label text="Delete Selected Objects" name="desc-delete-selected" class="help-desc" />
+                                    <ui:Label text="" name="extra-delete-selected" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="ESC" class="help-key" />
+                                    <ui:Label text="Exit Construction Mode" name="desc-exit-construction" class="help-desc" />
+                                    <ui:Label text="" name="extra-exit-construction" class="help-desc-extra" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:VisualElement class="help-column">
+                                <ui:Label text="General Actions" class="help-section-title" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Left" class="help-key help-key-wide" />
+                                    <ui:Label text="Construct Object" name="desc-construct" class="help-desc" />
+                                    <ui:Label text="" name="extra-construct" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Right" class="help-key help-key-wide" />
+                                    <ui:Label text="Edit Hovered / Selected Object(s)" name="desc-edit-menu" class="help-desc" />
+                                    <ui:Label text="" name="extra-edit-menu" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Middle" class="help-key help-key-wide" />
+                                    <ui:Label text="Modify Hovered Object" name="desc-modify" class="help-desc" />
+                                    <ui:Label text="" name="extra-modify" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="CTRL + Left" class="help-key help-key-wide" />
+                                    <ui:Label text="Select Hovered Object" name="desc-select" class="help-desc" />
+                                    <ui:Label text="" name="extra-select" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="CTRL + Right" class="help-key help-key-wide" />
+                                    <ui:Label text="Delete Hovered Object" name="desc-ctrl-delete" class="help-desc" />
+                                    <ui:Label text="" name="extra-ctrl-delete" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="CTRL + Middle" class="help-key help-key-wide" />
+                                    <ui:Label text="Modify Hovered Object (Alternative Action)" name="desc-ctrl-modify" class="help-desc" />
+                                    <ui:Label text="" name="extra-ctrl-modify" class="help-desc-extra" />
+                                </ui:VisualElement>
+
+                                <ui:Label text="Selection" class="help-section-title" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Left + Drag" class="help-key help-key-wide" />
+                                    <ui:Label text="Select Multiple" name="desc-select-multiple" class="help-desc" />
+                                    <ui:Label text="" name="extra-select-multiple" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Left" class="help-key help-key-wide" />
+                                    <ui:Label text="Unselect All" name="desc-unselect-all" class="help-desc" />
+                                    <ui:Label text="" name="extra-unselect-all" class="help-desc-extra" />
+                                </ui:VisualElement>
+
+                                <ui:Label text="View Navigation" class="help-section-title" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Middle + Drag" class="help-key help-key-wide" />
+                                    <ui:Label text="Move View" name="desc-move-view" class="help-desc" />
+                                    <ui:Label text="" name="extra-move-view" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Wheel Up" class="help-key help-key-wide" />
+                                    <ui:Label text="Zoom In View" name="desc-zoom-in-wheel" class="help-desc" />
+                                    <ui:Label text="" name="extra-zoom-in-wheel" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Wheel Down" class="help-key help-key-wide" />
+                                    <ui:Label text="Zoom Out View" name="desc-zoom-out-wheel" class="help-desc" />
+                                    <ui:Label text="" name="extra-zoom-out-wheel" class="help-desc-extra" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                        </ui:VisualElement>
+                    </ui:ScrollView>
+                </ui:Tab>
+
+                <!-- ================= OBJECTS TAB ================= -->
+                <ui:Tab label="Objects" name="tab-objects">
+                    <ui:ScrollView name="scroll-objects" class="help-tab-scroll"
+                                    vertical-scroller-visibility="Auto"
+                                    horizontal-scroller-visibility="Hidden">
+                        <ui:Label text="Objects Mode - Special Functions" class="help-section-title" />
+                        <ui:VisualElement class="help-row">
+                            <ui:Label text="Mouse Left (drag)" class="help-key help-key-wide" />
+                            <ui:Label text="Drag Hovered Object" name="desc-obj-drag" class="help-desc" />
+                            <ui:Label text="" name="extra-obj-drag" class="help-desc-extra" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="help-row">
+                            <ui:Label text="CTRL + Left (drag)" class="help-key help-key-wide" />
+                            <ui:Label text="Edit Object Angle" name="desc-obj-angle" class="help-desc" />
+                            <ui:Label text="" name="extra-obj-angle" class="help-desc-extra" />
+                        </ui:VisualElement>
+                    </ui:ScrollView>
+                </ui:Tab>
+
+                <!-- ================= SEGMENTS TAB ================= -->
+                <ui:Tab label="Segments" name="tab-segments">
+                    <ui:ScrollView name="scroll-segments" class="help-tab-scroll"
+                                    vertical-scroller-visibility="Auto"
+                                    horizontal-scroller-visibility="Hidden">
+                        <ui:VisualElement class="help-columns">
+
+                            <ui:VisualElement class="help-column">
+                                <ui:Label text="Segments Mode - Special Functions" class="help-section-title" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="F" class="help-key" />
+                                    <ui:Label text="Flip Normal" name="desc-seg-flip" class="help-desc" />
+                                    <ui:Label text="" name="extra-seg-flip" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="P" class="help-key" />
+                                    <ui:Label text="Split Segment" name="desc-seg-split" class="help-desc" />
+                                    <ui:Label text="" name="extra-seg-split" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="J" class="help-key" />
+                                    <ui:Label text="Delete Vertex &amp; Join Connected Segments" name="desc-seg-join" class="help-desc" />
+                                    <ui:Label text="" name="extra-seg-join" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Left (drag)" class="help-key help-key-wide" />
+                                    <ui:Label text="Drag Hovered Object" name="desc-seg-drag" class="help-desc" />
+                                    <ui:Label text="" name="extra-seg-drag" class="help-desc-extra" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:VisualElement class="help-column">
+                                <ui:Label text=" " class="help-section-title help-section-title-spacer" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Right" class="help-key help-key-wide" />
+                                    <ui:Label text="Revert Construction Step" name="desc-seg-revert" class="help-desc" />
+                                    <ui:Label text="" name="extra-seg-revert" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Middle (on Segment)" class="help-key help-key-wide" />
+                                    <ui:Label text="Split Segment" name="desc-seg-middle-split" class="help-desc" />
+                                    <ui:Label text="" name="extra-seg-middle-split" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Middle (on Vertex)" class="help-key help-key-wide" />
+                                    <ui:Label text="Delete Vertex &amp; Join Connected Segments" name="desc-seg-middle-join" class="help-desc" />
+                                    <ui:Label text="" name="extra-seg-middle-join" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="CTRL + Middle" class="help-key help-key-wide" />
+                                    <ui:Label text="Flip Normal (Alternative Action)" name="desc-seg-ctrl-middle" class="help-desc" />
+                                    <ui:Label text="" name="extra-seg-ctrl-middle" class="help-desc-extra" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                        </ui:VisualElement>
+                    </ui:ScrollView>
+                </ui:Tab>
+
+                <!-- ================= REGIONS TAB ================= -->
+                <ui:Tab label="Regions" name="tab-regions">
+                    <ui:ScrollView name="scroll-regions" class="help-tab-scroll"
+                                    vertical-scroller-visibility="Auto"
+                                    horizontal-scroller-visibility="Hidden">
+                        <ui:Label text="Regions Mode - Special Functions" class="help-section-title" />
+                        <ui:VisualElement class="help-row">
+                            <ui:Label text="TBD" class="help-key" />
+                            <ui:Label text="No special functions documented yet" name="desc-region-tbd" class="help-desc" />
+                            <ui:Label text="" name="extra-region-tbd" class="help-desc-extra" />
+                        </ui:VisualElement>
+                    </ui:ScrollView>
+                </ui:Tab>
+
+                <!-- ================= WAYS TAB ================= -->
+                <ui:Tab label="Ways" name="tab-ways">
+                    <ui:ScrollView name="scroll-ways" class="help-tab-scroll"
+                                    vertical-scroller-visibility="Auto"
+                                    horizontal-scroller-visibility="Hidden">
+                        <ui:VisualElement class="help-columns">
+
+                            <ui:VisualElement class="help-column">
+                                <ui:Label text="Ways Mode - Special Functions" class="help-section-title" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="P" class="help-key" />
+                                    <ui:Label text="Split Segment" name="desc-way-split" class="help-desc" />
+                                    <ui:Label text="" name="extra-way-split" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="J" class="help-key" />
+                                    <ui:Label text="Delete Vertex &amp; Join Connected Segments" name="desc-way-join" class="help-desc" />
+                                    <ui:Label text="" name="extra-way-join" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Left (drag)" class="help-key help-key-wide" />
+                                    <ui:Label text="Drag Hovered Object" name="desc-way-drag" class="help-desc" />
+                                    <ui:Label text="" name="extra-way-drag" class="help-desc-extra" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                            <ui:VisualElement class="help-column">
+                                <ui:Label text=" " class="help-section-title help-section-title-spacer" />
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Right" class="help-key help-key-wide" />
+                                    <ui:Label text="Revert Construction Step" name="desc-way-revert" class="help-desc" />
+                                    <ui:Label text="" name="extra-way-revert" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Middle (on Segment)" class="help-key help-key-wide" />
+                                    <ui:Label text="Split Segment" name="desc-way-middle-split" class="help-desc" />
+                                    <ui:Label text="" name="extra-way-middle-split" class="help-desc-extra" />
+                                </ui:VisualElement>
+                                <ui:VisualElement class="help-row">
+                                    <ui:Label text="Mouse Middle (on Vertex)" class="help-key help-key-wide" />
+                                    <ui:Label text="Delete Vertex &amp; Join Connected Segments" name="desc-way-middle-join" class="help-desc" />
+                                    <ui:Label text="" name="extra-way-middle-join" class="help-desc-extra" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+
+                        </ui:VisualElement>
+                    </ui:ScrollView>
+                </ui:Tab>
+
+            </ui:TabView>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

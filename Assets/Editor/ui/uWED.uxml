@@ -20,6 +20,9 @@
             <ui:Label tabindex="-1" text="1024" parse-escape-sequences="true" display-tooltip-when-elided="true" name="gridSizeValue" binding-path="gridSize" style="flex-direction: row; align-self: center; margin-top: 0; align-items: auto; width: 30px;"/>
             <ui:Toggle label="Snap" name="enableSnap" value="true" tooltip="Toggle snapping" style="-unity-text-align: upper-right; text-overflow: ellipsis; width: 50px; justify-content: flex-end; align-items: auto; align-self: center;"/>
         </ui:VisualElement>
+        <ui:VisualElement name="helpMenu" style="flex-grow: 0; flex-direction: row; flex-shrink: 0;">
+            <ui:Button text="?" name="help"/>
+        </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="editor" style="flex-grow: 1; position: absolute; top: 28px; height: auto; width: auto; bottom: 100px; left: 4px; right: 4px; background-color: rgba(0, 0, 0, 0);"/>
     <ui:VisualElement name="preview" style="flex-grow: 1; position: absolute; top: auto; height: 200px; width: auto; bottom: 100px; left: auto; right: 0; background-color: rgba(0, 0, 0, 0.78); aspect-ratio: 1; align-items: stretch; align-self: flex-end; justify-content: center; border-top-width: 1px; border-left-width: 1px; border-left-color: rgb(153, 153, 153); border-right-color: rgb(153, 153, 153); border-top-color: rgb(153, 153, 153); border-bottom-color: rgb(153, 153, 153); min-width: auto; min-height: auto;">

@@ -1,0 +1,154 @@
+/*
+    EditorHelp.uss
+    Minimal, self-contained style (no UnityEditor defaults reused).
+    Colors/spacing are placeholders — tune freely later.
+*/
+
+.help-root {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 40px;
+    /* keep this element above siblings by adding it LAST in the tree at runtime */
+}
+
+.help-panel {
+    width: 80%;
+    max-width: 720px;
+    max-height: 85%;
+    background-color: rgb(45, 45, 45);
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: rgb(20, 20, 20);
+    padding: 12px;
+    flex-direction: column;
+}
+
+.help-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(70, 70, 70);
+    padding-bottom: 6px;
+}
+
+.help-title {
+    font-size: 16px;
+    -unity-font-style: bold;
+    color: rgb(230, 230, 230);
+}
+
+.help-close-button {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background-color: rgb(70, 70, 70);
+    color: rgb(230, 230, 230);
+    -unity-text-align: middle-center;
+    padding: 0;
+    border-width: 0;
+}
+
+.help-close-button:hover {
+    background-color: rgb(90, 90, 90);
+}
+
+.help-tabview {
+    /* Fills the remaining vertical space in the panel below the header;
+       can shrink to the panel's max-height, at which point the ScrollView
+       inside each Tab (not this element) starts scrolling.
+       No align-items override here - the default (stretch) is what gives
+       tab content its width; overriding it collapses everything to 0px. */
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.help-tab-scroll {
+    /* One ScrollView per Tab, so the tab header row above never scrolls
+       and each tab keeps its own scroll position. */
+    flex-grow: 1;
+}
+
+.help-columns {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.help-column {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: 0;
+    flex-shrink: 1;
+}
+
+.help-column:first-child {
+    margin-right: 16px;
+}
+
+.help-section-title {
+    font-size: 13px;
+    -unity-font-style: bold;
+    color: rgb(200, 200, 200);
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+.help-section-title-spacer {
+    color: rgba(0, 0, 0, 0);
+}
+
+.help-row {
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 3px;
+}
+
+.help-key {
+    min-width: 34px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-right: 8px;
+    background-color: rgb(60, 60, 60);
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: rgb(85, 85, 85);
+    -unity-text-align: middle-center;
+    color: rgb(235, 235, 235);
+    -unity-font-style: bold;
+    font-size: 11px;
+}
+
+.help-key-wide {
+    min-width: 130px;
+}
+
+.help-desc {
+    flex-shrink: 1;
+    flex-basis: 260px;
+    color: rgb(210, 210, 210);
+    white-space: normal;
+}
+
+/* Inside a two-column layout there's roughly half the width available,
+   so give help-desc a smaller starting basis to reduce early wrapping/overflow. */
+.help-column .help-desc {
+    flex-basis: 140px;
+}
+
+.help-desc-extra {
+    flex-grow: 1;
+    color: rgb(150, 150, 150);
+    -unity-font-style: italic;
+    font-size: 11px;
+    white-space: normal;
+}
