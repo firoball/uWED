@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WayMode : BaseEditorMode
@@ -92,7 +90,7 @@ public class WayMode : BaseEditorMode
         }
         else
         {
-            m_currentVertex = m_currentWay.Positions[m_currentWay.Positions.Count - 1];
+            m_currentVertex = m_currentWay.Positions[^1];
             m_drawer.SetConstructionMode(true, m_currentVertex);
             return false;
         }
@@ -139,6 +137,13 @@ public class WayMode : BaseEditorMode
         //Split or join segments, if feasible
         CursorInfo ci = m_drawer.CursorInfo;
 
+        if (ci.HoverVertex != null) //delete waypoint
+        {
+            // By deleting a Vertex, they way will be auto-joined between its neighbors
+            DeleteVertex(ci.HoverVertex);
+            return;
+        }
+        
         if (ci.Waypoint != null) //insert waypoint
         {
             bool found = false;

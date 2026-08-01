@@ -5,7 +5,6 @@ using UnityEngine;
 public class MapData
 {
     private MapDataSet m_data;
-    private List<Contour> m_contours;
 
 
     public MapData() : this(null) { }
@@ -21,7 +20,6 @@ public class MapData
         else
         {
             m_data = new MapDataSet();
-            m_contours = new List<Contour>();
         }
     }
 
@@ -30,8 +28,6 @@ public class MapData
     public IReadOnlyList<Vertex> Vertices => m_data.Vertices; 
     public IReadOnlyList<Segment> Segments => m_data.Segments;
     public IReadOnlyList<Region> Regions => m_data.Regions;
-    //public IList<Contour> Contours => m_contours.AsReadOnly();
-    public List<Contour> Contours => m_contours; //TODO: this is not really map data... can't be readonly here
 
     public MapDataSet Data { get => m_data; }
 

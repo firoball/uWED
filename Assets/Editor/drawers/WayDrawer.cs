@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class WayDrawer : BaseEditorDrawer
 {
-    private Color c_vertexDragColor = new Color(0.3f, 0.3f, 0.6f, 1.0f);
-    private Color c_lineDragColor = new Color(0.25f, 0.25f, 0.5f, 1.0f);
+    private new class Colors : BaseEditorDrawer.Colors
+    {
+        public static readonly Color VertexDragColor = new Color(0.3f, 0.3f, 0.6f, 1.0f);
+        public static readonly Color LineDragColor = new Color(0.25f, 0.25f, 0.5f, 1.0f);
+    }
 
     //Dragging mode
     private bool m_dragging;
@@ -125,11 +128,11 @@ public class WayDrawer : BaseEditorDrawer
         if (w == null || w.Positions.Count <= p)
             color = base.SetWaypointColor(w, p);
         else if (m_dragging && w.Positions[p] == m_draggedVertex)
-            color = c_vertexDragColor;
+            color = Colors.VertexDragColor;
         else if (!m_dragging && w.Positions[p] == m_cursorInfo.HoverVertex)
-            color = c_hoverColor;
+            color = Colors.HoverColor;
         else if (m_cursorInfo.SelectedVertices.Contains(w.Positions[p]))
-            color = c_selectColor;
+            color = Colors.SelectColor;
         else
             color = base.SetWaypointColor(w, p);
 
@@ -140,24 +143,20 @@ public class WayDrawer : BaseEditorDrawer
     {
         Color color;
         if (!m_dragging && m_cursorInfo.Waypoint != null && m_cursorInfo.Waypoint == w.Positions[p])
-            color = c_hoverColor;
+            color = Colors.HoverColor;
         //segments are identified by their first Waypoint vertex
         else if (w.Positions[(p + 1) % w.Positions.Count] == m_draggedVertex || w.Positions[p] == m_draggedVertex)
-            color = c_lineDragColor;
+            color = Colors.LineDragColor;
         else
             color = base.SetWaySegmentColor(w, p);
         return color;
     }
 
-    protected override void ImmediateRepaint()
+    protected override void PostEditorRedraw(EditorView view)
     {
-        if (!enabledSelf)
-            return;
-
-        base.ImmediateRepaint();
-
         bool intersects = IntersectionTest();
         DrawModes(intersects);
+        
     }
 
     protected override void HoverTest()
@@ -244,10 +243,10 @@ public class WayDrawer : BaseEditorDrawer
         m_cursorInfo.VertexDragIsValid = true;
         if (m_dragging && m_connectedVertices != null)
         {
-            Color previewColor = c_validColor;
+            Color previewColor = Colors.ValidColor;
             if (intersects)
             {
-                previewColor = c_invalidColor;
+                previewColor = Colors.InvalidColor;
                 m_cursorInfo.VertexDragIsValid = false;
             }
 
@@ -262,10 +261,10 @@ public class WayDrawer : BaseEditorDrawer
         m_cursorInfo.NextSegmentIsValid = true;
         if (m_constructing && m_focusedVertex != null)
         {
-            Color previewColor = c_validColor;
+            Color previewColor = Colors.ValidColor;
             if (intersects)
             {
-                previewColor = c_invalidColor;
+                previewColor = Colors.InvalidColor;
                 m_cursorInfo.NextSegmentIsValid = false;
             }
 

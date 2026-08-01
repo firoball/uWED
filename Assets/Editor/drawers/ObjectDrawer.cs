@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class ObjectDrawer : BaseEditorDrawer
 {
-    private Color c_objectDragColor = new Color(0.0f, 0.3f, 0.0f, 1.0f);
+    private new class Colors : BaseEditorDrawer.Colors
+    {
+        public static readonly Color ObjectDragColor = new Color(0.0f, 0.3f, 0.0f, 1.0f);
+    }
 
     //Dragging mode
     private bool m_dragging;
@@ -79,12 +82,12 @@ public class ObjectDrawer : BaseEditorDrawer
         Color color;
         if (m_dragging && m_mapData.Objects[i] == m_draggedObject)
         {
-            color = m_rotating ? c_hoverColor : c_objectDragColor;
+            color = m_rotating ? Colors.HoverColor : Colors.ObjectDragColor;
         }
         else if (!m_dragging && m_mapData.Objects[i] == m_cursorInfo.HoverObject)
-            color = c_hoverColor;
+            color = Colors.HoverColor;
         else if (m_cursorInfo.SelectedObjects.Contains(m_mapData.Objects[i]))
-            color = c_selectColor;
+            color = Colors.SelectColor;
         else
             color = base.SetObjectColor(i);
 
@@ -103,16 +106,11 @@ public class ObjectDrawer : BaseEditorDrawer
         }
     }
 
-    protected override void ImmediateRepaint()
+    protected override void PostEditorRedraw(EditorView view)
     {
-        if (!enabledSelf)
-            return;
-
-        base.ImmediateRepaint();
-
         DrawModes();
     }
-
+    
     protected override void HoverTest()
     {
         int pointHoverSize = 16;
@@ -162,13 +160,13 @@ public class ObjectDrawer : BaseEditorDrawer
                     p2 = ev.TransformScreenPos(p2);
                     p1 += m_draggedObject.Vertex.ScreenPosition;
                     p2 += m_draggedObject.Vertex.ScreenPosition;
-                    DrawLine(p2, p1, c_validColor);
+                    DrawLine(p2, p1, Colors.ValidColor);
                 }
             }
             else
             {
-                DrawCircle(m_mouseSnappedPos, c_validColor, c_bigObjectSize);
-                DrawArrow(m_mouseSnappedPos, c_objectBgColor, c_bigObjectSize, m_draggedObject.Angle);
+                DrawCircle(m_mouseSnappedPos, Colors.ValidColor, c_bigObjectSize);
+                DrawArrow(m_mouseSnappedPos, Colors.ObjectBgColor, c_bigObjectSize, m_draggedObject.Angle);
             }
         }
 

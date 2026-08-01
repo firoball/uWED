@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class SegmentDrawer : BaseEditorDrawer
 {
-    private Color c_vertexDragColor = new Color(0.0f, 0.45f, 0.0f, 1.0f);
-    private Color c_lineDragColor = new Color(0.45f, 0.45f, 0.45f, 1.0f);
+    private new class Colors : BaseEditorDrawer.Colors
+    {
+        public static readonly Color VertexDragColor = new Color(0.0f, 0.45f, 0.0f, 1.0f);
+        public static readonly Color LineDragColor = new Color(0.45f, 0.45f, 0.45f, 1.0f);
+    }
 
     //Dragging mode
     private bool m_dragging;
@@ -131,11 +134,11 @@ public class SegmentDrawer : BaseEditorDrawer
     {
         Color color;
         if (m_dragging && m_draggedSegments.Contains(m_mapData.Segments[i]))
-            color = c_lineDragColor;
+            color = Colors.LineDragColor;
         else if (!m_dragging && m_mapData.Segments[i] == m_cursorInfo.HoverSegment)
-            color = c_hoverColor;
+            color = Colors.HoverColor;
         else if (m_cursorInfo.SelectedSegments.Contains(m_mapData.Segments[i]))
-            color = c_selectColor;
+            color = Colors.SelectColor;
         else
             color = base.SetSegmentColor(i);
 
@@ -146,89 +149,23 @@ public class SegmentDrawer : BaseEditorDrawer
     {
         Color color;
         if (m_dragging && m_mapData.Vertices[i] == m_draggedVertex)
-            color = c_vertexDragColor;
+            color = Colors.VertexDragColor;
         else if (!m_dragging && m_mapData.Vertices[i] == m_cursorInfo.HoverVertex)
-            color = c_hoverColor;
+            color = Colors.HoverColor;
         else if (m_cursorInfo.SelectedVertices.Contains(m_mapData.Vertices[i]))
-            color = c_selectColor;
+            color = Colors.SelectColor;
         else
             color = base.SetVertexColor(i);
 
         return color;
     }
 
-    protected override void ImmediateRepaint()
+    protected override void PostEditorRedraw(EditorView view)
     {
-        if (!enabledSelf)
-            return;
-
-        base.ImmediateRepaint();
-
         bool intersects = IntersectionTest();
         DrawModes(intersects);
-
-        
-/*
-        //TEMP - move to RegionMode
-        if (m_cursorInfo.HoverSegment != null)
-        {
-            Segment s = m_cursorInfo.HoverSegment;
-            if (s.Vertex2.Connections.Count > 2)
-            {
-                float cw = float.MaxValue;
-                float ccw = float.MinValue;
-                Segment scw = null;
-                Segment sccw = null;
-                //string v = "";
-                Vector2 lhs = (s.Vertex2.WorldPosition - s.Vertex1.WorldPosition).normalized;
-                for (int i = 0; i < s.Vertex2.Connections.Count; i++)
-                {
-                    if (s.Vertex2.Connections[i] != s)
-                    {
-                        Vector2 rhs;
-                        bool side;
-                        if (s.Vertex2.Connections[i].Vertex1 == s.Vertex2)
-                        {
-                            rhs = (s.Vertex2.Connections[i].Vertex2.WorldPosition - s.Vertex2.WorldPosition).normalized;
-                            side = Geom2D.IsCcw(s.Vertex1.WorldPosition, s.Vertex2.WorldPosition, s.Vertex2.Connections[i].Vertex2.WorldPosition);
-                        }
-                        else
-                        {
-                            rhs = (s.Vertex2.Connections[i].Vertex1.WorldPosition - s.Vertex2.WorldPosition).normalized;
-                            side = Geom2D.IsCcw(s.Vertex1.WorldPosition, s.Vertex2.WorldPosition, s.Vertex2.Connections[i].Vertex1.WorldPosition);
-                        }
-
-                        float newdot = Vector2.Dot(lhs, rhs);
-                        //v += "["+lhs + " " + rhs + " dot: " + side+ " " + newdot+ "] ";
-
-                        if (!side && newdot < cw)
-                        {
-                            cw = newdot;
-                            scw = s.Vertex2.Connections[i];
-                        }
-                        if (side && newdot > ccw)
-                        {
-                            ccw = newdot;
-                            sccw = s.Vertex2.Connections[i];
-                        }
-                    }
-                }
-                //string result = " => candidate: ";
-                if (scw != null)
-                {
-                    //result += cw + " (cw)";
-                    DrawLine(scw.Vertex2.ScreenPosition, scw.Vertex1.ScreenPosition, c_validColor);
-                }
-                else
-                {
-                    //result += ccw + " (ccw)";
-                    DrawLine(sccw.Vertex2.ScreenPosition, sccw.Vertex1.ScreenPosition, c_validColor);
-                }
-                //Debug.Log(v+result);
-            }
-        }*/
     }
-
+    
     protected override void HoverTest()
     {
         //Hover vertex
@@ -307,10 +244,10 @@ public class SegmentDrawer : BaseEditorDrawer
         m_cursorInfo.VertexDragIsValid = true;
         if (m_dragging && m_connectedVertices != null)
         {
-            Color previewColor = c_validColor;
+            Color previewColor = Colors.ValidColor;
             if (intersects)
             {
-                previewColor = c_invalidColor;
+                previewColor = Colors.InvalidColor;
                 m_cursorInfo.VertexDragIsValid = false;
             }
 
@@ -325,10 +262,10 @@ public class SegmentDrawer : BaseEditorDrawer
         m_cursorInfo.NextSegmentIsValid = true;
         if (m_constructing && m_focusedVertex != null)
         {
-            Color previewColor = c_validColor;
+            Color previewColor = Colors.ValidColor;
             if (intersects)
             {
-                previewColor = c_invalidColor;
+                previewColor = Colors.InvalidColor;
                 m_cursorInfo.NextSegmentIsValid = false;
             }
 

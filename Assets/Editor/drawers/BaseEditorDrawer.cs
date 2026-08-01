@@ -4,25 +4,28 @@ using UnityEngine.UIElements;
 
 public abstract class BaseEditorDrawer : ImmediateModeElement
 {
-    //object colors
-    protected Color c_objectColor = new Color(0.0f, 0.6f, 0.0f, 1.0f);
-    protected Color c_objectBgColor = new Color(0.125f, 0.125f, 0.125f, 1.0f);
+    protected class Colors
+    {
+        //object colors
+        public static readonly Color ObjectColor = new Color(0.0f, 0.6f, 0.0f, 1.0f);
+        public static readonly Color ObjectBgColor = new Color(0.125f, 0.125f, 0.125f, 1.0f);
 
-    //way colors
-    protected Color c_wayColor = new Color(0.3f, 0.3f, 1.0f, 1.0f);
-    protected Color c_waypointColor = new Color(0.5f, 0.5f, 1.0f, 1.0f);
-    protected Color c_wayStartColor = new Color(0.9f, 0.9f, 1.0f, 1.0f);
+        //way colors
+        public static readonly Color WayColor = new Color(0.3f, 0.3f, 1.0f, 1.0f);
+        public static readonly Color WaypointColor = new Color(0.5f, 0.5f, 1.0f, 1.0f);
+        public static readonly Color WayStartColor = new Color(0.9f, 0.9f, 1.0f, 1.0f);
 
-    //segment colors
-    protected Color c_vertexColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
-    protected Color c_lineColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+        //segment colors
+        public static readonly Color VertexColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);
+        public static readonly Color LineColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
 
-    //common colors
-    protected Color c_hoverColor = new Color(1.0f, 0.75f, 0.0f, 1.0f);
-    protected Color c_selectColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);
-    protected Color c_validColor = new Color(0.3f, 0.8f, 0.3f, 1.0f);
-    protected Color c_invalidColor = new Color(1.0f, 0.3f, 0.3f, 1.0f);
-    protected Color c_centerColor = new Color(0.7f, 0.7f, 0.0f, 1.0f);
+        //common colors
+        public static readonly Color HoverColor = new Color(1.0f, 0.75f, 0.0f, 1.0f);
+        public static readonly Color SelectColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);
+        public static readonly Color ValidColor = new Color(0.3f, 0.8f, 0.3f, 1.0f);
+        public static readonly Color InvalidColor = new Color(1.0f, 0.3f, 0.3f, 1.0f);
+        public static readonly Color CenterColor = new Color(0.7f, 0.7f, 0.0f, 1.0f);
+    }
 
     //default sizes
     protected int c_smallObjectSize = 3;
@@ -133,6 +136,10 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         SetDragMode(on, false);
     }
 
+    protected virtual void PreEditorRedraw(EditorView view) { }
+
+    protected virtual void PostEditorRedraw(EditorView view) { }
+
     protected virtual void SelectMultiple(Rect selection) { }
 
     protected virtual bool CloseWay(Way w)
@@ -142,7 +149,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
 
     protected virtual Color SetObjectColor(int i)
     {
-        return c_objectColor;
+        return Colors.ObjectColor;
     }
 
     protected virtual float SetObjectAngle(int i)
@@ -153,24 +160,24 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
     protected virtual Color SetWaypointColor(Way w, int p)
     {
         if (p == 0)
-            return c_wayStartColor;
+            return Colors.WayStartColor;
         else
-            return c_waypointColor;
+            return Colors.WaypointColor;
     }
 
     protected virtual Color SetWaySegmentColor(Way w, int p)
     {
-        return c_wayColor;
+        return Colors.WayColor;
     }
 
     protected virtual Color SetSegmentColor(int i)
     {
-        return c_lineColor;
+        return Colors.LineColor;
     }
 
     protected virtual Color SetVertexColor(int i)
     {
-        return c_vertexColor;
+        return Colors.VertexColor;
     }
 
     protected virtual void HoverTest()
@@ -180,7 +187,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
     }
 
 
-    protected override void ImmediateRepaint() 
+    protected sealed override void ImmediateRepaint() 
     {
         if (!enabledSelf) return;
 
@@ -198,6 +205,8 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             foreach (MapObject o in m_mapData.Objects)
                 o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition);
 
+            PreEditorRedraw(editorView);
+
             DrawCenter();
             DrawWays();
             DrawLines();
@@ -206,6 +215,8 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             UpdateSelector();
             DrawSelector();
             HoverTest();
+
+            PostEditorRedraw(editorView);
         }
     }
 
@@ -311,8 +322,8 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             Vector2 p1 = editorView.WorldtoScreenSpace(new Vector2(c_centerLength, 0));
             Vector2 p2 = editorView.WorldtoScreenSpace(new Vector2(0, -c_centerLength));
             Vector2 p3 = editorView.WorldtoScreenSpace(new Vector2(0, c_centerLength));
-            DrawLine(p0, p1, c_centerColor);
-            DrawLine(p2, p3, c_centerColor);
+            DrawLine(p0, p1, Colors.CenterColor);
+            DrawLine(p2, p3, Colors.CenterColor);
         }
     }
 
@@ -321,7 +332,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
         if (m_selecting)
         {
             GL.Begin(GL.LINE_STRIP);
-            GL.Color(c_validColor);
+            GL.Color(Colors.ValidColor);
             GL.Vertex(m_selectionStart);
             GL.Vertex(new Vector2(m_selectionEnd.x, m_selectionStart.y));
             GL.Vertex(m_selectionEnd);
@@ -372,7 +383,7 @@ public abstract class BaseEditorDrawer : ImmediateModeElement
             if (m_enableObjectDetails)
             {
                 int idxDir = idx + step1;
-                Array.Fill(m_objectMgr.Colors, c_objectBgColor, idxDir, step2);
+                Array.Fill(m_objectMgr.Colors, Colors.ObjectBgColor, idxDir, step2);
                 float angle = SetObjectAngle(i);
                 RotateArrow(m_objectMgr.Vertices, idxDir, pArrow, m_mapData.Objects[i].Vertex.WorldPosition, angle);
             }

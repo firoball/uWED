@@ -5,6 +5,7 @@ using UnityEngine;
 
 public static class ContourHelper
 {
+
     public static List<Vertex> FindContour(Contour contour, Tuple<Segment, bool> nearest, int limit)
     {
         List<Vertex> vertices = new List<Vertex>();
@@ -15,17 +16,28 @@ public static class ContourHelper
         do
         {
             current = FindNextSegment(current);
+            Vertex newVertex;
             if (current.Item2) //left sided segment
             {
-                vertices.Add(current.Item1.Vertex1);
+                newVertex = current.Item1.Vertex1;
                 current.Item1.CLeft = contour;
             }
             else //right sided segment
             {
-                vertices.Add(current.Item1.Vertex2);
+                newVertex = current.Item1.Vertex2;
                 current.Item1.CRight = contour;
             }
 
+            if (vertices.Count > 0 && newVertex.WorldPosition == vertices[^1].WorldPosition)
+            {
+                // layered neighbor vertex  found - just ignore it
+                Debug.LogWarning($"Removed duplicate Vertex at {newVertex.WorldPosition}");
+            }
+            else
+            {
+                // add the new vertex
+                vertices.Add(newVertex);
+            }
         } while (
             (current.Item1 != first.Item1 || current.Item2 != first.Item2) &&
             vertices.Count <= limit //avoid endless loop in case of some weird error
@@ -104,7 +116,7 @@ public static class ContourHelper
         return isInside;
     }
 
-    public static bool IsFlippedContour(Contour c1, Contour c2)
+    private static bool IsFlippedContour(Contour c1, Contour c2)
     {
         //different vertex count - can't be a match
         if (c1.Vertices.Count != c2.Vertices.Count)

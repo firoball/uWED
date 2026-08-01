@@ -30,7 +30,7 @@ public class EditorManipulator : MouseManipulator
             new WayMode(m_mapData)
         };
 
-        ResetMode();
+        InitializeActiveMode();
     }
 
     protected override void RegisterCallbacksOnTarget()
@@ -209,7 +209,7 @@ public class EditorManipulator : MouseManipulator
         target.CaptureMouse();
     }
 
-    private void ResetMode()
+    private void InitializeActiveMode()
     {
         m_editorModes[(int)m_mode].Initialize();
         m_constructMode = EditorStatus.Construct.Idle;
@@ -219,10 +219,9 @@ public class EditorManipulator : MouseManipulator
     {
         if (mode != m_mode)
         {
-//            ResetMode();
             m_editorModes[(int)m_mode].Drawer.SetEnabled(false);
             m_mode = mode;
-            ResetMode();
+            InitializeActiveMode();
             EditorView ev = target as EditorView;
             ev?.Interface.NotifySetModeListeners(m_mode);
             m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
@@ -232,7 +231,10 @@ public class EditorManipulator : MouseManipulator
     public void LoadMap(IMapLoader loader, string name)
     {
         if (loader != null && !string.IsNullOrWhiteSpace(name))
+        {
             m_mapData?.Load(loader, name);
+            InitializeActiveMode(); //map data has changed rebuild all dependent structures
+        }
     }
 
     public void WriteMap(IMapWriter writer, string name)
