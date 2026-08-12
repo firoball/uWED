@@ -1,0 +1,128 @@
+.info-panel {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    padding: 8px 10px;
+    background-color: rgba(40, 40, 40, 0.92);
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.5);
+    min-width: 160px;
+}
+
+.info-panel__columns {
+    flex-direction: row;
+}
+
+.info-panel__column {
+    flex-direction: column;
+}
+
+.info-panel__hover {
+    min-width: 140px;
+}
+
+/* Reserved for future per-type parameters. Empty for now: no min-width, no
+   padding, so it takes zero extra space until content is added later. Give
+   it a min-width and padding-left/right once real content lands. */
+.info-panel__extra {
+    flex-grow: 0;
+}
+
+/* Same min-width as .info-panel__hover - this column renders the exact
+   same per-type detail views (Vertex/Segment/Region/Object/Way) for a
+   single-item selection, not just short count summaries, so a smaller
+   minimum here made identical content render at two different widths. */
+.info-panel__selection {
+    min-width: 140px;
+}
+
+/* Only present when the hover column is also visible - without it, the
+   selection column sits flush at the panel's left edge instead of
+   showing a separator line with nothing on the other side of it. */
+.info-panel__selection--separated {
+    margin-left: 12px;
+    padding-left: 12px;
+    border-left-width: 1px;
+    border-left-color: rgba(255, 255, 255, 0.15);
+}
+
+.info-row {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 1px;
+}
+
+.info-row--header {
+    font-size: 13px;
+    -unity-font-style: bold;
+    color: rgb(120, 200, 255);
+    margin-bottom: 4px;
+}
+
+/* Applied to the single-item detail views living in the selection column
+   only (not hover, not the multi-select summary) - distinguishes a
+   selected item's header from a hovered one at a glance. */
+.info-detail-view--selected .info-row--header {
+    color: rgb(255, 255, 0);
+}
+
+.info-row--name {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: rgb(255, 255, 255);
+    margin-bottom: 4px;
+}
+
+.info-row--param {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.info-row__label {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.info-row__value {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.info-row--texture {
+    flex-direction: row;
+    margin-top: 8px;
+}
+
+.info-texture-slot {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 10px;
+}
+
+.info-texture-swatch {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 3px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.info-texture-swatch--empty {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.info-texture-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+.info-row--count {
+    font-size: 13px;
+}

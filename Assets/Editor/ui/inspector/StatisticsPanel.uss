@@ -1,0 +1,26 @@
+.statistics-panel {
+    flex-direction: row;
+    align-items: center;
+}
+
+.info-stat-entry {
+    margin-top: 3px;
+    margin-left: 3px;
+}
+
+/* Applied to the first label of the right-aligned x/y/status cluster only -
+   overrides margin-left to eat the row's remaining space, pushing that
+   label and everything after it flush to the right edge. */
+.info-stat-entry--push {
+    margin-left: auto;
+}
+
+/* The furthest-right label (status). Fixed width so a shorter status word
+   doesn't shift the row around, right-aligned text within that width, and
+   the row's closing 3px inset on the right to match the 3px left inset
+   the first label gets from .info-stat-entry. */
+.info-stat-status {
+    width: 90px;
+    -unity-text-align: middle-right;
+    margin-right: 3px;
+}
