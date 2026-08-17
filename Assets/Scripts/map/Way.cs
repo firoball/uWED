@@ -3,15 +3,19 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class Way
+public class Way : IndexedData
 {
+    //properties from map format
     [SerializeReference]
     private List<Vertex> m_positions;
+    [SerializeField]
+    private string m_name;
+    
+    public Way() : this (null, null) { }
 
-    public Way() : this (null) { }
-
-    public Way (List<Vertex> positions)
+    public Way (List<Vertex> positions, string name)
     {
+        m_name = !string.IsNullOrWhiteSpace(name) ? name : "defaultway";
         if (positions != null)
             m_positions = positions;
         else
@@ -19,4 +23,7 @@ public class Way
     }
 
     public List<Vertex> Positions => m_positions;
+
+    public string Name => m_name;
+
 }
