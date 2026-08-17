@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [CustomEditor(typeof(MapAsset))]
-public class MapAssetEditor : Editor
+public class MapAssetEditor : UnityEditor.Editor
 {
     private MapAssetViewer m_viewer;
     private MapAssetStatistics m_stats;

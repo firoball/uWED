@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Editor.UI.Manipulator;
 using Editor.UI.View2D;
 
-namespace Editor.ui
-{
+//namespace Editor.ui
+//{
     public class ManipulatorBinder
     {
         ITextureProvider segmentTextures = new SimpleTextureProvider();
@@ -32,4 +32,4 @@ namespace Editor.ui
             m_segmentManipulator.Open(segment, segment.Index);
         }
     }
-}
+//}

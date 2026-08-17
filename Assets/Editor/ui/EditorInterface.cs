@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Editor.UI.View2D;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,17 +16,34 @@ public class EditorInterface
     private readonly List<BaseField<int>> m_lockAngleListeners = new List<BaseField<int>>();
     private readonly List<BaseField<bool>> m_toggleGridListeners = new List<BaseField<bool>>();
 
+    #region buffers
+
     private bool m_toggleSnapping = false;
     private EditorStatus.Mode m_setMode = EditorStatus.Mode.Count;
+    private EditorStatus.Construct m_setConstructionMode = EditorStatus.Construct.Idle;
     private float m_scaleGrid = 0f;
     private float m_lockAngle = 0f;
     private bool m_toggleGrid = false;
+
+    #endregion
+
+    #region event hooks
+
+    public event Action<Vector2> OnMouseMoved;
+    public event Action<CursorInfo> OnCursorInfoChanged;
+    public event Action<Mesh> OnRegionMeshChanged;
+    public event Action<EditorStatus.Mode> OnModeChanged;
+    public event Action<EditorStatus.Construct> OnConstructionModeChanged;
+    public event Action<Vertex> OnEditVertex;
+    public event Action<Segment, List<string>> OnEditSegment;
 
     public List<BaseField<bool>> ToggleSnappingListeners => m_toggleSnappingListeners;
     public List<PopupField<string>> SetModeListeners => m_setModeListeners;
     public List<BaseField<int>> ScaleGridListeners => m_scaleGridListeners;
     public List<BaseField<int>> LockAngleListeners => m_lockAngleListeners;
     public List<BaseField<bool>> ToggleGridListeners => m_toggleGridListeners;
+
+    #endregion
 
 
     public EditorInterface(EditorView ev, GridManipulator gm, EditorManipulator em)
@@ -34,13 +53,15 @@ public class EditorInterface
         m_em = em;
     }
 
+    #region incoming events
+
     //Events from external components
     public void OnToggleSnapping(ChangeEvent<bool> evt)
     {
         m_ev?.ToggleSnapping(evt.newValue);
     }
 
-    public void OnSetMode(ChangeEvent<string> evt) 
+    public void OnSetMode(ChangeEvent<string> evt)
     {
         PopupField<string> field = evt.target as PopupField<string>;
         if (field != null && field.index >= 0 && field.index < (int)EditorStatus.Mode.Count)
@@ -48,10 +69,12 @@ public class EditorInterface
             m_em?.SetMode((EditorStatus.Mode)field.index);
         }
     }
-    
-    public void OnSetView(ChangeEvent<string> evt) { }
-    
-    public void OnScaleGrid(ChangeEvent<int> evt) 
+
+    public void OnSetView(ChangeEvent<string> evt)
+    {
+    }
+
+    public void OnScaleGrid(ChangeEvent<int> evt)
     {
         m_gm?.ScaleGrid((float)evt.newValue);
     }
@@ -72,7 +95,7 @@ public class EditorInterface
         m_ev?.LockAngle(angle);
     }
 
-    public void OnToggleGrid(ChangeEvent<bool> evt) 
+    public void OnToggleGrid(ChangeEvent<bool> evt)
     {
         m_gm?.ToggleGrid(evt.newValue);
     }
@@ -87,6 +110,10 @@ public class EditorInterface
     {
         m_em?.WriteMap(writer, name);
     }
+
+    #endregion
+
+    #region outgoing events
 
     //Notifiers for listeners
     public void NotifyToggleSnappingListeners(bool value)
@@ -122,9 +149,17 @@ public class EditorInterface
 
     public void NotifySetModeListeners(EditorStatus.Mode value)
     {
+        OnModeChanged?.Invoke(value);
+
         m_setMode = value;
         foreach (var listener in m_setModeListeners)
             listener.index = (int)value;
+    }
+
+    public void NotifySetConstructionModeListeners(EditorStatus.Construct value)
+    {
+        m_setConstructionMode = value;
+        OnConstructionModeChanged?.Invoke(value);
     }
 
     public void NotifyToggleGridListeners(bool value)
@@ -134,6 +169,35 @@ public class EditorInterface
             listener.value = value;
     }
 
+    // unbuffered mouse move related event
+    public void NotifyMouseMoveListeners(Vector2 value)
+    {
+        OnMouseMoved?.Invoke(value);
+    }
+
+    // unbuffered mouse move related event
+    public void NotifyCursorInfoChangedListeners(CursorInfo value)
+    {
+        OnCursorInfoChanged?.Invoke(value);
+    }
+
+    public void NotifyRegionMeshChangedListeners(Mesh mesh)
+    {
+        OnRegionMeshChanged?.Invoke(mesh);
+    }
+
+    public void NotifyVertexEditListeners(Vertex vertex)
+    {
+        OnEditVertex?.Invoke(vertex);
+    }
+    
+    public void NotifySegmentEditListeners(Segment segment, List<string> segmentNames)
+    {
+        OnEditSegment?.Invoke(segment, segmentNames);
+    }
+    
+    #endregion
+
     //Notify all listeners
     public void RefreshListeners()
     {
@@ -141,6 +205,7 @@ public class EditorInterface
         NotifyScaleGridListeners(m_scaleGrid);
         NotifyLockAngleListeners(m_lockAngle);
         NotifySetModeListeners(m_setMode);
+        NotifySetConstructionModeListeners(m_setConstructionMode);
         NotifyToggleGridListeners(m_toggleGrid);
     }
 }

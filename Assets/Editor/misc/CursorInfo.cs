@@ -1,9 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class CursorInfo
 {
+    //Map statistics
+    private int m_objects;
+    private int m_vertices;
+    private int m_segments;
+    private int m_regions;
+    private int m_ways;
+
+    private int m_hoverIndex;
+    
     //Segment and Way modes
     private Vertex m_nearVertex;
     private Vertex m_hoverVertex;
@@ -20,13 +29,13 @@ public class CursorInfo
     private bool m_nextSegmentIsValid;
     private readonly List<Segment> m_selectedSegments;
 
-    //Way mode
-    private Vertex m_waypoint;
-
     //Region mode
     private Region m_hoverRegion;
     private readonly List<Region> m_selectedRegions;
     private Contour m_hoverContour;
+
+    //Way mode
+    private Vertex m_waypoint;
 
     public CursorInfo()
     {
@@ -88,4 +97,34 @@ public class CursorInfo
     public List<Region> SelectedRegions => m_selectedRegions;
     public Contour HoverContour { get => m_hoverContour; set => m_hoverContour = value; }
 
+    public int Objects
+    {
+        get => m_objects;
+        set => m_objects = value;
+    }
+
+    public int Vertices
+    {
+        get => m_vertices;
+        set => m_vertices = value;
+    }
+
+    public int Segments
+    {
+        get => m_segments;
+        set => m_segments = value;
+    }
+
+    public int Regions
+    {
+        get => m_regions;
+        set => m_regions = value;
+    }
+
+    public int Ways
+    {
+        get => m_ways;
+        set => m_ways = value;
+    }
+    
 }

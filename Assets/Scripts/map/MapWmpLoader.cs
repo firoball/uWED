@@ -24,29 +24,34 @@ public class MapWmpLoader : IMapLoader
         Map map = new Map();
         map.Parse(name);
 
-        m_data.Objects = MergeObjectLists(map);
-
         m_data.Ways = map.Ways.Select(x => new Way(
             x.Points.Select(p => new Vertex(
                 new Vector2(p.X, p.Y) * m_scale
-                )).ToList()
-            )).ToList();
+            )).ToList(), x.Name
+        )).ToList();
 
         m_data.Regions = map.Regions.Select(x => new Region(
-            //TODO: add stuff
+            x.FloorHeight, x.CeilingHeight, x.Name
             )).ToList();
 
         m_data.Vertices = map.Vertices.Select(x => new Vertex(
             new Vector2(x.X, x.Y) * m_scale
             )).ToList();
         
+        // requires Vertices and Regions
         m_data.Segments = map.Walls.Select(x => new Segment(
-            m_data.Vertices[x.Vertex2.Index], //vertex1
-            m_data.Vertices[x.Vertex1.Index], //vertex2
+            m_data.Vertices[x.Vertex2.Index], //vertex1(!)
+            m_data.Vertices[x.Vertex1.Index], //vertex2(!)
             m_data.Regions[x.Region2.Index], //left
-            m_data.Regions[x.Region1.Index] //right
+            m_data.Regions[x.Region1.Index], //right
+            
+            new Vector2(x.OffsetX, x.OffsetY),
+            x.Name
             )).ToList();
 
+        // requires Regions
+        m_data.Objects = MergeObjectLists(map);
+        
         return true;
     }
 
@@ -66,38 +71,41 @@ public class MapWmpLoader : IMapLoader
 
             if (idxP < idxT && idxP < idxA)
             {
+                PlayerStart p = map.PlayerStarts[cntP];
                 objects.Add(
                     new MapObject(
-                        new Vector2(map.PlayerStarts[cntP].X, map.PlayerStarts[cntP].Y) * m_scale
-                        )
-                    {
-                        Angle = (map.PlayerStarts[cntP].Angle - 90f) * Mathf.PI / 180f
-                    }
-                    );
+                        new Vector2(p.X, p.Y) * m_scale,
+                        (p.Angle - 90f) * Mathf.PI / 180f,
+                        m_data.Regions[p.Region.Index],
+                        "player"
+                    )
+                );
                 cntP++;
             }
             else if (idxT < idxP && idxT < idxA)
             {
+                Thing t = map.Things[cntT];
                 objects.Add(
                     new MapObject(
-                        new Vector2(map.Things[cntT].X, map.Things[cntT].Y) * m_scale
-                        )
-                    {
-                        Angle = (map.Things[cntT].Angle - 90f) * Mathf.PI / 180f
-                    }
-                    );
+                        new Vector2(t.X, t.Y) * m_scale,
+                        (t.Angle - 90f) * Mathf.PI / 180f,
+                        m_data.Regions[t.Region.Index],
+                        t.Name
+                    )
+                );
                 cntT++;
             }
             else
             {
+                Actor a = map.Actors[cntA];
                 objects.Add(
                     new MapObject(
-                        new Vector2(map.Actors[cntA].X, map.Actors[cntA].Y) * m_scale
-                        )
-                    {
-                        Angle = (map.Actors[cntA].Angle - 90f) * Mathf.PI / 180f
-                    }
-                    );
+                        new Vector2(a.X, a.Y) * m_scale,
+                        (a.Angle - 90f) * Mathf.PI / 180f,
+                        m_data.Regions[a.Region.Index],
+                        a.Name
+                    )
+                );
                 cntA++;
             }
         }

@@ -1,5 +1,5 @@
-using System.Linq;
-using UnityEditor;
+using Editor.Ui.Help;
+using Editor.UI.View2D;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,18 +9,18 @@ public class MenuBinder
     private Label m_gridSizeValue;
     private Label m_angleSizeValue;
 
-    public MenuBinder(EditorView ev, EditorHelp eh, VisualElement parent, EditorWindow wnd)
+    public MenuBinder(EditorView ev, EditorHelp eh, VisualElement menuParent, UWed wnd)
     {
-        BindFileMenu(ev, parent, wnd);
-        BindEditorMode(ev, eh, parent);
-        BindSnapControl(ev, parent);
-        BindHelpButton(eh, parent);
+        BindFileMenu(ev, menuParent, wnd);
+        BindEditorMode(ev, eh, menuParent);
+        BindSnapControl(ev, menuParent);
+        BindHelpButton(eh, menuParent);
 
         //Update initial values of all controls
         ev.Interface.RefreshListeners();
     }
 
-    private void BindFileMenu(EditorView ev, VisualElement parent, EditorWindow wnd)
+    private void BindFileMenu(EditorView ev, VisualElement parent, UWed wnd)
     {
         ToolbarMenu toolbarMenu = parent.Q("fileMenu") as ToolbarMenu;
         if (toolbarMenu != null && ev != null)

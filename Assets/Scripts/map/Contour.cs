@@ -133,10 +133,11 @@ public class Contour : IContour<Vertex>
             if (m_vertices.Find(v => v != m_vertices[i] && v.WorldPosition == m_vertices[i].WorldPosition) != null)
             {
                 int prev = (i - 1 +  m_vertices.Count) %  m_vertices.Count;
-                Vector2 patchedPosition = m_vertices[prev].WorldPosition +
+                Vector3 patchedPosition = m_vertices[prev].WorldPosition +
                                                    (m_vertices[i].WorldPosition - m_vertices[prev].WorldPosition) * 0.999f;
                 // insert corrected Vertex instead of original one, keep original data untouched
                 Debug.LogWarning($"Patched duplicate Vertex at {m_vertices[i].WorldPosition}");
+                patchedPosition.z = (float)m_vertices[i].Z; //TODO: make WorldPosition Vector3
                 m_vertices[i] = new Vertex(patchedPosition);
                 repaired = true;
             }
