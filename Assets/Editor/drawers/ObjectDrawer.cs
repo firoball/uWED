@@ -1,186 +1,192 @@
+using Editor.UI.View2D;
 using UnityEngine;
 
-public class ObjectDrawer : BaseEditorDrawer
+namespace Editor.Drawers
 {
-    private new class Colors : BaseEditorDrawer.Colors
+    public class ObjectDrawer : BaseEditorDrawer
     {
-        public static readonly Color ObjectDragColor = new Color(0.0f, 0.3f, 0.0f, 1.0f);
-    }
-
-    //Dragging mode
-    private bool m_dragging;
-    private bool m_rotating;
-    private MapObject m_draggedObject;
-    //private List<MapObject> m_draggedObjects;
-
-    public ObjectDrawer(MapData mapData) : base(mapData) 
-    {
-        m_enableObjectDetails = true;
-    }
-
-    public override void Initialize()
-    {
-        m_dragging = false;
-        m_rotating = false;
-        m_draggedObject = null;
-        //m_draggedObjects = new List<MapObject>();
-
-        base.Initialize();
-    }
-
-    public override void SetSelectSingle()
-    {
-        if (m_cursorInfo.HoverObject != null)
+        private new class Colors : BaseEditorDrawer.Colors
         {
-            MapObject o = m_cursorInfo.HoverObject;
-            if (!m_cursorInfo.SelectedObjects.Contains(o))
-                m_cursorInfo.SelectedObjects.Add(o);
-            else
-                m_cursorInfo.SelectedObjects.Remove(o);
+            public static readonly Color ObjectDragColor = new Color(0.0f, 0.3f, 0.0f, 1.0f);
         }
-    }
 
-    public override void Unselect()
-    {
-        m_cursorInfo.SelectedObjects.Clear();
-    }
+        //Dragging mode
+        private bool m_dragging;
+        private bool m_rotating;
+        private MapObject m_draggedObject;
+        //private List<MapObject> m_draggedObjects;
 
-    public override void SetDragMode(bool on, bool alt)
-    {
-        //if alt is true, object rotation is activated
-        //on valid finish alt is set true as well
-        //on abort alt is set to false
-        m_dragging = false;
-        if (on && m_cursorInfo.HoverObject != null)
+        public ObjectDrawer(MapData mapData) : base(mapData)
         {
-            m_dragging = true;
-            m_rotating = alt;
-            m_draggedObject = m_cursorInfo.HoverObject;
+            m_enableObjectDetails = true;
         }
-        else
-        {
-            if (m_rotating && alt) //normally assignments should not be done in drawer, but only here all params are available
-                m_draggedObject.Angle = CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
 
+        public override void Initialize()
+        {
+            m_dragging = false;
             m_rotating = false;
             m_draggedObject = null;
-        }
-    }
+            //m_draggedObjects = new List<MapObject>();
 
-    protected override void  SelectMultiple(Rect selection)
-    {
-        foreach (MapObject o in m_mapData.Objects)
+            base.Initialize();
+        }
+
+        public override void SetSelectSingle()
         {
-            if (!m_cursorInfo.SelectedObjects.Contains(o) && selection.Contains(o.Vertex.ScreenPosition))
-                m_cursorInfo.SelectedObjects.Add(o);
-        }
-    }
-
-
-    protected override Color SetObjectColor(int i)
-    {
-        Color color;
-        if (m_dragging && m_mapData.Objects[i] == m_draggedObject)
-        {
-            color = m_rotating ? Colors.HoverColor : Colors.ObjectDragColor;
-        }
-        else if (!m_dragging && m_mapData.Objects[i] == m_cursorInfo.HoverObject)
-            color = Colors.HoverColor;
-        else if (m_cursorInfo.SelectedObjects.Contains(m_mapData.Objects[i]))
-            color = Colors.SelectColor;
-        else
-            color = base.SetObjectColor(i);
-
-        return color;
-    }
-
-    protected override float SetObjectAngle(int i)
-    {
-        if (m_rotating && m_mapData.Objects[i] == m_draggedObject)
-        {
-            return CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
-        }
-        else
-        { 
-            return base.SetObjectAngle(i);
-        }
-    }
-
-    protected override void PostEditorRedraw(EditorView view)
-    {
-        DrawModes();
-    }
-    
-    protected override void HoverTest()
-    {
-        int pointHoverSize = 16;
-        MapObject mapObject = null;
-        MapObject snappedMapObject = null;
-        int halfSize = (pointHoverSize - 1) / 2;
-
-        for (int o = 0; o < m_mapData.Objects.Count && mapObject == null; o++)
-        {
-            Vector2 pos = m_mapData.Objects[o].Vertex.ScreenPosition;
-            Rect rect = new Rect(pos.x - halfSize, pos.y - halfSize, pointHoverSize, pointHoverSize);
-            if (rect.Contains(m_mousePos))
+            if (m_cursorInfo.HoverObject != null)
             {
-                mapObject = m_mapData.Objects[o];
+                MapObject o = m_cursorInfo.HoverObject;
+                if (!m_cursorInfo.SelectedObjects.Contains(o))
+                    m_cursorInfo.SelectedObjects.Add(o);
+                else
+                    m_cursorInfo.SelectedObjects.Remove(o);
             }
-            else if (rect.Contains(m_mouseSnappedPos))
+        }
+
+        public override void Unselect()
+        {
+            m_cursorInfo.SelectedObjects.Clear();
+        }
+
+        public override void SetDragMode(bool on, bool alt)
+        {
+            //if alt is true, object rotation is activated
+            //on valid finish alt is set true as well
+            //on abort alt is set to false
+            m_dragging = false;
+            if (on && m_cursorInfo.HoverObject != null)
             {
-                snappedMapObject = m_mapData.Objects[o];
+                m_dragging = true;
+                m_rotating = alt;
+                m_draggedObject = m_cursorInfo.HoverObject;
             }
             else
             {
-                //nothing to do
+                if (m_rotating &&
+                    alt) //normally assignments should not be done in drawer, but only here all params are available
+                    m_draggedObject.Angle = CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
+
+                m_rotating = false;
+                m_draggedObject = null;
             }
         }
 
-        m_cursorInfo.HoverObject = mapObject;
-        m_cursorInfo.NearObject = snappedMapObject;
-    }
-
-    private void DrawModes()
-    {
-        //Draw mouse - drag mode
-        if (m_dragging && m_draggedObject != null)
+        protected override void SelectMultiple(Rect selection)
         {
-            if (m_rotating)
+            foreach (MapObject o in m_mapData.Objects)
             {
-                EditorView ev = parent as EditorView;
-                if (ev != null)
+                if (!m_cursorInfo.SelectedObjects.Contains(o) && selection.Contains(o.Vertex.ScreenPosition))
+                    m_cursorInfo.SelectedObjects.Add(o);
+            }
+        }
+
+
+        protected override Color SetObjectColor(int i)
+        {
+            Color color;
+            if (m_dragging && m_mapData.Objects[i] == m_draggedObject)
+            {
+                color = m_rotating ? Colors.HoverColor : Colors.ObjectDragColor;
+            }
+            else if (!m_dragging && m_mapData.Objects[i] == m_cursorInfo.HoverObject)
+                color = Colors.HoverColor;
+            else if (m_cursorInfo.SelectedObjects.Contains(m_mapData.Objects[i]))
+                color = Colors.SelectColor;
+            else
+                color = base.SetObjectColor(i);
+
+            return color;
+        }
+
+        protected override float SetObjectAngle(int i)
+        {
+            if (m_rotating && m_mapData.Objects[i] == m_draggedObject)
+            {
+                return CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
+            }
+            else
+            {
+                return base.SetObjectAngle(i);
+            }
+        }
+
+        protected override void PostEditorRedraw(EditorView view)
+        {
+            DrawModes();
+        }
+
+        protected override void HoverTest()
+        {
+            int pointHoverSize = 16;
+            MapObject mapObject = null;
+            MapObject snappedMapObject = null;
+            int halfSize = (pointHoverSize - 1) / 2;
+
+            for (int o = 0; o < m_mapData.Objects.Count && mapObject == null; o++)
+            {
+                Vector2 pos = m_mapData.Objects[o].Vertex.ScreenPosition;
+                Rect rect = new Rect(pos.x - halfSize, pos.y - halfSize, pointHoverSize, pointHoverSize);
+                if (rect.Contains(m_mousePos))
                 {
-                    float length = (m_mousePos - m_draggedObject.Vertex.ScreenPosition).magnitude - c_bigObjectSize;
-                    float angle = CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
-                    Vector2 p1;
-                    p1.x = length * Mathf.Cos(angle);
-                    p1.y = length * -Mathf.Sin(angle);
-                    Vector2 p2 = p1.normalized * c_bigObjectSize;
-                    p1 = ev.TransformScreenPos(p1);
-                    p2 = ev.TransformScreenPos(p2);
-                    p1 += m_draggedObject.Vertex.ScreenPosition;
-                    p2 += m_draggedObject.Vertex.ScreenPosition;
-                    DrawLine(p2, p1, Colors.ValidColor);
+                    mapObject = m_mapData.Objects[o];
+                }
+                else if (rect.Contains(m_mouseSnappedPos))
+                {
+                    snappedMapObject = m_mapData.Objects[o];
+                }
+                else
+                {
+                    //nothing to do
                 }
             }
-            else
-            {
-                DrawCircle(m_mouseSnappedPos, Colors.ValidColor, c_bigObjectSize);
-                DrawArrow(m_mouseSnappedPos, Colors.ObjectBgColor, c_bigObjectSize, m_draggedObject.Angle);
-            }
+
+            m_cursorInfo.HoverObject = mapObject;
+            m_cursorInfo.NearObject = snappedMapObject;
         }
 
-    }
-
-    private float CalcMouseAngle(Vector2 screenPosition)
-    { 
-        EditorView ev = parent as EditorView;
-        if (ev != null)
+        private void DrawModes()
         {
-            Vector2 v = ev.TransformScreenPos(m_mousePos - screenPosition);
-            return ev.SnapAngle(Mathf.Atan2(-v.y, v.x));
-        }
-        return 0.0f;
-    }
+            //Draw mouse - drag mode
+            if (m_dragging && m_draggedObject != null)
+            {
+                if (m_rotating)
+                {
+                    EditorView ev = parent as EditorView;
+                    if (ev != null)
+                    {
+                        float length = (m_mousePos - m_draggedObject.Vertex.ScreenPosition).magnitude - c_bigObjectSize;
+                        float angle = CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
+                        Vector2 p1;
+                        p1.x = length * Mathf.Cos(angle);
+                        p1.y = length * -Mathf.Sin(angle);
+                        Vector2 p2 = p1.normalized * c_bigObjectSize;
+                        p1 = ev.TransformScreenPos(p1);
+                        p2 = ev.TransformScreenPos(p2);
+                        p1 += m_draggedObject.Vertex.ScreenPosition;
+                        p2 += m_draggedObject.Vertex.ScreenPosition;
+                        DrawLine(p2, p1, Colors.ValidColor);
+                    }
+                }
+                else
+                {
+                    DrawCircle(m_mouseSnappedPos, Colors.ValidColor, c_bigObjectSize);
+                    DrawArrow(m_mouseSnappedPos, Colors.ObjectBgColor, c_bigObjectSize, m_draggedObject.Angle);
+                }
+            }
 
+        }
+
+        private float CalcMouseAngle(Vector2 screenPosition)
+        {
+            EditorView ev = parent as EditorView;
+            if (ev != null)
+            {
+                Vector2 v = ev.TransformScreenPos(m_mousePos - screenPosition);
+                return ev.SnapAngle(Mathf.Atan2(-v.y, v.x));
+            }
+
+            return 0.0f;
+        }
+
+    }
 }
