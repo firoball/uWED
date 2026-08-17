@@ -1,9 +1,8 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-//namespace Editor.ui
-//{
+namespace Editor.Ui.Help
+{
     public class EditorHelp : VisualElement
     {
         //private VisualElement m_helpRoot;
@@ -68,4 +67,4 @@ using UnityEngine.UIElements;
         }
         
     }
-//}
+}
