@@ -1,0 +1,336 @@
+/*
+    ManipulatorBase.uss
+    Shared look for every per-object-type Manipulator window.
+    Minimal/placeholder colors, consistent with EditorHelp.uss - tune freely later.
+*/
+
+.manip-root {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 40px;
+    /* keep this element above siblings by adding it LAST in the tree at runtime */
+}
+
+.manip-panel {
+    width: 80%;
+    max-width: 640px;
+    max-height: 85%;
+    background-color: rgb(45, 45, 45);
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: rgb(20, 20, 20);
+    padding: 12px;
+    flex-direction: column;
+}
+
+/* ---------------- Header ---------------- */
+
+.manip-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(70, 70, 70);
+    padding-bottom: 6px;
+}
+
+.manip-type-label {
+    font-size: 16px;
+    -unity-font-style: bold;
+    color: rgb(230, 230, 230);
+}
+
+.manip-close-button {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background-color: rgb(70, 70, 70);
+    color: rgb(230, 230, 230);
+    -unity-text-align: middle-center;
+    padding: 0;
+    border-width: 0;
+}
+
+.manip-close-button:hover {
+    background-color: rgb(90, 90, 90);
+}
+
+/* ---------------- Settings bar ---------------- */
+/* Shared across every tab of a given window - always-on snapping, no toggle. */
+
+.manip-settings-bar {
+    flex-direction: row;
+    align-items: center;
+    background-color: rgb(38, 38, 38);
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin-bottom: 8px;
+}
+
+.manip-settings-label {
+    color: rgb(180, 180, 180);
+    font-size: 11px;
+    margin-right: 4px;
+}
+
+.manip-settings-field {
+    width: 56px;
+    margin-right: 16px;
+}
+
+/* ---------------- Tabs / scroll ---------------- */
+
+.manip-tabview {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.manip-scroll {
+    flex-grow: 1;
+}
+
+.manip-content-container {
+    flex-direction: column;
+}
+
+/* ---------------- Read-only context block ---------------- */
+/* Locked/non-editable fields, shown grayed above the editable ones. */
+
+.manip-readonly-block {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(60, 60, 60);
+}
+
+.manip-readonly-row {
+    flex-direction: row;
+    margin-bottom: 2px;
+}
+
+.manip-readonly-label {
+    min-width: 120px;
+    color: rgb(130, 130, 130);
+}
+
+.manip-readonly-value {
+    color: rgb(130, 130, 130);
+    -unity-font-style: italic;
+}
+
+/* ---------------- Editable rows ---------------- */
+
+.manip-section-title {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: rgb(200, 200, 200);
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.manip-field-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.manip-field-label {
+    min-width: 120px;
+    color: rgb(210, 210, 210);
+}
+
+/* ---------------- Number stepper widget ---------------- */
+
+.stepper-row {
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.stepper-btn {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0 2px;
+    border-radius: 3px;
+    background-color: rgb(65, 65, 65);
+    color: rgb(220, 220, 220);
+    -unity-text-align: middle-center;
+    border-width: 0;
+}
+
+.stepper-btn:hover {
+    background-color: rgb(85, 85, 85);
+}
+
+.stepper-field {
+    width: 80px;
+}
+
+/* ---------------- Vector2 stepper (e.g. Segment offset) ---------------- */
+
+.vector2-stepper-row {
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.vector2-stepper-axis-label {
+    color: rgb(160, 160, 160);
+    font-size: 10px;
+    margin-right: 2px;
+    margin-left: 6px;
+}
+
+.vector2-stepper-axis-label:first-child {
+    margin-left: 0;
+}
+
+.vector2-stepper-axis {
+    flex-grow: 0;
+}
+
+/* ---------------- Auto-align checkbox pairing ---------------- */
+/* Compact: no visible label text (the tooltip carries "Auto Align X/Y"),
+   sits directly next to its own axis inside Vector2StepperField instead of
+   trailing the whole row with a long "Auto Align X"/"Auto Align Y" label. */
+
+.vector2-stepper-autoalign {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.vector2-stepper-autoalign .unity-toggle__label {
+    display: none;
+}
+
+/* ---------------- Name / texture picker rows ---------------- */
+
+.manip-picker-row {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.manip-picker-dropdown {
+    flex-grow: 1;
+    margin-right: 6px;
+}
+
+.manip-picker-new-button {
+    width: 24px;
+    height: 20px;
+    padding: 0;
+    border-radius: 3px;
+    background-color: rgb(65, 65, 65);
+    color: rgb(220, 220, 220);
+    -unity-text-align: middle-center;
+    border-width: 0;
+}
+
+.manip-picker-new-button:hover {
+    background-color: rgb(85, 85, 85);
+}
+
+.manip-picker-new-entry {
+    flex-grow: 1;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    display: none; /* toggled visible on "create new" click; reserves no extra
+                       layout jump since it occupies its row only once shown */
+}
+
+/* ---------------- Texture slot ---------------- */
+
+.manip-texture-slot {
+    flex-direction: row;
+    margin-bottom: 8px;
+}
+
+.manip-texture-slot.hidden {
+    display: none;
+}
+
+.manip-texture-preview {
+    width: 96px;
+    height: 96px;
+    max-width: 256px;
+    max-height: 256px;
+    background-color: rgb(30, 30, 30);
+    border-width: 1px;
+    border-color: rgb(70, 70, 70);
+    border-radius: 4px;
+    margin-right: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.manip-texture-preview-label {
+    color: rgb(90, 90, 90);
+    font-size: 10px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.manip-texture-info {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.manip-texture-info-label {
+    color: rgb(170, 170, 170);
+    font-size: 11px;
+    margin-bottom: 2px;
+}
+
+/* ---------------- Footer ---------------- */
+
+.manip-footer {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top-width: 1px;
+    border-top-color: rgb(70, 70, 70);
+}
+
+.manip-footer-button {
+    min-width: 90px;
+    height: 26px;
+    border-radius: 4px;
+    margin: 0 6px;
+    background-color: rgb(65, 65, 65);
+    color: rgb(220, 220, 220);
+    border-width: 0;
+}
+
+.manip-footer-button:hover {
+    background-color: rgb(85, 85, 85);
+}
+
+.manip-ok-button {
+    background-color: rgb(70, 110, 70);
+}
+
+.manip-ok-button:hover {
+    background-color: rgb(85, 130, 85);
+}
+
+/* ---------------- Focus highlight (TAB-key navigation) ---------------- */
+/* Applies to every focusable input so keyboard Tab-order is clearly visible. */
+
+.manip-content-container FloatField:focus,
+.manip-content-container TextField:focus,
+.manip-content-container DropdownField:focus,
+.manip-content-container Toggle:focus,
+.manip-settings-bar FloatField:focus {
+    border-width: 1px;
+    border-color: rgb(90, 150, 220);
+}

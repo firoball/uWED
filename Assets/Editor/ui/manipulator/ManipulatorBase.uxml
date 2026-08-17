@@ -1,0 +1,52 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="/Assets/Editor/ui/Manipulator/ManipulatorBase.uss" />
+
+    <!--
+        Shared scaffold for all per-object-type Manipulator windows (Vertex, Segment,
+        Region, Way, Object, ...). Instantiated by ManipulatorWindowBase<T> and added
+        programmatically as the LAST child of the root VisualElement, same pattern as
+        EditorHelp - renders above everything, "manip-root" acts as the click barrier
+        while open, wrapper layers stay pickingMode.Ignore.
+
+        Object-type-specific fields are NOT declared here. Subclasses build their own
+        fields in C# and add them into "manip-content-container" - keeps every type's
+        field set independent of this shared file, so this file only ever needs to
+        change for scaffolding-wide changes (header/footer/settings bar/tab shell).
+
+        Only one Tab exists for now ("tab-primary"). More tabs per object type will
+        be added here later once their content is designed (Basic/Advanced vs.
+        category split - not decided yet).
+    -->
+    <ui:VisualElement name="ManipulatorRoot" class="manip-root">
+        <ui:VisualElement name="ManipulatorPanel" class="manip-panel">
+
+            <ui:VisualElement name="manip-header" class="manip-header">
+                <ui:Label text="Type" name="manip-type-label" class="manip-type-label" />
+                <ui:Button text="X" name="manip-close-button" class="manip-close-button" />
+            </ui:VisualElement>
+
+            <ui:VisualElement name="manip-settings-bar" class="manip-settings-bar">
+                <ui:Label text="Step" class="manip-settings-label" />
+                <ui:FloatField name="manip-linear-step" value="0.1" class="manip-settings-field" />
+                <ui:Label text="Angle Step" class="manip-settings-label" />
+                <ui:FloatField name="manip-angle-step" value="15" class="manip-settings-field" />
+            </ui:VisualElement>
+
+            <ui:TabView name="manip-tabview" class="manip-tabview">
+                <ui:Tab label="Basic" name="tab-primary">
+                    <ui:ScrollView name="manip-scroll" class="manip-scroll"
+                                    vertical-scroller-visibility="Auto"
+                                    horizontal-scroller-visibility="Hidden">
+                        <ui:VisualElement name="manip-content-container" class="manip-content-container" />
+                    </ui:ScrollView>
+                </ui:Tab>
+            </ui:TabView>
+
+            <ui:VisualElement name="manip-footer" class="manip-footer">
+                <ui:Button text="Cancel" name="manip-cancel-button" class="manip-footer-button" />
+                <ui:Button text="OK" name="manip-ok-button" class="manip-footer-button manip-ok-button" />
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
