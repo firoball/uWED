@@ -1,0 +1,40 @@
+/*
+ * Standalone, absolutely positioned (bottom right). Fixed square size and
+ * styling matched to InfoPanel.uss (background, border, padding).
+ * --panel-height should match InfoPanel's height (currently 174px).
+ */
+
+.mesh-preview-panel {
+    --panel-height: 174px;
+
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    margin: 0;
+
+    width: var(--panel-height);
+    height: var(--panel-height);
+    min-width: var(--panel-height);
+    min-height: var(--panel-height);
+    max-width: var(--panel-height);
+    max-height: var(--panel-height);
+
+    padding: 8px 10px;
+
+    background-color: rgba(40, 40, 40, 0.92);
+    border-radius: 6px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.5);
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.mesh-preview-panel__image {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
+}
