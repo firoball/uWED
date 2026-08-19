@@ -1,8 +1,4 @@
-/*
-    ManipulatorBase.uss
-    Shared look for every per-object-type Manipulator window.
-    Minimal/placeholder colors, consistent with EditorHelp.uss - tune freely later.
-*/
+/* Shared look for every per-object-type Manipulator window. */
 
 .manip-root {
     position: absolute;
@@ -14,7 +10,6 @@
     align-items: center;
     justify-content: flex-start;
     padding-top: 40px;
-    /* keep this element above siblings by adding it LAST in the tree at runtime */
 }
 
 .manip-panel {
@@ -63,7 +58,6 @@
 }
 
 /* ---------------- Settings bar ---------------- */
-/* Shared across every tab of a given window - always-on snapping, no toggle. */
 
 .manip-settings-bar {
     flex-direction: row;
@@ -100,7 +94,7 @@
     flex-direction: column;
 }
 
-/* ---------------- Read-only context block ---------------- */
+/* ---------------- Read-only context ---------------- */
 
 .manip-readonly-block {
     margin-bottom: 10px;
@@ -230,14 +224,10 @@
     flex-grow: 1;
     margin-top: 2px;
     margin-bottom: 4px;
-    display: none; /* toggled visible on "create new" click; reserves no extra
-                       layout jump since it occupies its row only once shown */
+    display: none;
 }
 
 /* ---------------- Texture card ---------------- */
-/* Vertical layout matching InfoPanel: preview on top (Hint overlaid in its
-   top-left corner), texture Name picker below the preview, Scale below that -
-   not the preview-left/info-right layout used earlier. */
 
 .manip-texture-card {
     flex-direction: column;
@@ -254,8 +244,6 @@
     margin-bottom: 6px;
     align-items: center;
     justify-content: center;
-    /* fixed square - do not stretch to container width, unlike most other
-       fields here, so it stays square regardless of slot column width */
 }
 
 .manip-texture-preview-label {
@@ -265,9 +253,6 @@
     white-space: normal;
 }
 
-/* Hint overlaid inside the preview's top-left corner - .manip-texture-preview
-   doesn't need its own explicit "position", UI Toolkit positions an absolute
-   child against its parent's padding box regardless. */
 .manip-texture-hint-overlay {
     position: absolute;
     top: 4px;
@@ -276,7 +261,6 @@
     background-color: rgba(20, 20, 20, 0.75);
     color: rgb(200, 200, 200);
     font-size: 10px;
-    /* no width set - sizes to its own text content, like InfoPanel */
 }
 
 .manip-texture-name-row {
@@ -309,10 +293,6 @@
 }
 
 /* ---------------- Name/Texture slots ---------------- */
-/* One slot = one Name+Texture pairing. Standard case is a single slot; a
-   second becomes visible only once the underlying data actually has a
-   second name/texture. Both share this row via flex-grow, so a single
-   visible slot naturally fills the full width - no extra logic needed. */
 
 .manip-slots-row {
     flex-direction: row;
@@ -366,8 +346,7 @@
     background-color: rgb(85, 130, 85);
 }
 
-/* ---------------- Focus highlight (TAB-key navigation) ---------------- */
-/* Applies to every focusable input so keyboard Tab-order is clearly visible. */
+/* ---------------- Focus highlight ---------------- */
 
 .manip-content-container FloatField:focus,
 .manip-content-container TextField:focus,

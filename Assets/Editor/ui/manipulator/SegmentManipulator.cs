@@ -5,33 +5,7 @@ using UnityEngine.UIElements;
 namespace Editor.UI.Manipulator
 {
     /// <summary>
-    /// Segment tab: Vertices, Left/Right Region and Length are locked (shown
-    /// read-only, same fields/naming as InfoPanel). Editable: one or two
-    /// Name+Texture-Offset+Texture "slots" (see NameTextureSlot) - Name first,
-    /// then Texture Offset, then the Texture card.
-    ///
-    /// Standard case is a single slot. Slot 2 becomes visible once a second
-    /// name provider is supplied via SetProviders() - side by side with the
-    /// first (manip-slots-row). It's browsable at that point, but not yet
-    /// wired to any Segment data (see TODO below) since there's no confirmed
-    /// second-name/second-offset property on Segment to read/write.
-    ///
-    /// Vertex1/Vertex2 are read-only on Segment - only settable through its
-    /// constructor, so Clone() rebuilds via `new Segment(vertex1, vertex2)`
-    /// rather than an object initializer. LeftRegion/RightRegion aren't part
-    /// of that constructor either, so their display reads from OriginalTarget
-    /// (the real object), not the local edit copy - see ManipulatorWindowBase.
-    ///
-    /// Contour is intentionally not shown - internal-only, not meant for the user.
-    /// Texture itself has no editable picker - Texture Name is a read-only
-    /// label (like InfoPanel), only ever set via the "..." Select button
-    /// (currently a placeholder, not implemented).
-    ///
-    /// TODO: Length isn't on Segment yet ("will soon have" it, read-only) -
-    /// the row exists already but always shows "-" until it does.
-    /// TODO: once Segment exposes a second name/offset/texture, mirror slot
-    /// 1's wiring in LoadValues/WriteBack for slot 2 (currently nothing typed
-    /// into slot 2 persists on Apply, even while it's visible/browsable).
+    /// Segment tab. See SegmentManipulator.md for extension points.
     /// </summary>
     public class SegmentManipulator : ManipulatorWindowBase<Segment>
     {
@@ -59,16 +33,8 @@ namespace Editor.UI.Manipulator
         {
         }
 
-        /// <summary>
-        /// Providers aren't necessarily ready when the window itself is
-        /// constructed (e.g. built during static setup, before your name/texture
-        /// registries exist) - call this once they are, any time before Open().
-        ///
-        /// The second pair is optional and fills the already-built (but hidden)
-        /// slot 2 - passing either one makes slot 2 visible on the next Open().
-        /// Slot 2 is still not wired to any Segment data (see class TODO), so
-        /// it's browsable but nothing typed into it persists on Apply.
-        /// </summary>
+        /// <summary>Call once providers are ready (not necessarily at construction).
+        /// Second pair is optional and makes slot 2 visible.</summary>
         public void SetProviders(INameProvider nameProvider, ITextureProvider textureProvider,
             INameProvider nameProvider2 = null, ITextureProvider textureProvider2 = null)
         {
@@ -124,9 +90,6 @@ namespace Editor.UI.Manipulator
             WireSlot(m_slot1);
             row.Add(m_slot1);
 
-            // Slot 2: built so the side-by-side layout already works once real
-            // data exists, but hidden until a second provider is supplied -
-            // see SetProviders() and the class-level TODO.
             m_slot2 = new NameTextureSlot();
             WireSlot(m_slot2);
             m_slot2.AddToClassList("hidden");
@@ -141,7 +104,6 @@ namespace Editor.UI.Manipulator
             {
                 if (slot == m_slot1 && m_current != null)
                     m_current.Name = evt.newValue;
-                // slot2 has nothing to write to yet (see class TODO).
             });
 
             slot.NameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
@@ -149,7 +111,7 @@ namespace Editor.UI.Manipulator
                 if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
                 {
                     CommitNewName(slot);
-                    evt.StopPropagation(); // don't also trigger the window's own OK
+                    evt.StopPropagation();
                 }
             });
 
@@ -157,14 +119,13 @@ namespace Editor.UI.Manipulator
             {
                 if (slot == m_slot1 && m_current != null)
                     m_current.Offset = v;
-                // slot2 has nothing to write to yet (see class TODO).
             };
 
             slot.TextureSelectButton.clicked += () =>
             {
                 var provider = TextureProviderFor(slot);
                 var names = provider != null ? provider.GetTextureNames() : (IReadOnlyList<string>)new List<string>();
-                Debug.Log($"TODO: open texture selection menu (not implemented yet). Available: {string.Join(", ", names)}");
+                Debug.Log($"TODO: open texture selection menu. Available: {string.Join(", ", names)}");
             };
         }
 
@@ -172,9 +133,7 @@ namespace Editor.UI.Manipulator
         {
             string sanitized = NameSanitizer.Sanitize(slot.NameNewEntry.value);
             slot.NameNewEntry.style.display = DisplayStyle.None;
-
-            if (string.IsNullOrEmpty(sanitized))
-                return;
+            if (string.IsNullOrEmpty(sanitized)) return;
 
             var provider = NameProviderFor(slot);
             if (provider != null && provider.TryCreateName(sanitized))
@@ -187,13 +146,8 @@ namespace Editor.UI.Manipulator
         INameProvider NameProviderFor(NameTextureSlot slot) => slot == m_slot1 ? m_nameProvider : m_nameProvider2;
         ITextureProvider TextureProviderFor(NameTextureSlot slot) => slot == m_slot1 ? m_textureProvider : m_textureProvider2;
 
-        // Choice assignment is deferred one frame via schedule.Execute(): a
-        // DropdownField's popup measures its row heights against the current
-        // layout. Populating "choices" in the very same frame the panel just
-        // became display:Flex can race UI Toolkit's (also deferred) layout
-        // pass, leaving stale/blank rows in the popup until something else
-        // forces a relayout (e.g. a manual scroll). Deferring guarantees a
-        // real layout has happened first.
+        // schedule.Execute defers one frame - avoids a DropdownField popup
+        // measuring against a not-yet-laid-out panel (blank rows until scrolled).
         void RefreshNameChoices(NameTextureSlot slot)
         {
             var provider = NameProviderFor(slot);
@@ -204,15 +158,11 @@ namespace Editor.UI.Manipulator
 
         protected override Segment Clone(Segment source)
         {
-            // Vertex1/Vertex2 are read-only - only settable through this
-            // constructor, not via object-initializer assignment.
+            // Vertex1/Vertex2 only settable via constructor, not an initializer.
             return new Segment(source.Vertex1, source.Vertex2)
             {
                 Name = source.Name,
                 Offset = source.Offset
-                // LeftRegion / RightRegion intentionally not copied - read-only,
-                // displayed straight from OriginalTarget in LoadValues, not
-                // from this copy.
             };
         }
 
@@ -229,31 +179,19 @@ namespace Editor.UI.Manipulator
             RefreshNameChoices(m_slot1);
             m_slot1.NameDropdown.SetValueWithoutNotify(copy.Name);
             m_slot1.NameNewEntry.style.display = DisplayStyle.None;
-
             m_slot1.OffsetStepper.Step = CurrentLinearStep;
             m_slot1.OffsetStepper.Value = copy.Offset;
+            LoadTextureInfo(m_slot1, copy);
 
-            m_slot1.TextureHintValue.text = "Hint";
-            m_slot1.TextureNameValue.text = "-"; // informational only, not wired yet
-            m_slot1.ScaleValue.text = "Scale X/Y: -";
-
-            // Slot 2 becomes visible once a second name provider was supplied
-            // via SetProviders() - browsable at that point, but still not
-            // wired to any Segment data (see class TODO).
             bool hasSecondSlot = m_nameProvider2 != null || m_textureProvider2 != null;
             if (hasSecondSlot) m_slot2.RemoveFromClassList("hidden");
             else m_slot2.AddToClassList("hidden");
 
             RefreshNameChoices(m_slot2);
-            m_slot2.NameDropdown.SetValueWithoutNotify(string.Empty);
             m_slot2.NameNewEntry.style.display = DisplayStyle.None;
-
             m_slot2.OffsetStepper.Step = CurrentLinearStep;
-            m_slot2.OffsetStepper.Value = Vector2.zero;
-
-            m_slot2.TextureHintValue.text = "Hint";
-            m_slot2.TextureNameValue.text = "-";
-            m_slot2.ScaleValue.text = "Scale X/Y: -";
+            LoadTextureInfo(m_slot2, copy);
+            LoadSlot2(m_slot2, copy);
         }
 
         static string FormatVertex(Vertex v)
@@ -279,8 +217,29 @@ namespace Editor.UI.Manipulator
         {
             target.Name = editedCopy.Name;
             target.Offset = editedCopy.Offset;
-            // Vertices, Left/Right Region and Length are read-only - left untouched.
-            // Slot 2 has nothing to write yet (see class TODO).
+            WriteBackSlot2(target, m_slot2);
+        }
+
+        // ---- Extension points - see SegmentManipulator.md ----
+
+        /// <summary>Texture Name/Scale for a slot. Override once real texture data exists.</summary>
+        protected virtual void LoadTextureInfo(NameTextureSlot slot, Segment copy)
+        {
+            slot.TextureHintValue.text = "Hint";
+            slot.TextureNameValue.text = "-";
+            slot.ScaleValue.text = "Scale X/Y: -";
+        }
+
+        /// <summary>Slot 2's Name/Offset display. Override once Segment exposes a second one.</summary>
+        protected virtual void LoadSlot2(NameTextureSlot slot2, Segment copy)
+        {
+            slot2.NameDropdown.SetValueWithoutNotify(string.Empty);
+            slot2.OffsetStepper.Value = Vector2.zero;
+        }
+
+        /// <summary>Write slot 2 back. No-op until Segment exposes a second Name/Offset.</summary>
+        protected virtual void WriteBackSlot2(Segment target, NameTextureSlot slot2)
+        {
         }
     }
 }
