@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Editor.Assets;
 using Editor.Ui.Help;
 using Editor.UI.Inspector;
 using Editor.UI.Manipulator;
@@ -44,15 +45,13 @@ public class UWed : EditorWindow
 
     public void CreateGUI()
     {
-        // Each editor window contains a root VisualElement object
-        VisualElement root = rootVisualElement;
         VisualElement ui = m_uxml.Instantiate();
         rootVisualElement.Add(ui);
         ui.StretchToParentSize();
         IEnumerable<VisualElement> containers = ui.Children();
-        VisualElement menu = containers.Where(x => x.name == "menu").FirstOrDefault();
-        VisualElement editor = containers.Where(x => x.name == "editor").FirstOrDefault();
-        VisualElement inspector = containers.Where(x => x.name == "inspector").FirstOrDefault();
+        VisualElement menu = containers.FirstOrDefault(x => x.name == "menu");
+        VisualElement editor = containers.FirstOrDefault(x => x.name == "editor");
+        VisualElement inspector = containers.FirstOrDefault(x => x.name == "inspector");
 
         IManipulatorSettings settings = new ManipulatorSettings();
         VertexManipulator vertexManipulator = new VertexManipulator(m_manipulatorUxml, settings);

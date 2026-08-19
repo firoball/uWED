@@ -15,20 +15,9 @@ namespace Editor.Drawers
     {
         private class ContourRenderInfo
         {
-            private List<int> m_triangles;
-            private List<Vertex> m_vertices;
+            public List<Vertex> Vertices { get; set; }
 
-            public List<Vertex> Vertices
-            {
-                get => m_vertices;
-                set => m_vertices = value;
-            }
-
-            public List<int> Triangles
-            {
-                get => m_triangles;
-                set => m_triangles = value;
-            }
+            public List<int> Triangles { get; set; }
         }
 
         private List<Contour> m_contours;

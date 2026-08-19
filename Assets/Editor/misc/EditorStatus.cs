@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EditorStatus
 {
-    public enum Mode : int
+    public enum Mode
     {
         Objects = 0,
         Segments = 1,
@@ -12,7 +12,7 @@ public class EditorStatus
         Ways = 3,
         Count = 4,
     }
-    public enum Construct : int
+    public enum Construct
     {
         Idle = 0,
         Constructing = 1,
@@ -22,7 +22,7 @@ public class EditorStatus
         Count = 5,
     }
 
-    public enum View : int
+    public enum View
     {
         Construct = 0,
         Design = 1,

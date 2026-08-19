@@ -1,71 +1,75 @@
+using Editor.Assets;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CustomEditor(typeof(MapAsset))]
-public class MapAssetEditor : UnityEditor.Editor
+namespace Editor.Inspector
 {
-    private MapAssetViewer m_viewer;
-    private MapAssetStatistics m_stats;
 
-    public override VisualElement CreateInspectorGUI()
+    [CustomEditor(typeof(MapAsset))]
+    public class MapAssetEditor : UnityEditor.Editor
     {
-        MapAsset mapAsset = (MapAsset)target;
-        VisualElement inspector = new VisualElement();
-        
-        SerializedProperty properties = serializedObject.FindProperty("m_data");
-        inspector.TrackPropertyValue(properties, OnPropertyChanged);
-        
-        Label info = new Label("Info: Active inspector may cause performance issues");
-        inspector.Add(info);
+        private MapAssetViewer m_viewer;
+        private MapAssetStatistics m_stats;
 
-        m_viewer = new MapAssetViewer(mapAsset);
-        inspector.Add(m_viewer.Foldout); //wrap preview map in its foldout
-        
-        m_stats = new MapAssetStatistics(mapAsset);
-        inspector.Add(m_stats);
-        
-        MapAssetCleaner cleaner = new MapAssetCleaner(mapAsset);
-        inspector.Add(cleaner);
-
-        inspector.RegisterCallback<GeometryChangedEvent>(OnWindowSizeChanged);
-
-        return inspector;
-    }
-
-    [OnOpenAsset]
-    public static bool OnOpenAsset(EntityId entityId, int line)
-    {
-        Object target = EditorUtility.EntityIdToObject(entityId);
-
-        if (target is MapAsset)
+        public override VisualElement CreateInspectorGUI()
         {
-            var map = AssetDatabase.GetAssetPath(entityId);
+            MapAsset mapAsset = (MapAsset)target;
+            VisualElement inspector = new VisualElement();
 
-            Selection.activeObject = target;
-            UWed.OpenWindow();
-            UWed.OpenMap(map);
-            return true;
+            SerializedProperty properties = serializedObject.FindProperty("m_data");
+            inspector.TrackPropertyValue(properties, OnPropertyChanged);
+
+            Label info = new Label("Info: Active inspector may cause performance issues");
+            inspector.Add(info);
+
+            m_viewer = new MapAssetViewer(mapAsset);
+            inspector.Add(m_viewer.Foldout); //wrap preview map in its foldout
+
+            m_stats = new MapAssetStatistics(mapAsset);
+            inspector.Add(m_stats);
+
+            MapAssetCleaner cleaner = new MapAssetCleaner(mapAsset);
+            inspector.Add(cleaner);
+
+            inspector.RegisterCallback<GeometryChangedEvent>(OnWindowSizeChanged);
+
+            return inspector;
         }
-        else
+
+        [OnOpenAsset]
+        public static bool OnOpenAsset(EntityId entityId, int line)
         {
-            return false;
+            Object target = EditorUtility.EntityIdToObject(entityId);
+
+            if (target is MapAsset)
+            {
+                var map = AssetDatabase.GetAssetPath(entityId);
+
+                Selection.activeObject = target;
+                UWed.OpenWindow();
+                UWed.OpenMap(map);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void OnWindowSizeChanged(GeometryChangedEvent evt)
+        {
+            m_viewer?.UpdateRect();
+        }
+
+        private void OnPropertyChanged(SerializedProperty property)
+        {
+            m_viewer?.UpdateMap();
+            m_stats?.Update();
         }
     }
-
-    private void OnWindowSizeChanged(GeometryChangedEvent evt)
-    {
-        m_viewer?.UpdateRect();
-    }
-
-    private void OnPropertyChanged(SerializedProperty property)
-    {
-        m_viewer?.UpdateMap();
-        m_stats?.Update();
-    }
-
 }
 
 

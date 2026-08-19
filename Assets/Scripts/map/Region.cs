@@ -4,8 +4,6 @@ using UnityEngine;
 [Serializable]
 public class Region : IndexedData
 {
-    [SerializeReference] private bool m_default; // TODO: this is meant to mark region as border, not used yet
-
     //region boundaries - for multi-select
     private Vector2 m_min;
     private Vector2 m_max;
@@ -26,17 +24,10 @@ public class Region : IndexedData
         m_ceilHgt = ceilHgt;
         m_name = !string.IsNullOrWhiteSpace(name) ? name : "defaultregion";
 
-        m_default = true;
         m_min = new Vector2(float.MaxValue, float.MaxValue);
         m_max = new Vector2(float.MinValue, float.MinValue);
     }
-
-    public bool Default
-    {
-        get => m_default;
-        set => m_default = value;
-    }
-
+    
     public Vector2 Min
     {
         get => m_min;

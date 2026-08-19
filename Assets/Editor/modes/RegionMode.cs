@@ -32,52 +32,7 @@ namespace Editor.Modes
             }
             else
             {
-                //Get region reference
-                Region region = ci.HoverRegion; //update existing (potentially broken) region
-                if (ci.HoverRegion == null) //create new region
-                {
-                    region = new Region();
-                    m_mapData.Add(region);
-                }
-
-                /* identify any segment referencing currently hovered counter and
-                 * assign the region reference to corresponding segment side
-                 *
-                 * in case the region is still assigned to a segment which is not part of
-                 * the hovered contour, this must be a leftover of some editing activity
-                 * and therefore can be removed
-                 */
-                Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
-                Vector2 max = new Vector2(float.MinValue, float.MinValue);
-                for (int i = 0; i < m_mapData.Segments.Count; i++)
-                {
-                    Segment s = m_mapData.Segments[i];
-
-                    //remove possible region leftovers from segments
-                    if (!ci.HoverContour.Is(s.CLeft) && s.Left == region) //left side
-                        s.Left = null;
-                    if (!ci.HoverContour.Is(s.CRight) && s.Right == region) //right side
-                        s.Right = null;
-
-                    //assign region to segments
-                    if (ci.HoverContour.Is(s.CLeft) && s.Left != region) //left side
-                    {
-                        s.Left = region;
-                        //identify region min/max boundaries
-                        SetMinMax(s.Vertex2.WorldPosition, ref min, ref max);
-                    }
-
-                    if (ci.HoverContour.Is(s.CRight) && s.Right != region) //right side
-                    {
-                        s.Right = region;
-                        //identify region min/max boundaries
-                        SetMinMax(s.Vertex1.WorldPosition, ref min, ref max);
-                    }
-                }
-
-                region.Min = min;
-                region.Max = max;
-
+                BuildRegion(ci.HoverRegion, ci.HoverContour);
                 m_drawer.MarkDirtyRepaint();
                 return true; //construction immediately finished
             }
@@ -90,7 +45,6 @@ namespace Editor.Modes
             //TODO: implement
 
             //TEMP
-            //Debug.Log(DecomposerDebug.Dump(m_cursorInfo.HoverContour));
             if (m_drawer.CursorInfo.HoverContour != null)
             {
                 File.WriteAllText(Path.Combine(".", "DecomposerDebug.Dump.txt"),
@@ -120,6 +74,56 @@ namespace Editor.Modes
             }
         }
 
+        private void BuildRegion(Region hoverRegion, Contour hoverContour)
+        {
+            //Get region reference
+            Region region = hoverRegion; //update existing (potentially broken) region
+            if (hoverRegion == null) //create new region
+            {
+                region = new Region();
+                m_mapData.Add(region);
+            }
+
+            /* identify any segment referencing currently hovered counter and
+             * assign the region reference to corresponding segment side
+             *
+             * in case the region is still assigned to a segment which is not part of
+             * the hovered contour, this must be a leftover of some editing activity
+             * and therefore can be removed
+             */
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(float.MinValue, float.MinValue);
+            for (int i = 0; i < m_mapData.Segments.Count; i++)
+            {
+                Segment s = m_mapData.Segments[i];
+
+                //remove possible region leftovers from segments
+                if (!hoverContour.Is(s.CLeft) && s.Left == region) //left side
+                    s.Left = null;
+                if (!hoverContour.Is(s.CRight) && s.Right == region) //right side
+                    s.Right = null;
+
+                //assign region to segments
+                if (hoverContour.Is(s.CLeft) && s.Left != region) //left side
+                {
+                    s.Left = region;
+                    //identify region min/max boundaries
+                    SetMinMax(s.Vertex2.WorldPosition, ref min, ref max);
+                }
+
+                if (hoverContour.Is(s.CRight) && s.Right != region) //right side
+                {
+                    s.Right = region;
+                    //identify region min/max boundaries
+                    SetMinMax(s.Vertex1.WorldPosition, ref min, ref max);
+                }
+            }
+
+            region.Min = min;
+            region.Max = max;
+
+        }
+        
         private void DeleteRegion(Region r)
         {
             //remove all references
@@ -170,7 +174,7 @@ namespace Editor.Modes
             }
         }
 
-        private void SetMinMax(Vector2 pos, ref Vector2 min, ref Vector2 max)
+        private static void SetMinMax(Vector2 pos, ref Vector2 min, ref Vector2 max)
         {
             min.x = Mathf.Min(min.x, pos.x);
             max.x = Mathf.Max(max.x, pos.x);

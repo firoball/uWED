@@ -13,7 +13,7 @@ namespace Editor.Modes
 
         public BaseEditorDrawer Drawer => m_drawer;
 
-        public BaseEditorMode(MapData mapData, BaseEditorDrawer drawer)
+        protected BaseEditorMode(MapData mapData, BaseEditorDrawer drawer)
         {
             drawer.SetEnabled(false);
             m_drawer = drawer;

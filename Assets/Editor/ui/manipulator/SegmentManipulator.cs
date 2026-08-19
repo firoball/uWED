@@ -5,23 +5,33 @@ using UnityEngine.UIElements;
 namespace Editor.UI.Manipulator
 {
     /// <summary>
-    /// Segment tab: Vertices and Left/Right Region are locked (shown read-only,
-    /// same fields/naming as InfoPanel). Editable: Name, Offset (Vector2, one
-    /// Vector2StepperField with per-axis Auto Align toggles), and a texture
-    /// placeholder.
+    /// Segment tab: Vertices, Left/Right Region and Length are locked (shown
+    /// read-only, same fields/naming as InfoPanel). Editable: one or two
+    /// Name+Texture-Offset+Texture "slots" (see NameTextureSlot) - Name first,
+    /// then Texture Offset, then the Texture card.
+    ///
+    /// Standard case is a single slot. Slot 2 becomes visible once a second
+    /// name provider is supplied via SetProviders() - side by side with the
+    /// first (manip-slots-row). It's browsable at that point, but not yet
+    /// wired to any Segment data (see TODO below) since there's no confirmed
+    /// second-name/second-offset property on Segment to read/write.
     ///
     /// Vertex1/Vertex2 are read-only on Segment - only settable through its
     /// constructor, so Clone() rebuilds via `new Segment(vertex1, vertex2)`
-    /// rather than an object initializer.
-    ///
-    /// Auto Align does not persist anything yet - the actual offset auto-calc
-    /// routine will be closely tied to textures and isn't available yet. While
-    /// checked, that axis is simply left untouched on Apply.
+    /// rather than an object initializer. LeftRegion/RightRegion aren't part
+    /// of that constructor either, so their display reads from OriginalTarget
+    /// (the real object), not the local edit copy - see ManipulatorWindowBase.
     ///
     /// Contour is intentionally not shown - internal-only, not meant for the user.
+    /// Texture itself has no editable picker - Texture Name is a read-only
+    /// label (like InfoPanel), only ever set via the "..." Select button
+    /// (currently a placeholder, not implemented).
     ///
-    /// TODO: LeftRegion/RightRegion property names below are still a guess as to
-    /// exact casing/type - adjust to match InfoPanel's actual Segment binding.
+    /// TODO: Length isn't on Segment yet ("will soon have" it, read-only) -
+    /// the row exists already but always shows "-" until it does.
+    /// TODO: once Segment exposes a second name/offset/texture, mirror slot
+    /// 1's wiring in LoadValues/WriteBack for slot 2 (currently nothing typed
+    /// into slot 2 persists on Apply, even while it's visible/browsable).
     /// </summary>
     public class SegmentManipulator : ManipulatorWindowBase<Segment>
     {
@@ -30,25 +40,17 @@ namespace Editor.UI.Manipulator
 
         INameProvider m_nameProvider;
         ITextureProvider m_textureProvider;
+        INameProvider m_nameProvider2;
+        ITextureProvider m_textureProvider2;
 
         Label m_vertex1Value;
         Label m_vertex2Value;
         Label m_regionLeftValue;
         Label m_regionRightValue;
+        Label m_lengthValue;
 
-
-        DropdownField m_nameDropdown;
-        Button m_nameNewButton;
-        TextField m_nameNewEntry;
-
-        Vector2StepperField m_offsetStepper;
-
-        VisualElement m_textureSlot1;
-        VisualElement m_textureSlot2;
-        DropdownField m_texture1Dropdown;
-        Button m_texture1NewButton;
-        TextField m_texture1NewEntry;
-        Label m_texture1ScaleValue;
+        NameTextureSlot m_slot1;
+        NameTextureSlot m_slot2;
 
         Segment m_current;
 
@@ -61,19 +63,25 @@ namespace Editor.UI.Manipulator
         /// Providers aren't necessarily ready when the window itself is
         /// constructed (e.g. built during static setup, before your name/texture
         /// registries exist) - call this once they are, any time before Open().
+        ///
+        /// The second pair is optional and fills the already-built (but hidden)
+        /// slot 2 - passing either one makes slot 2 visible on the next Open().
+        /// Slot 2 is still not wired to any Segment data (see class TODO), so
+        /// it's browsable but nothing typed into it persists on Apply.
         /// </summary>
-        public void SetProviders(INameProvider nameProvider, ITextureProvider textureProvider)
+        public void SetProviders(INameProvider nameProvider, ITextureProvider textureProvider,
+            INameProvider nameProvider2 = null, ITextureProvider textureProvider2 = null)
         {
             m_nameProvider = nameProvider;
             m_textureProvider = textureProvider;
+            m_nameProvider2 = nameProvider2;
+            m_textureProvider2 = textureProvider2;
         }
 
         protected override void PopulateContent(VisualElement container)
         {
             BuildReadonlyBlock(container);
-            BuildNameRow(container);
-            BuildOffsetRows(container);
-            BuildTextureSlots(container);
+            BuildSlots(container);
         }
 
         void BuildReadonlyBlock(VisualElement container)
@@ -85,6 +93,7 @@ namespace Editor.UI.Manipulator
             m_vertex2Value = AddReadonlyRow(block, "Vertex 2");
             m_regionLeftValue = AddReadonlyRow(block, "Left Region");
             m_regionRightValue = AddReadonlyRow(block, "Right Region");
+            m_lengthValue = AddReadonlyRow(block, "Length");
 
             container.Add(block);
         }
@@ -106,168 +115,91 @@ namespace Editor.UI.Manipulator
             return value;
         }
 
-        void BuildNameRow(VisualElement container)
+        void BuildSlots(VisualElement container)
         {
-            var title = new Label("Name");
-            title.AddToClassList("manip-section-title");
-            container.Add(title);
-
             var row = new VisualElement();
-            row.AddToClassList("manip-picker-row");
+            row.AddToClassList("manip-slots-row");
 
-            m_nameDropdown = new DropdownField();
-            m_nameDropdown.AddToClassList("manip-picker-dropdown");
-            m_nameDropdown.formatListItemCallback = DisplayLowercase;
-            m_nameDropdown.formatSelectedValueCallback = DisplayLowercase;
-            m_nameDropdown.RegisterValueChangedCallback(evt =>
-            {
-                if (m_current != null)
-                    m_current.Name = evt.newValue;
-            });
-            row.Add(m_nameDropdown);
+            m_slot1 = new NameTextureSlot();
+            WireSlot(m_slot1);
+            row.Add(m_slot1);
 
-            m_nameNewButton = new Button(ShowNameNewEntry) { text = "+" };
-            m_nameNewButton.AddToClassList("manip-picker-new-button");
-            row.Add(m_nameNewButton);
+            // Slot 2: built so the side-by-side layout already works once real
+            // data exists, but hidden until a second provider is supplied -
+            // see SetProviders() and the class-level TODO.
+            m_slot2 = new NameTextureSlot();
+            WireSlot(m_slot2);
+            m_slot2.AddToClassList("hidden");
+            row.Add(m_slot2);
 
             container.Add(row);
+        }
 
-            m_nameNewEntry = new TextField { isDelayed = false };
-            m_nameNewEntry.AddToClassList("manip-picker-new-entry");
-            m_nameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
+        void WireSlot(NameTextureSlot slot)
+        {
+            slot.NameDropdown.RegisterValueChangedCallback(evt =>
             {
-                if (evt.keyCode == UnityEngine.KeyCode.Return || evt.keyCode == UnityEngine.KeyCode.KeypadEnter)
+                if (slot == m_slot1 && m_current != null)
+                    m_current.Name = evt.newValue;
+                // slot2 has nothing to write to yet (see class TODO).
+            });
+
+            slot.NameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
+            {
+                if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
                 {
-                    CommitNewName();
+                    CommitNewName(slot);
                     evt.StopPropagation(); // don't also trigger the window's own OK
                 }
             });
-            container.Add(m_nameNewEntry);
+
+            slot.OffsetStepper.ValueChanged += v =>
+            {
+                if (slot == m_slot1 && m_current != null)
+                    m_current.Offset = v;
+                // slot2 has nothing to write to yet (see class TODO).
+            };
+
+            slot.TextureSelectButton.clicked += () =>
+            {
+                var provider = TextureProviderFor(slot);
+                var names = provider != null ? provider.GetTextureNames() : (IReadOnlyList<string>)new List<string>();
+                Debug.Log($"TODO: open texture selection menu (not implemented yet). Available: {string.Join(", ", names)}");
+            };
         }
 
-        static string DisplayLowercase(string value) => string.IsNullOrEmpty(value) ? value : value.ToLowerInvariant();
-
-        void ShowNameNewEntry()
+        void CommitNewName(NameTextureSlot slot)
         {
-            m_nameNewEntry.style.display = DisplayStyle.Flex;
-            m_nameNewEntry.SetValueWithoutNotify(string.Empty);
-            m_nameNewEntry.Focus();
-        }
-
-        void CommitNewName()
-        {
-            string sanitized = NameSanitizer.Sanitize(m_nameNewEntry.value);
-            m_nameNewEntry.style.display = DisplayStyle.None;
+            string sanitized = NameSanitizer.Sanitize(slot.NameNewEntry.value);
+            slot.NameNewEntry.style.display = DisplayStyle.None;
 
             if (string.IsNullOrEmpty(sanitized))
                 return;
 
-            if (m_nameProvider != null && m_nameProvider.TryCreateName(sanitized))
+            var provider = NameProviderFor(slot);
+            if (provider != null && provider.TryCreateName(sanitized))
             {
-                RefreshNameChoices();
-                m_nameDropdown.value = sanitized;
+                RefreshNameChoices(slot);
+                slot.NameDropdown.value = sanitized;
             }
         }
 
-        void RefreshNameChoices()
+        INameProvider NameProviderFor(NameTextureSlot slot) => slot == m_slot1 ? m_nameProvider : m_nameProvider2;
+        ITextureProvider TextureProviderFor(NameTextureSlot slot) => slot == m_slot1 ? m_textureProvider : m_textureProvider2;
+
+        // Choice assignment is deferred one frame via schedule.Execute(): a
+        // DropdownField's popup measures its row heights against the current
+        // layout. Populating "choices" in the very same frame the panel just
+        // became display:Flex can race UI Toolkit's (also deferred) layout
+        // pass, leaving stale/blank rows in the popup until something else
+        // forces a relayout (e.g. a manual scroll). Deferring guarantees a
+        // real layout has happened first.
+        void RefreshNameChoices(NameTextureSlot slot)
         {
-            if (m_nameProvider == null) return;
-            var names = new List<string>(m_nameProvider.GetNames());
-            m_nameDropdown.choices = names;
-        }
-
-        void BuildOffsetRows(VisualElement container)
-        {
-            var title = new Label("Offset");
-            title.AddToClassList("manip-section-title");
-            container.Add(title);
-
-            // One widget handles both axes (Segment.Offset is a single Vector2)
-            // with each Auto Align toggle built in right next to its own axis -
-            // no extra row label needed, the section title above already says
-            // "Offset".
-            m_offsetStepper = new Vector2StepperField(showAutoAlignToggles: true) { Step = CurrentLinearStep };
-            m_offsetStepper.ValueChanged += v =>
-            {
-                if (m_current != null) m_current.Offset = v;
-            };
-            container.Add(m_offsetStepper);
-        }
-
-        void BuildTextureSlots(VisualElement container)
-        {
-            var title = new Label("Texture");
-            title.AddToClassList("manip-section-title");
-            container.Add(title);
-
-            m_textureSlot1 = BuildTextureSlot("Texture", out m_texture1Dropdown, out m_texture1NewButton,
-                out m_texture1NewEntry, out m_texture1ScaleValue);
-            container.Add(m_textureSlot1);
-
-            // Second slot - same layout, hidden until a second texture actually
-            // exists (Segment currently only has one texture slot in the data).
-            m_textureSlot2 = BuildTextureSlot("Texture 2", out _, out _, out _, out _);
-            m_textureSlot2.AddToClassList("hidden");
-            container.Add(m_textureSlot2);
-        }
-
-        VisualElement BuildTextureSlot(string label, out DropdownField dropdown, out Button newButton,
-            out TextField newEntry, out Label scaleValue)
-        {
-            var slot = new VisualElement();
-            slot.AddToClassList("manip-texture-slot");
-
-            var preview = new VisualElement();
-            preview.AddToClassList("manip-texture-preview");
-            var previewLabel = new Label("No preview\n(placeholder)");
-            previewLabel.AddToClassList("manip-texture-preview-label");
-            preview.Add(previewLabel);
-            slot.Add(preview);
-
-            var info = new VisualElement();
-            info.AddToClassList("manip-texture-info");
-
-            var pickerRow = new VisualElement();
-            pickerRow.AddToClassList("manip-picker-row");
-
-            // Built as locals throughout (including inside the lambda below) -
-            // 'out' parameters can't be captured by a lambda closure (CS1628),
-            // so they're only assigned to dropdown/newButton/newEntry/scaleValue
-            // at the very end, once we're done using them directly.
-            var dropdownLocal = new DropdownField();
-            dropdownLocal.AddToClassList("manip-picker-dropdown");
-            dropdownLocal.formatListItemCallback = DisplayLowercase;
-            dropdownLocal.formatSelectedValueCallback = DisplayLowercase;
-            pickerRow.Add(dropdownLocal);
-
-            var newButtonLocal = new Button { text = "+" };
-            newButtonLocal.AddToClassList("manip-picker-new-button");
-            pickerRow.Add(newButtonLocal);
-            info.Add(pickerRow);
-
-            var newEntryLocal = new TextField { isDelayed = false };
-            newEntryLocal.AddToClassList("manip-picker-new-entry");
-            info.Add(newEntryLocal);
-
-            newButtonLocal.clicked += () =>
-            {
-                newEntryLocal.style.display = DisplayStyle.Flex;
-                newEntryLocal.SetValueWithoutNotify(string.Empty);
-                newEntryLocal.Focus();
-            };
-
-            var scaleLabelLocal = new Label("Scale X/Y: -");
-            scaleLabelLocal.AddToClassList("manip-texture-info-label");
-            info.Add(scaleLabelLocal);
-
-            slot.Add(info);
-
-            dropdown = dropdownLocal;
-            newButton = newButtonLocal;
-            newEntry = newEntryLocal;
-            scaleValue = scaleLabelLocal;
-
-            return slot;
+            var provider = NameProviderFor(slot);
+            if (provider == null) return;
+            var names = new List<string>(provider.GetNames());
+            slot.schedule.Execute(() => slot.SetNameChoices(names));
         }
 
         protected override Segment Clone(Segment source)
@@ -279,7 +211,8 @@ namespace Editor.UI.Manipulator
                 Name = source.Name,
                 Offset = source.Offset
                 // LeftRegion / RightRegion intentionally not copied - read-only,
-                // displayed straight from the original source in LoadValues.
+                // displayed straight from OriginalTarget in LoadValues, not
+                // from this copy.
             };
         }
 
@@ -289,29 +222,38 @@ namespace Editor.UI.Manipulator
 
             m_vertex1Value.text = FormatVertex(copy.Vertex1);
             m_vertex2Value.text = FormatVertex(copy.Vertex2);
-            // TODO: wire actual LeftRegion/RightRegion source once property names are confirmed.
-            m_regionLeftValue.text = "-";
-            m_regionRightValue.text = "-";
+            m_regionLeftValue.text = FormatRegionRef(OriginalTarget.Left);
+            m_regionRightValue.text = FormatRegionRef(OriginalTarget.Right);
+            m_lengthValue.text = FormatSegmentLength(OriginalTarget.Length);
 
-            RefreshNameChoices();
-            m_nameDropdown.SetValueWithoutNotify(copy.Name);
-            m_nameNewEntry.style.display = DisplayStyle.None;
+            RefreshNameChoices(m_slot1);
+            m_slot1.NameDropdown.SetValueWithoutNotify(copy.Name);
+            m_slot1.NameNewEntry.style.display = DisplayStyle.None;
 
-            m_offsetStepper.Step = CurrentLinearStep;
-            m_offsetStepper.Value = copy.Offset;
-            m_offsetStepper.AutoAlignXToggle.SetValueWithoutNotify(false);
-            m_offsetStepper.AutoAlignYToggle.SetValueWithoutNotify(false);
-            m_offsetStepper.SetXEnabled(true);
-            m_offsetStepper.SetYEnabled(true);
+            m_slot1.OffsetStepper.Step = CurrentLinearStep;
+            m_slot1.OffsetStepper.Value = copy.Offset;
 
-            m_texture1Dropdown.choices = m_textureProvider != null
-                ? new List<string>(m_textureProvider.GetTextureNames())
-                : new List<string>();
-            m_texture1NewEntry.style.display = DisplayStyle.None;
-            m_texture1ScaleValue.text = "Scale X/Y: -"; // informational only, not wired yet
+            m_slot1.TextureHintValue.text = "Hint";
+            m_slot1.TextureNameValue.text = "-"; // informational only, not wired yet
+            m_slot1.ScaleValue.text = "Scale X/Y: -";
 
-            // Second texture slot stays hidden until Segment actually exposes one.
-            m_textureSlot2.AddToClassList("hidden");
+            // Slot 2 becomes visible once a second name provider was supplied
+            // via SetProviders() - browsable at that point, but still not
+            // wired to any Segment data (see class TODO).
+            bool hasSecondSlot = m_nameProvider2 != null || m_textureProvider2 != null;
+            if (hasSecondSlot) m_slot2.RemoveFromClassList("hidden");
+            else m_slot2.AddToClassList("hidden");
+
+            RefreshNameChoices(m_slot2);
+            m_slot2.NameDropdown.SetValueWithoutNotify(string.Empty);
+            m_slot2.NameNewEntry.style.display = DisplayStyle.None;
+
+            m_slot2.OffsetStepper.Step = CurrentLinearStep;
+            m_slot2.OffsetStepper.Value = Vector2.zero;
+
+            m_slot2.TextureHintValue.text = "Hint";
+            m_slot2.TextureNameValue.text = "-";
+            m_slot2.ScaleValue.text = "Scale X/Y: -";
         }
 
         static string FormatVertex(Vertex v)
@@ -319,27 +261,26 @@ namespace Editor.UI.Manipulator
             if (v == null) return "-";
             string x = v.X.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
             string y = v.Y.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
-            return $"({x}, {y})";
+            string z = v.Z.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+            return $"x {x} y {y} z {z}";
         }
 
+        static string FormatRegionRef(Region region)
+        {
+            return region == null ? "-" : $"{region.Name} #{region.Index}";
+        }
+
+        static string FormatSegmentLength(float f)
+        {
+            return f.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+        }
+        
         protected override void WriteBack(Segment target, Segment editedCopy)
         {
             target.Name = editedCopy.Name;
-
-            // Auto Align has no calculation behind it yet (future work, tied to
-            // textures) - while checked there is no computed value to write, so
-            // that axis is simply left as-is rather than overwritten with a
-            // stale/manual one. Offset is a single Vector2 property, so a
-            // partial (one-axis) update means reading the target's current
-            // value first and only overwriting the axis that was actually edited.
-            Vector2 result = target.Offset;
-            if (!m_offsetStepper.AutoAlignXToggle.value)
-                result.x = editedCopy.Offset.x;
-            if (!m_offsetStepper.AutoAlignYToggle.value)
-                result.y = editedCopy.Offset.y;
-            target.Offset = result;
-
-            // Vertices and Left/Right Region are read-only - left untouched.
+            target.Offset = editedCopy.Offset;
+            // Vertices, Left/Right Region and Length are read-only - left untouched.
+            // Slot 2 has nothing to write yet (see class TODO).
         }
     }
 }

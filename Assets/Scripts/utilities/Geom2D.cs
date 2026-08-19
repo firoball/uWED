@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Geom2D
+public static class Geom2D
 {
     public static bool DoIntersect(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
     {
@@ -47,7 +47,6 @@ public class Geom2D
     public static Vector2 ProjectPointToLine(Vector2 point, Vector2 p1, Vector2 p2)
     {
         Vector2 linep1p2 = p2 - p1;
-        //        float lengthp1p2 = linep1p2.magnitude;
         float sqrLengthp1p2 = linep1p2.sqrMagnitude;
         linep1p2.Normalize();
 
@@ -55,7 +54,6 @@ public class Geom2D
         float dot = Vector2.Dot(linep1pt, linep1p2);
 
         Vector2 pointOnLine;
-        //        if (dot > lengthp1p2)
         if (dot < 0)
             pointOnLine = p1;
         else if (dot * dot > sqrLengthp1p2)

@@ -251,13 +251,11 @@ namespace Editor.Modes
                 //triangle must not contain any vertex for successful merge (intersection test)
                 foreach (Vertex vertex in m_mapData.Vertices)
                 {
-                    if (!triangle.Contains(vertex.WorldPosition)) //exclude own vertices
+                    if (!triangle.Contains(vertex.WorldPosition) && Geom2D.IsInside(triangle, vertex.WorldPosition))
                     {
-                        if (Geom2D.IsInside(triangle, vertex.WorldPosition))
-                        {
-                            valid = false;
-                            break;
-                        }
+                        //exclude own vertices
+                        valid = false;
+                        break;
                     }
                 }
 

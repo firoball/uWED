@@ -227,13 +227,13 @@ namespace Editor.Drawers
             }
 
             //intersection tests for construction mode preview
-            if (m_constructing && m_focusedVertex != null && !intersects)
+            //first vertex (p = 0) must stay allowed for connections (close way)
+            //any waypoint hovered - except first waypoint of current way
+            if (m_constructing && m_focusedVertex != null && !intersects
+                && (m_cursorInfo.HoverVertex != null || m_cursorInfo.NearVertex != null)
+                && m_currentWay.Positions[0].ScreenPosition != mouseVertexPos)
             {
-                //first vertex (p = 0) must stay allowed for connections (close way)
-                //any waypoint hovered - except first waypoint of current way
-                if ((m_cursorInfo.HoverVertex != null || m_cursorInfo.NearVertex != null)
-                    && m_currentWay.Positions[0].ScreenPosition != mouseVertexPos)
-                    intersects = true;
+                intersects = true;
             }
 
             return intersects;

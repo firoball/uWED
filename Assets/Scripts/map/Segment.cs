@@ -72,4 +72,5 @@ public class Segment : IndexedData
         set => m_offset = value;
     }
 
+    public float Length => (m_vertex2.WorldPosition - m_vertex1.WorldPosition).magnitude;
 }

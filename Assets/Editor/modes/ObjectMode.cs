@@ -39,12 +39,9 @@ namespace Editor.Modes
 
         public override void FinishDrag(Vector2 mouseSnappedWorldPos)
         {
-            if (m_currentObject != null)
+            if (m_currentObject != null && !m_rotate)
             {
-                if (!m_rotate)
-                {
-                    m_currentObject.Vertex.WorldPosition = mouseSnappedWorldPos;
-                }
+                m_currentObject.Vertex.WorldPosition = mouseSnappedWorldPos;
             }
 
             m_drawer.SetDragMode(false, m_rotate);

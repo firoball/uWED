@@ -1,43 +1,49 @@
 using UnityEditor;
 
-public class MapAssetWriter : IMapWriter
+namespace Editor.Assets
 {
-    private MapDataSet m_data;
-
-    public MapDataSet Data { set => m_data = value; }
-
-    public MapAssetWriter()
+    public class MapAssetWriter : IMapWriter
     {
-        m_data = null;
-    }
+        private MapDataSet m_data;
 
-    public bool Write(string name)
-    {
-        if (m_data != null)
+        public MapDataSet Data
         {
-            MapAsset asset = MapAsset.Get(name);
-            if (asset == null)
+            set => m_data = value;
+            get => m_data;
+        }
+
+        public MapAssetWriter()
+        {
+            m_data = null;
+        }
+
+        public bool Write(string name)
+        {
+            if (m_data != null)
             {
-                asset = MapAsset.Create(name);
+                MapAsset asset = MapAsset.Get(name);
+                if (asset == null)
+                {
+                    asset = MapAsset.Create(name);
+                }
+
+                //decouple MapDataSet from origin
+                asset.Data = new MapDataSet(); //drop previous contents
+                asset.Data.Objects.AddRange(m_data.Objects);
+                asset.Data.Ways.AddRange(m_data.Ways);
+                asset.Data.Vertices.AddRange(m_data.Vertices);
+                asset.Data.Segments.AddRange(m_data.Segments);
+                asset.Data.Regions.AddRange(m_data.Regions);
+
+                //make sure asset is detected as modified
+                EditorUtility.SetDirty(asset);
+
+                return true;
             }
-
-            //decouple MapDataSet from origin
-            asset.Data = new MapDataSet(); //drop previous contents
-            asset.Data.Objects.AddRange(m_data.Objects);
-            asset.Data.Ways.AddRange(m_data.Ways);
-            asset.Data.Vertices.AddRange(m_data.Vertices);
-            asset.Data.Segments.AddRange(m_data.Segments);
-            asset.Data.Regions.AddRange(m_data.Regions);
-
-            //make sure asset is detected as modified
-            EditorUtility.SetDirty(asset);
-
-            return true;
-        }
-        else
-        {
-            return false;
+            else
+            {
+                return false;
+            }
         }
     }
-
 }

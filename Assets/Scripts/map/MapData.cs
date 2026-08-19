@@ -118,15 +118,12 @@ public class MapData
     public void Remove(Vertex v, bool force, bool skipSegments)
     {
         // if a Vertex was deleted as consequence of a segment deletion, this would fire an unwanted recursion 
-        if (!skipSegments)
+        if (!skipSegments && v.IsConnected())
         {
-            if (v.IsConnected()) //also delete all connected segments
-            {
-                List<Segment> segments = FindSegments(v);
-                foreach (Segment s in segments)
-                    Remove(s);
-            }
-
+            //also delete all connected segments
+            List<Segment> segments = FindSegments(v);
+            foreach (Segment s in segments)
+                Remove(s);
         }
         if (v != null && !v.IsConnected())
         {
@@ -158,18 +155,15 @@ public class MapData
 
     public void Remove(Segment s)
     {
-        if (s != null)
+        if (s != null && m_data.Segments.Remove(s))
         {
-            if (m_data.Segments.Remove(s))
-            {
-                Reindex();
-                s.Vertex1.Unconnect(s);
-                s.Vertex2.Unconnect(s);
+            Reindex();
+            s.Vertex1.Unconnect(s);
+            s.Vertex2.Unconnect(s);
 
-                // make sure segment removal is skipped when removing vertices - otherwise unwanted recursion happens
-                Remove(s.Vertex1, false, true);
-                Remove(s.Vertex2, false, true);
-            }
+            // make sure segment removal is skipped when removing vertices - otherwise unwanted recursion happens
+            Remove(s.Vertex1, false, true);
+            Remove(s.Vertex2, false, true);
         }
     }
 

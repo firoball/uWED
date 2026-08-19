@@ -17,6 +17,9 @@ namespace Editor.UI.Inspector
     [UxmlElement]
     public partial class StatisticsPanel : VisualElement
     {
+        [SerializeField]
+        private StyleSheet m_styleSheet;
+
         readonly Label _statObjects, _statVertices, _statSegments, _statRegions, _statWays;
         readonly Label _x, _y, _status;
 

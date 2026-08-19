@@ -6,28 +6,15 @@ namespace Editor.UI.Manipulator
 {
     /// <summary>
     /// One composite stepper for a Vector2 - X and Y sub-fields each with their
-    /// own [-][+] (needed since callers may want to disable one axis without
-    /// affecting the other, e.g. Segment's per-axis Auto Align). Replaces
-    /// building two independent NumberStepperField rows by hand for every
-    /// Vector2 value (Segment offset today, others later).
-    ///
-    /// Optional per-axis Auto Align toggles sit directly next to their own
-    /// axis (X toggle right after the X stepper, Y toggle right after the Y
-    /// stepper) rather than trailing at the end of the row - keeps the whole
-    /// row compact and each toggle visually paired with what it affects.
+    /// own [-][+]. Used for Segment's Offset (and any future Vector2 value)
+    /// instead of building two independent NumberStepperField rows by hand.
     /// </summary>
     public class Vector2StepperField : VisualElement
     {
         public event Action<Vector2> ValueChanged;
-        public event Action<bool> AutoAlignXChanged;
-        public event Action<bool> AutoAlignYChanged;
 
         public NumberStepperField XField { get; }
         public NumberStepperField YField { get; }
-
-        /// <summary>Null unless this instance was built with showAutoAlignToggles: true.</summary>
-        public Toggle AutoAlignXToggle { get; }
-        public Toggle AutoAlignYToggle { get; }
 
         public float Step
         {
@@ -49,7 +36,7 @@ namespace Editor.UI.Manipulator
             }
         }
 
-        public Vector2StepperField(bool showAutoAlignToggles = false)
+        public Vector2StepperField()
         {
             AddToClassList("vector2-stepper-row");
 
@@ -69,33 +56,8 @@ namespace Editor.UI.Manipulator
 
             Add(xLabel);
             Add(XField);
-
-            if (showAutoAlignToggles)
-            {
-                AutoAlignXToggle = new Toggle { tooltip = "Auto Align X" };
-                AutoAlignXToggle.AddToClassList("vector2-stepper-autoalign");
-                AutoAlignXToggle.RegisterValueChangedCallback(evt =>
-                {
-                    XField.SetFieldsEnabled(!evt.newValue);
-                    AutoAlignXChanged?.Invoke(evt.newValue);
-                });
-                Add(AutoAlignXToggle);
-            }
-
             Add(yLabel);
             Add(YField);
-
-            if (showAutoAlignToggles)
-            {
-                AutoAlignYToggle = new Toggle { tooltip = "Auto Align Y" };
-                AutoAlignYToggle.AddToClassList("vector2-stepper-autoalign");
-                AutoAlignYToggle.RegisterValueChangedCallback(evt =>
-                {
-                    YField.SetFieldsEnabled(!evt.newValue);
-                    AutoAlignYChanged?.Invoke(evt.newValue);
-                });
-                Add(AutoAlignYToggle);
-            }
         }
 
         public void SetXEnabled(bool enabled) => XField.SetFieldsEnabled(enabled);

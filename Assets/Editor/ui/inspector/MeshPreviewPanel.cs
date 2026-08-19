@@ -45,6 +45,7 @@ namespace Editor.UI.Inspector
         private PreviewRenderUtility m_PreviewUtility;
         private Mesh m_Mesh;
         private Material[] m_Materials;
+        private Material[] m_ProvidedMaterials; // as passed to Set(), before default-material substitution
         private Material m_DefaultMaterial;
 
         private Bounds m_MeshBounds;
@@ -77,6 +78,16 @@ namespace Editor.UI.Inspector
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<DetachFromPanelEvent>(_ => Dispose());
+
+            // PreviewRenderUtility's native camera/render texture and our
+            // runtime-created default material are destroyed on domain
+            // reload, but this instance itself commonly survives (UI
+            // Toolkit preserves EditorWindow visual trees across reloads).
+            // Without this, m_PreviewUtility/m_DefaultMaterial stay
+            // non-null but stale, so EnsurePreviewUtility() never
+            // recreates them and nothing renders - silently, no exception.
+            AssemblyReloadEvents.beforeAssemblyReload += ReleaseNativeResources;
+            AssemblyReloadEvents.afterAssemblyReload += ReloadAfterAssemblyReload;
         }
 
         // =========================================================================
@@ -98,6 +109,7 @@ namespace Editor.UI.Inspector
             style.display = DisplayStyle.Flex;
 
             m_Mesh = mesh;
+            m_ProvidedMaterials = materials;
             m_Materials = BuildMaterialArray(materials, m_Mesh.subMeshCount);
 
             m_MeshBounds = m_Mesh.bounds;
@@ -115,9 +127,9 @@ namespace Editor.UI.Inspector
         public new void Clear()
         {
             m_Mesh = null;
+            m_ProvidedMaterials = null;
             m_PreviewImage.image = null;
             style.display = DisplayStyle.None;
-            base.Clear();
         }
 
         // =========================================================================
@@ -305,7 +317,17 @@ namespace Editor.UI.Inspector
 
             for (int i = 0; i < m_Materials.Length; i++)
             {
-                m_PreviewUtility.DrawMesh(m_Mesh, Matrix4x4.identity, m_Materials[i], i);
+                try
+                {
+                    m_PreviewUtility.DrawMesh(m_Mesh, Matrix4x4.identity, m_Materials[i], i);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"MeshPreviewPanel: DrawMesh failed for submesh {i} " +
+                                    $"(subMeshCount={m_Mesh.subMeshCount}, materials={m_Materials.Length}): {e}");
+                    m_PreviewUtility.EndPreview();
+                    return;
+                }
             }
 
             m_PreviewUtility.Render();
@@ -319,6 +341,16 @@ namespace Editor.UI.Inspector
 
         public void Dispose()
         {
+            AssemblyReloadEvents.beforeAssemblyReload -= ReleaseNativeResources;
+            AssemblyReloadEvents.afterAssemblyReload -= ReloadAfterAssemblyReload;
+            ReleaseNativeResources();
+        }
+
+        // Drops native/runtime-created resources without touching m_Mesh or
+        // m_ProvidedMaterials, so ReloadAfterAssemblyReload can rebuild from
+        // them. Also used by Dispose() for the same underlying cleanup.
+        private void ReleaseNativeResources()
+        {
             if (m_PreviewUtility != null)
             {
                 m_PreviewUtility.Cleanup();
@@ -330,6 +362,12 @@ namespace Editor.UI.Inspector
                 UnityEngine.Object.DestroyImmediate(m_DefaultMaterial);
                 m_DefaultMaterial = null;
             }
+        }
+
+        private void ReloadAfterAssemblyReload()
+        {
+            if (m_Mesh != null)
+                Set(m_Mesh, m_ProvidedMaterials);
         }
     }
 }

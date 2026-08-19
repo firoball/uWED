@@ -4,38 +4,19 @@ using System.Linq;
 
 public class CursorInfo
 {
-    //Map statistics
-    private int m_objects;
-    private int m_vertices;
-    private int m_segments;
-    private int m_regions;
-    private int m_ways;
-
-    private int m_hoverIndex;
-    
     //Segment and Way modes
-    private Vertex m_nearVertex;
-    private Vertex m_hoverVertex;
     private readonly List<Vertex> m_selectedVertices;
-    private bool m_vertexDragIsValid;
 
     //Object mode
-    private MapObject m_nearObject;
-    private MapObject m_hoverObject;
     private readonly List<MapObject> m_selectedObjects;
 
     //Segment mode
-    private Segment m_hoverSegment;
-    private bool m_nextSegmentIsValid;
     private readonly List<Segment> m_selectedSegments;
 
     //Region mode
-    private Region m_hoverRegion;
     private readonly List<Region> m_selectedRegions;
-    private Contour m_hoverContour;
 
     //Way mode
-    private Vertex m_waypoint;
 
     public CursorInfo()
     {
@@ -49,23 +30,23 @@ public class CursorInfo
 
     public void Initialize()
     {
-        m_nearVertex = null;
-        m_hoverVertex = null;
+        NearVertex = null;
+        HoverVertex = null;
         m_selectedVertices.Clear();
-        m_vertexDragIsValid = true;
+        VertexDragIsValid = true;
 
-        m_nearObject = null;
-        m_hoverObject = null;
+        NearObject = null;
+        HoverObject = null;
         m_selectedObjects.Clear();
 
-        m_hoverSegment = null;
-        m_nextSegmentIsValid = true;
+        HoverSegment = null;
+        NextSegmentIsValid = true;
         m_selectedSegments.Clear();
 
-        m_waypoint = null;
+        Waypoint = null;
 
-        m_hoverRegion = null;
-        m_hoverContour = null;
+        HoverRegion = null;
+        HoverContour = null;
         m_selectedRegions.Clear();
 
     }
@@ -78,53 +59,36 @@ public class CursorInfo
             return false;
     }
 
-    public Vertex NearVertex { get => m_nearVertex; set => m_nearVertex = value; }
-    public Vertex HoverVertex { get => m_hoverVertex; set => m_hoverVertex = value; }
-    public List<Vertex> SelectedVertices => m_selectedVertices;
-    public bool VertexDragIsValid { get => m_vertexDragIsValid; set => m_vertexDragIsValid = value; }
+    public Vertex NearVertex { get; set; }
 
-    public MapObject NearObject { get => m_nearObject; set => m_nearObject = value; }
-    public MapObject HoverObject { get => m_hoverObject; set => m_hoverObject = value; }
+    public Vertex HoverVertex { get; set; }
+
+    public List<Vertex> SelectedVertices => m_selectedVertices;
+    public bool VertexDragIsValid { get; set; }
+
+    public MapObject NearObject { get; set; }
+
+    public MapObject HoverObject { get; set; }
+
     public List<MapObject> SelectedObjects => m_selectedObjects;
 
-    public Segment HoverSegment { get => m_hoverSegment; set => m_hoverSegment = value; }
-    public bool NextSegmentIsValid { get => m_nextSegmentIsValid; set => m_nextSegmentIsValid = value; }
+    public Segment HoverSegment { get; set; }
+
+    public bool NextSegmentIsValid { get; set; }
+
     public List<Segment> SelectedSegments => m_selectedSegments;
 
-    public Vertex Waypoint { get => m_waypoint; set => m_waypoint = value; }
-    
-    public Region HoverRegion { get => m_hoverRegion; set => m_hoverRegion = value; }
+    public Vertex Waypoint { get; set; }
+
+    public Region HoverRegion { get; set; }
+
     public List<Region> SelectedRegions => m_selectedRegions;
-    public Contour HoverContour { get => m_hoverContour; set => m_hoverContour = value; }
+    public Contour HoverContour { get; set; }
 
-    public int Objects
-    {
-        get => m_objects;
-        set => m_objects = value;
-    }
-
-    public int Vertices
-    {
-        get => m_vertices;
-        set => m_vertices = value;
-    }
-
-    public int Segments
-    {
-        get => m_segments;
-        set => m_segments = value;
-    }
-
-    public int Regions
-    {
-        get => m_regions;
-        set => m_regions = value;
-    }
-
-    public int Ways
-    {
-        get => m_ways;
-        set => m_ways = value;
-    }
-    
+    //Map statistics
+    public int Objects { get; set; }
+    public int Vertices { get; set; }
+    public int Segments { get; set; }
+    public int Regions { get; set; }
+    public int Ways { get; set; }
 }

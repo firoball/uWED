@@ -5,7 +5,7 @@ using WMPio;
 
 public class MapWmpLoader : IMapLoader
 {
-    private MapDataSet m_data;
+    private readonly MapDataSet m_data;
     private float m_scale;
 
     private const float c_defaultScale = 8f; //scale must be some 2^x value for grid alignment

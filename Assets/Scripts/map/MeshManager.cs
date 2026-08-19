@@ -3,8 +3,8 @@ using UnityEngine.Rendering;
 
 public class MeshManager
 {
-    private Mesh m_mesh;
-    private MeshTopology m_topology;
+    private readonly Mesh m_mesh;
+    private readonly MeshTopology m_topology;
     private Vector3[] m_vertices;
     private int[] m_indices;
     private Color[] m_colors;

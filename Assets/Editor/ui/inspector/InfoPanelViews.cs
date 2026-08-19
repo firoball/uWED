@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
@@ -117,7 +118,7 @@ namespace Editor.UI.Inspector
         {
             SetHeader("Object", o.Index);
             SetName(o.Name);
-            _angle.text = FormatFloat(o.Angle - 90f) + "°";
+            _angle.text = FormatFloat(o.Angle * 180 / UnityEngine.Mathf.PI) + "°";
             SetVertexSubBlock(_position, o.Vertex);
             _texture.Set(textureName);
         }

@@ -22,14 +22,15 @@ using Editor.UI.View2D;
         
         private void OnEditVertex(Vertex vertex)
         {
-            m_vertexManipulator.Open(vertex, vertex.Index);
+            m_vertexManipulator.Open(vertex);
         }
         
         private void OnEditSegment(Segment segment, List<string> names)
         {
             SimpleNameProvider segmentNames = new SimpleNameProvider(names);
             m_segmentManipulator.SetProviders(segmentNames, segmentTextures);
-            m_segmentManipulator.Open(segment, segment.Index);
+            //m_segmentManipulator.SetProviders(segmentNames, segmentTextures, segmentNames, segmentTextures);
+            m_segmentManipulator.Open(segment);
         }
     }
 //}

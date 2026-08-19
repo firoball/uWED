@@ -58,17 +58,17 @@ namespace Editor.Drawers
         protected readonly CursorInfo m_cursorInfo;
 
         //Meshes for drawing map
-        private MeshManager m_wayVertexMgr;
-        private MeshManager m_waySegmentMgr;
-        private MeshManager m_vertexMgr;
-        private MeshManager m_segmentMgr;
-        private MeshManager m_objectMgr;
+        private readonly MeshManager m_wayVertexMgr;
+        private readonly MeshManager m_waySegmentMgr;
+        private readonly MeshManager m_vertexMgr;
+        private readonly MeshManager m_segmentMgr;
+        private readonly MeshManager m_objectMgr;
 
         private Matrix4x4 m_screenMatrix;
 
         public CursorInfo CursorInfo => m_cursorInfo;
 
-        public BaseEditorDrawer(MapData mapData) : base()
+        protected BaseEditorDrawer(MapData mapData) : base()
         {
             //set initial values for derived class in overridden Initialize() method
             m_mapData = mapData;
@@ -416,7 +416,7 @@ namespace Editor.Drawers
             m_objectMgr.DrawMesh(m_screenMatrix);
         }
 
-        private Vector2[] GetArrow(float size)
+        private static Vector2[] GetArrow(float size)
         {
             int triangles = 3;
             int step = 3;
@@ -438,7 +438,7 @@ namespace Editor.Drawers
             return points;
         }
 
-        private void RotateArrow(Vector3[] points, int startIndex, Vector2[] arrow, Vector3 position, float angle)
+        private static void RotateArrow(Vector3[] points, int startIndex, Vector2[] arrow, Vector3 position, float angle)
         {
             for (int i = 0; i < arrow.Length; i++)
             {
@@ -449,7 +449,7 @@ namespace Editor.Drawers
         }
 
 
-        private Vector2[] GetDot(float radius)
+        private static Vector2[] GetDot(float radius)
         {
             int triangles = 12;
             int step = 3;

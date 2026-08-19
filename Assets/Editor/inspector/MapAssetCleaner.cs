@@ -1,15 +1,19 @@
+using Editor.Assets;
 using UnityEngine.UIElements;
 
-public class MapAssetCleaner : Foldout
+namespace Editor.Inspector
 {
-    public MapAssetCleaner(MapAsset mapAsset)
+    public class MapAssetCleaner : Foldout
     {
-        text = "!! Danger Zone !!";
-        value = false;
-        Button clear = new Button();
-        clear.text = "Clear Map Data";
-        clear.RegisterCallback<ClickEvent>(evt => { mapAsset.Data.Clear(); });
-        Add(clear);
-        Add(new Label("Warning: Clearing cannot be undone!"));
+        public MapAssetCleaner(MapAsset mapAsset)
+        {
+            text = "!! Danger Zone !!";
+            value = false;
+            Button clear = new Button();
+            clear.text = "Clear Map Data";
+            clear.RegisterCallback<ClickEvent>(evt => { mapAsset.Data.Clear(); });
+            Add(clear);
+            Add(new Label("Warning: Clearing cannot be undone!"));
+        }
     }
 }
