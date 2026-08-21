@@ -7,3 +7,6 @@
 [submodule "Assets/ext/Triangulator"]
 	path = Assets/ext/Triangulator
 	url = git@github.com:firoball/Triangulator.git
+[submodule "Assets/ext/GenericComboBoxField"]
+	path = Assets/ext/GenericComboBoxField
+	url = git@github.com:firoball/GenericComboBoxField.git
