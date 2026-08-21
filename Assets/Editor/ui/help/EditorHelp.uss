@@ -89,7 +89,7 @@
     flex-shrink: 1;
 }
 
-.help-column:first-child {
+.help-column-first {
     margin-right: 16px;
 }
 

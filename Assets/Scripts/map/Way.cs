@@ -22,8 +22,15 @@ public class Way : IndexedData
             m_positions = new List<Vertex>();
     }
 
-    public List<Vertex> Positions => m_positions;
+    public List<Vertex> Positions
+    {
+        get => m_positions;
+        set => m_positions = value;
+    }
 
-    public string Name => m_name;
-
+    public string Name
+    {
+        get => m_name;
+        set => m_name = value;
+    }
 }

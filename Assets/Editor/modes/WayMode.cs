@@ -1,3 +1,4 @@
+using System.Linq;
 using Editor.Drawers;
 using Editor.UI.View2D;
 using UnityEngine;
@@ -118,6 +119,24 @@ namespace Editor.Modes
                 m_currentWay.Positions.Add(m_currentVertex);
                 m_drawer.SetConstructionMode(true, m_currentVertex);
                 return false;
+            }
+        }
+
+        public override void EditObject(EditorView ev)
+        {
+            CursorInfo ci = m_drawer.CursorInfo;
+            if (ci.HoverVertex != null)
+            {
+                for (int w = 0; w < m_mapData.Ways.Count; w++)
+                {
+                    Way way = m_mapData.Ways[w];
+                    int idx = way.Positions.IndexOf(ci.HoverVertex);
+                    if (idx != -1)
+                    {
+                        ev.Interface.NotifyWayEditListeners(way, m_mapData.Ways.Select(w => w.Name).ToList());
+                        break;
+                    }
+                }
             }
         }
 

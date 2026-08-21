@@ -37,7 +37,7 @@
                                     horizontal-scroller-visibility="Hidden">
                         <ui:VisualElement class="help-columns">
 
-                            <ui:VisualElement class="help-column">
+                            <ui:VisualElement class="help-column help-column-first">
                                 <ui:Label text="Editor Modes" class="help-section-title" />
                                 <ui:VisualElement class="help-row">
                                     <ui:Label text="O" class="help-key" />
@@ -191,7 +191,7 @@
                                     horizontal-scroller-visibility="Hidden">
                         <ui:VisualElement class="help-columns">
 
-                            <ui:VisualElement class="help-column">
+                            <ui:VisualElement class="help-column help-column-first">
                                 <ui:Label text="Segments Mode - Special Functions" class="help-section-title" />
                                 <ui:VisualElement class="help-row">
                                     <ui:Label text="F" class="help-key" />
@@ -264,7 +264,7 @@
                                     horizontal-scroller-visibility="Hidden">
                         <ui:VisualElement class="help-columns">
 
-                            <ui:VisualElement class="help-column">
+                            <ui:VisualElement class="help-column help-column-first">
                                 <ui:Label text="Ways Mode - Special Functions" class="help-section-title" />
                                 <ui:VisualElement class="help-row">
                                     <ui:Label text="P" class="help-key" />

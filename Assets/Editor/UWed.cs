@@ -54,9 +54,6 @@ public class UWed : EditorWindow
         VisualElement inspector = containers.FirstOrDefault(x => x.name == "inspector");
 
         IManipulatorSettings settings = new ManipulatorSettings();
-        VertexManipulator vertexManipulator = new VertexManipulator(m_manipulatorUxml, settings);
-        SegmentManipulator segmentManipulator = new SegmentManipulator(m_manipulatorUxml, settings);
-
 
         // all Elements interacting with EditorView events must be created earlier for event registration
         m_infoPanel = new InfoPanel();
@@ -73,14 +70,12 @@ public class UWed : EditorWindow
         editor?.Add(m_infoPanel);
         editor?.Add(m_meshPreviewPanel);
         ui.Add(m_editorHelp);
-        ui.Add(vertexManipulator);
-        ui.Add(segmentManipulator);
         inspector?.Add(statisticsPanel);
 
         // glue things together
         MenuBinder menuBinder = new MenuBinder(m_editorView, m_editorHelp, menu, this); 
         InspectorBinder inspectorBinder = new InspectorBinder(m_editorView, m_infoPanel, m_meshPreviewPanel, statisticsPanel);
-        ManipulatorBinder manipulatorBinder = new ManipulatorBinder(m_editorView, vertexManipulator, segmentManipulator);
+        ManipulatorBinder manipulatorBinder = new ManipulatorBinder(m_editorView, m_manipulatorUxml, ui, settings);
         
         AssemblyReloadEvents.beforeAssemblyReload += m_editorView.SavePrefs;
     }

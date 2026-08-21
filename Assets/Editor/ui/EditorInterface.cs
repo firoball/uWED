@@ -34,8 +34,11 @@ public class EditorInterface
     public event Action<Mesh> OnRegionMeshChanged;
     public event Action<EditorStatus.Mode> OnModeChanged;
     public event Action<EditorStatus.Construct> OnConstructionModeChanged;
+    public event Action<MapObject, List<string>> OnEditObject;
     public event Action<Vertex> OnEditVertex;
     public event Action<Segment, List<string>> OnEditSegment;
+    public event Action<Region, List<string>> OnEditRegion;
+    public event Action<Way, List<string>> OnEditWay;
 
     public List<BaseField<bool>> ToggleSnappingListeners => m_toggleSnappingListeners;
     public List<PopupField<string>> SetModeListeners => m_setModeListeners;
@@ -186,6 +189,11 @@ public class EditorInterface
         OnRegionMeshChanged?.Invoke(mesh);
     }
 
+    public void NotifyObjectEditListeners(MapObject mapObject, List<string> objectNames)
+    {
+        OnEditObject?.Invoke(mapObject, objectNames);
+    }
+    
     public void NotifyVertexEditListeners(Vertex vertex)
     {
         OnEditVertex?.Invoke(vertex);
@@ -194,6 +202,16 @@ public class EditorInterface
     public void NotifySegmentEditListeners(Segment segment, List<string> segmentNames)
     {
         OnEditSegment?.Invoke(segment, segmentNames);
+    }
+    
+    public void NotifyRegionEditListeners(Region region, List<string> regionNames)
+    {
+        OnEditRegion?.Invoke(region, regionNames);
+    }
+    
+    public void NotifyWayEditListeners(Way way, List<string> wayNames)
+    {
+        OnEditWay?.Invoke(way, wayNames);
     }
     
     #endregion

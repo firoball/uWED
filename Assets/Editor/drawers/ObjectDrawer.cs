@@ -64,7 +64,7 @@ namespace Editor.Drawers
             {
                 if (m_rotating &&
                     alt) //normally assignments should not be done in drawer, but only here all params are available
-                    m_draggedObject.Angle = CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
+                    m_draggedObject.Angle = CalcMouseAngle(m_draggedObject.Position.ScreenPosition);
 
                 m_rotating = false;
                 m_draggedObject = null;
@@ -75,7 +75,7 @@ namespace Editor.Drawers
         {
             foreach (MapObject o in m_mapData.Objects)
             {
-                if (!m_cursorInfo.SelectedObjects.Contains(o) && selection.Contains(o.Vertex.ScreenPosition))
+                if (!m_cursorInfo.SelectedObjects.Contains(o) && selection.Contains(o.Position.ScreenPosition))
                     m_cursorInfo.SelectedObjects.Add(o);
             }
         }
@@ -102,7 +102,7 @@ namespace Editor.Drawers
         {
             if (m_rotating && m_mapData.Objects[i] == m_draggedObject)
             {
-                return CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
+                return CalcMouseAngle(m_draggedObject.Position.ScreenPosition);
             }
             else
             {
@@ -124,7 +124,7 @@ namespace Editor.Drawers
 
             for (int o = 0; o < m_mapData.Objects.Count && mapObject == null; o++)
             {
-                Vector2 pos = m_mapData.Objects[o].Vertex.ScreenPosition;
+                Vector2 pos = m_mapData.Objects[o].Position.ScreenPosition;
                 Rect rect = new Rect(pos.x - halfSize, pos.y - halfSize, pointHoverSize, pointHoverSize);
                 if (rect.Contains(m_mousePos))
                 {
@@ -154,16 +154,16 @@ namespace Editor.Drawers
                     EditorView ev = parent as EditorView;
                     if (ev != null)
                     {
-                        float length = (m_mousePos - m_draggedObject.Vertex.ScreenPosition).magnitude - c_bigObjectSize;
-                        float angle = CalcMouseAngle(m_draggedObject.Vertex.ScreenPosition);
+                        float length = (m_mousePos - m_draggedObject.Position.ScreenPosition).magnitude - c_bigObjectSize;
+                        float angle = CalcMouseAngle(m_draggedObject.Position.ScreenPosition);
                         Vector2 p1;
                         p1.x = length * Mathf.Cos(angle);
                         p1.y = length * -Mathf.Sin(angle);
                         Vector2 p2 = p1.normalized * c_bigObjectSize;
                         p1 = ev.TransformScreenPos(p1);
                         p2 = ev.TransformScreenPos(p2);
-                        p1 += m_draggedObject.Vertex.ScreenPosition;
-                        p2 += m_draggedObject.Vertex.ScreenPosition;
+                        p1 += m_draggedObject.Position.ScreenPosition;
+                        p2 += m_draggedObject.Position.ScreenPosition;
                         DrawLine(p2, p1, Colors.ValidColor);
                     }
                 }

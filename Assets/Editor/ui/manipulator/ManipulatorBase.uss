@@ -107,8 +107,6 @@
 .manip-readonly-row {
     flex-direction: row;
     margin-bottom: 3px;
-    max-width: 50%;
-    justify-content: space-between;
 }
 
 .manip-readonly-label {
@@ -184,7 +182,7 @@
     margin-left: 6px;
 }
 
-.vector2-stepper-axis-label:first-child {
+.vector2-stepper-axis-label-first {
     margin-left: 0;
 }
 
@@ -309,7 +307,7 @@
     display: none;
 }
 
-.manip-slot:first-child {
+.manip-slot-first {
     margin-right: 16px;
 }
 
@@ -353,7 +351,9 @@
 .manip-content-container DropdownField:focus,
 .manip-content-container Toggle:focus,
 .manip-content-container Button:focus,
-.manip-settings-bar FloatField:focus {
+.manip-settings-bar FloatField:focus,
+.manip-footer Button:focus,
+.manip-header Button:focus {
     border-width: 1px;
     border-color: rgb(90, 150, 220);
 }

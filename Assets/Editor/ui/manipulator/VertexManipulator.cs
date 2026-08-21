@@ -19,7 +19,6 @@ namespace Editor.UI.Manipulator
         protected override string TypeLabel => "Vertex";
         protected override bool UsesAngleStep => false;
 
-
         Label m_posXValue;
         Label m_posYValue;
         NumberStepperField m_zStepper;
@@ -37,21 +36,8 @@ namespace Editor.UI.Manipulator
             var readonlyBlock = new VisualElement();
             readonlyBlock.AddToClassList("manip-readonly-block");
 
-            var posXRow = new VisualElement();
-            posXRow.AddToClassList("manip-readonly-row");
-            posXRow.Add(new Label("X") { });
-            m_posXValue = new Label();
-            posXRow.Add(m_posXValue);
-            StyleReadonlyRow(posXRow, m_posXValue);
-            readonlyBlock.Add(posXRow);
-
-            var posYRow = new VisualElement();
-            posYRow.AddToClassList("manip-readonly-row");
-            posYRow.Add(new Label("Y"));
-            m_posYValue = new Label();
-            posYRow.Add(m_posYValue);
-            StyleReadonlyRow(posYRow, m_posYValue);
-            readonlyBlock.Add(posYRow);
+            m_posXValue = AddReadonlyRow(readonlyBlock, "X");
+            m_posYValue = AddReadonlyRow(readonlyBlock, "Y");
 
             container.Add(readonlyBlock);
 
@@ -73,11 +59,22 @@ namespace Editor.UI.Manipulator
             container.Add(zRow);
         }
 
-        static void StyleReadonlyRow(VisualElement row, Label valueLabel)
+        // Matches SegmentManipulator's AddReadonlyRow convention.
+        static Label AddReadonlyRow(VisualElement block, string labelText)
         {
-            var labelEl = row[0] as Label;
-            labelEl?.AddToClassList("manip-readonly-label");
-            valueLabel.AddToClassList("manip-readonly-value");
+            var row = new VisualElement();
+            row.AddToClassList("manip-readonly-row");
+
+            var label = new Label(labelText);
+            label.AddToClassList("manip-readonly-label");
+            row.Add(label);
+
+            var value = new Label();
+            value.AddToClassList("manip-readonly-value");
+            row.Add(value);
+
+            block.Add(row);
+            return value;
         }
 
         protected override Vertex Clone(Vertex source)

@@ -26,8 +26,6 @@ namespace Editor.UI.Manipulator
         NameTextureSlot m_slot1;
         NameTextureSlot m_slot2;
 
-        Segment m_current;
-
         public SegmentManipulator(VisualTreeAsset baseUxml, IManipulatorSettings settings)
             : base(baseUxml, settings)
         {
@@ -87,6 +85,7 @@ namespace Editor.UI.Manipulator
             row.AddToClassList("manip-slots-row");
 
             m_slot1 = new NameTextureSlot();
+            m_slot1.AddToClassList("manip-slot-first");
             WireSlot(m_slot1);
             row.Add(m_slot1);
 
@@ -100,12 +99,6 @@ namespace Editor.UI.Manipulator
 
         void WireSlot(NameTextureSlot slot)
         {
-            slot.NameDropdown.RegisterValueChangedCallback(evt =>
-            {
-                if (slot == m_slot1 && m_current != null)
-                    m_current.Name = evt.newValue;
-            });
-
             slot.NameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
             {
                 if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
@@ -114,12 +107,6 @@ namespace Editor.UI.Manipulator
                     evt.StopPropagation();
                 }
             });
-
-            slot.OffsetStepper.ValueChanged += v =>
-            {
-                if (slot == m_slot1 && m_current != null)
-                    m_current.Offset = v;
-            };
 
             slot.TextureSelectButton.clicked += () =>
             {
@@ -168,8 +155,6 @@ namespace Editor.UI.Manipulator
 
         protected override void LoadValues(Segment copy)
         {
-            m_current = copy;
-
             m_vertex1Value.text = FormatVertex(copy.Vertex1);
             m_vertex2Value.text = FormatVertex(copy.Vertex2);
             m_regionLeftValue.text = FormatRegionRef(OriginalTarget.Left);
@@ -177,11 +162,10 @@ namespace Editor.UI.Manipulator
             m_lengthValue.text = FormatSegmentLength(OriginalTarget.Length);
 
             RefreshNameChoices(m_slot1);
-            m_slot1.NameDropdown.SetValueWithoutNotify(copy.Name);
             m_slot1.NameNewEntry.style.display = DisplayStyle.None;
             m_slot1.OffsetStepper.Step = CurrentLinearStep;
-            m_slot1.OffsetStepper.Value = copy.Offset;
             LoadTextureInfo(m_slot1, copy);
+            LoadSlot1(m_slot1, copy);
 
             bool hasSecondSlot = m_nameProvider2 != null || m_textureProvider2 != null;
             if (hasSecondSlot) m_slot2.RemoveFromClassList("hidden");
@@ -212,11 +196,10 @@ namespace Editor.UI.Manipulator
         {
             return f.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
         }
-        
+
         protected override void WriteBack(Segment target, Segment editedCopy)
         {
-            target.Name = editedCopy.Name;
-            target.Offset = editedCopy.Offset;
+            WriteBackSlot1(target, m_slot1);
             WriteBackSlot2(target, m_slot2);
         }
 
@@ -228,6 +211,20 @@ namespace Editor.UI.Manipulator
             slot.TextureHintValue.text = "Hint";
             slot.TextureNameValue.text = "-";
             slot.ScaleValue.text = "Scale X/Y: -";
+        }
+
+        /// <summary>Slot 1's Name/Offset display. Override to change what backs it.</summary>
+        protected virtual void LoadSlot1(NameTextureSlot slot1, Segment copy)
+        {
+            slot1.NameDropdown.SetValueWithoutNotify(copy.Name);
+            slot1.OffsetStepper.Value = copy.Offset;
+        }
+
+        /// <summary>Write slot 1 back onto Segment.Name/Offset. Override to change what it writes to.</summary>
+        protected virtual void WriteBackSlot1(Segment target, NameTextureSlot slot1)
+        {
+            target.Name = slot1.NameDropdown.value;
+            target.Offset = slot1.OffsetStepper.Value;
         }
 
         /// <summary>Slot 2's Name/Offset display. Override once Segment exposes a second one.</summary>

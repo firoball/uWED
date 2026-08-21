@@ -42,6 +42,7 @@ namespace Editor.UI.Manipulator
 
             var xLabel = new Label("X");
             xLabel.AddToClassList("vector2-stepper-axis-label");
+            xLabel.AddToClassList("vector2-stepper-axis-label-first");
 
             XField = new NumberStepperField();
             XField.AddToClassList("vector2-stepper-axis");

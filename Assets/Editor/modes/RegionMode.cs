@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Editor.Drawers;
 using Editor.UI.View2D;
 using Triangulator;
@@ -39,10 +40,11 @@ namespace Editor.Modes
 
         }
 
-
         public override void EditObject(EditorView ev)
         {
-            //TODO: implement
+            CursorInfo ci = m_drawer.CursorInfo;
+            if  (ci.HoverRegion != null)
+                ev.Interface.NotifyRegionEditListeners(ci.HoverRegion, m_mapData.Regions.Select(r => r.Name).ToList());
 
             //TEMP
             if (m_drawer.CursorInfo.HoverContour != null)

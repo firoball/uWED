@@ -221,7 +221,7 @@ namespace Editor.Drawers
                 foreach (Way w in m_mapData.Ways)
                     w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldtoScreenSpace(p.WorldPosition));
                 foreach (MapObject o in m_mapData.Objects)
-                    o.Vertex.ScreenPosition = editorView.WorldtoScreenSpace(o.Vertex.WorldPosition);
+                    o.Position.ScreenPosition = editorView.WorldtoScreenSpace(o.Position.WorldPosition);
 
                 PreEditorRedraw(editorView);
 
@@ -402,14 +402,14 @@ namespace Editor.Drawers
                 Color color = SetObjectColor(i);
                 Array.Fill(m_objectMgr.Colors, color, idx, step1);
                 for (int c = 0; c < pCircle.Length; c++)
-                    m_objectMgr.Vertices[idx + c] = m_mapData.Objects[i].Vertex.WorldPosition + pCircle[c];
+                    m_objectMgr.Vertices[idx + c] = m_mapData.Objects[i].Position.WorldPosition + pCircle[c];
 
                 if (m_enableObjectDetails)
                 {
                     int idxDir = idx + step1;
                     Array.Fill(m_objectMgr.Colors, Colors.ObjectBgColor, idxDir, step2);
                     float angle = SetObjectAngle(i);
-                    RotateArrow(m_objectMgr.Vertices, idxDir, pArrow, m_mapData.Objects[i].Vertex.WorldPosition, angle);
+                    RotateArrow(m_objectMgr.Vertices, idxDir, pArrow, m_mapData.Objects[i].Position.WorldPosition, angle);
                 }
             }
 

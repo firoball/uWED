@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Editor.Drawers;
+using Editor.UI.View2D;
 using UnityEngine;
 
 namespace Editor.Modes
@@ -41,7 +43,7 @@ namespace Editor.Modes
         {
             if (m_currentObject != null && !m_rotate)
             {
-                m_currentObject.Vertex.WorldPosition = mouseSnappedWorldPos;
+                m_currentObject.Position.WorldPosition = mouseSnappedWorldPos;
             }
 
             m_drawer.SetDragMode(false, m_rotate);
@@ -71,6 +73,13 @@ namespace Editor.Modes
                 return true; //construction immediately finished
             }
 
+        }
+
+        public override void EditObject(EditorView ev)
+        {
+            CursorInfo ci = m_drawer.CursorInfo;
+            if  (ci.HoverObject != null)
+                ev.Interface.NotifyObjectEditListeners(ci.HoverObject, m_mapData.Objects.Select(o => o.Name).ToList());
         }
 
         public override void DeleteObject()
