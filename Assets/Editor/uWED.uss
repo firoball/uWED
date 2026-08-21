@@ -1,21 +1,125 @@
-.custom-label {
-    font-size: 20px;
-    -unity-font-style: bold;
-    color: rgb(68, 138, 255);
-}
-
-GridBackground, FlexibleGridBackground {
-    --grid-background-color: rgba(32,32,32,1);
-    --line-color: rgba(255,255,255,0.1);
-    --thick-line-color: rgba(255,255,255,0.2);    
-    --spacing: 32;
-}
-
-.inspector {
-    background-color: blue;
-    bottom: 0px;
-    height: 100px;
-    left: 0px;
+/* Top toolbar */
+.uwed-menu {
     position: absolute;
-    right: 0px;
+    left: 0;
+    top: 0;
+    right: 0;
+    flex-direction: row;
+    height: 26px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.uwed-toolbar-group {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-direction: row;
+}
+
+.uwed-toolbar-group--end {
+    justify-content: flex-end;
+}
+
+.uwed-file-menu {
+    align-items: stretch;
+    flex-shrink: 0;
+    margin: 1px 4px;
+    padding: 2px;
+    border-width: 1px;
+    border-radius: 2px;
+    background-color: var(--unity-colors-button-background);
+    border-color: var(--unity-colors-button-border);
+}
+
+.uwed-file-menu:hover.enabled {
+    background-color: var(--unity-colors-button-background-hover);
+}
+
+.uwed-file-menu:hover:active.enabled {
+    background-color: var(--unity-colors-button-background-pressed);
+}
+
+.uwed-editor-mode {
+    width: 80px;
+}
+
+.uwed-editor-view {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.uwed-view-button {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+/* Grid / snap controls */
+.uwed-grid-control {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.uwed-grid-label {
+    align-self: center;
+}
+
+.uwed-range-slider {
+    width: 50px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    align-self: flex-start;
+}
+
+.uwed-grid-value {
+    align-self: center;
+    margin-top: 0;
+}
+
+.uwed-angle-value {
+    width: 25px;
+}
+
+.uwed-grid-size-value {
+    width: 30px;
+}
+
+.uwed-toggle {
+    justify-content: flex-end;
+    -unity-text-align: upper-right;
+    text-overflow: ellipsis;
+    align-self: center;
+}
+
+.uwed-grid-toggle {
+    width: 45px;
+}
+
+.uwed-snap-toggle {
+    width: 50px;
+}
+
+/* Editor canvas + inspector */
+.uwed-editor {
+    flex-grow: 1;
+    position: absolute;
+    top: 28px;
+    bottom: 24px;
+    left: 4px;
+    right: 4px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.uwed-inspector {
+    flex-grow: 1;
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 24px;
+    border-width: 1px;
+    background-color: rgba(0, 0, 0, 0);
 }
