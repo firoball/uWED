@@ -125,19 +125,8 @@ namespace Editor.Modes
         public override void EditObject(EditorView ev)
         {
             CursorInfo ci = m_drawer.CursorInfo;
-            if (ci.HoverVertex != null)
-            {
-                for (int w = 0; w < m_mapData.Ways.Count; w++)
-                {
-                    Way way = m_mapData.Ways[w];
-                    int idx = way.Positions.IndexOf(ci.HoverVertex);
-                    if (idx != -1)
-                    {
-                        ev.Interface.NotifyWayEditListeners(way, m_mapData.Ways.Select(w => w.Name).ToList());
-                        break;
-                    }
-                }
-            }
+            if (ci.HoverWay != null)
+                ev.Interface.NotifyWayEditListeners(ci.HoverWay, m_mapData.GetWayNames());
         }
 
         public override void DeleteObject()

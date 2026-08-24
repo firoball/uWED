@@ -61,6 +61,7 @@ namespace Editor.UI.Manipulator
 
             m_typeLabel = instance.Q<Label>("manip-type-label");
             m_closeButton = instance.Q<Button>("manip-close-button");
+            m_closeButton.focusable = false; // same function as Cancel, not a separate Tab stop
             m_linearStepField = instance.Q<FloatField>("manip-linear-step");
             m_angleStepField = instance.Q<FloatField>("manip-angle-step");
             m_contentContainer = instance.Q<VisualElement>("manip-content-container");

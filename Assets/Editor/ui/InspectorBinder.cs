@@ -78,7 +78,7 @@ public class InspectorBinder
                 break;
             
             case EditorStatus.Mode.Ways:
-                SetWay(ci.HoverVertex, null);
+                SetWay(ci.HoverVertex, ci.HoverWay, null);
                 break;
             
             default:
@@ -139,9 +139,9 @@ public class InspectorBinder
         m_infoPanel.SetSelection(selected, 23, "floorTex", "ceilTex");
     }
     
-    private void SetWay(Vertex active, List<Way> selected)
+    private void SetWay(Vertex activeVertex, Way active, List<Way> selected)
     {
-        m_infoPanel.SetHover(active);
+        m_infoPanel.SetHover(active, activeVertex);
     }
     
 }

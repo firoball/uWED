@@ -17,6 +17,7 @@ public class CursorInfo
     private readonly List<Region> m_selectedRegions;
 
     //Way mode
+    private readonly List<Way> m_selectedWays;
 
     public CursorInfo()
     {
@@ -24,6 +25,7 @@ public class CursorInfo
         m_selectedObjects = new List<MapObject>();
         m_selectedSegments = new List<Segment>();
         m_selectedRegions = new List<Region>();
+        m_selectedWays = new List<Way>();
 
         Initialize();
     }
@@ -85,6 +87,8 @@ public class CursorInfo
     public List<Region> SelectedRegions => m_selectedRegions;
     public Contour HoverContour { get; set; }
 
+    public Way HoverWay { get; set; }
+    
     //Map statistics
     public int Objects { get; set; }
     public int Vertices { get; set; }

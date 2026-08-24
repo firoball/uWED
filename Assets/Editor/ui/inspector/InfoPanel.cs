@@ -33,12 +33,15 @@ namespace Editor.UI.Inspector
     [UxmlElement]
     public partial class InfoPanel : VisualElement
     {
-        // hover column - only Vertex/Segment/Region/Object can be touched
+        // hover column - Vertex/Segment/Region/Object can be touched
+        // directly; WayBriefView covers hovering a way's segment (the line
+        // between two consecutive way vertices - not a real Segment object)
         readonly VisualElement _hoverColumn;
         readonly VertexDetailView _hoverVertex;
         readonly SegmentDetailView _hoverSegment;
         readonly RegionDetailView _hoverRegion;
         readonly ObjectDetailView _hoverObject;
+        readonly WayBriefView _hoverWayBrief;
         readonly VisualElement[] _hoverViews;
 
         // reserved column for future parameters - see ExtraColumn
@@ -76,7 +79,8 @@ namespace Editor.UI.Inspector
             _hoverSegment = new SegmentDetailView();
             _hoverRegion = new RegionDetailView();
             _hoverObject = new ObjectDetailView();
-            _hoverViews = new VisualElement[] { _hoverVertex, _hoverSegment, _hoverRegion, _hoverObject };
+            _hoverWayBrief = new WayBriefView();
+            _hoverViews = new VisualElement[] { _hoverVertex, _hoverSegment, _hoverRegion, _hoverObject, _hoverWayBrief };
             foreach (var view in _hoverViews)
             {
                 view.style.display = DisplayStyle.None;
@@ -152,6 +156,29 @@ namespace Editor.UI.Inspector
             if (o == null) { ClearHover(); return; }
             ShowHoverView(_hoverObject);
             _hoverObject.Bind(o, textureName);
+        }
+
+        /// <summary>
+        /// One entry point for both way-related hover cases. Pass just the
+        /// way for hovering its segment (the line between two consecutive
+        /// way vertices, not a real Segment object) - shows name + vertex
+        /// count only. Pass the vertex too when hovering one of the way's
+        /// vertices specifically - shows the normal vertex detail with the
+        /// way's name/count appended.
+        /// </summary>
+        public void SetHover(Way way, Vertex vertex = null)
+        {
+            if (way == null) { ClearHover(); return; }
+
+            if (vertex != null)
+            {
+                ShowHoverView(_hoverVertex);
+                _hoverVertex.Bind(vertex, way);
+                return;
+            }
+
+            ShowHoverView(_hoverWayBrief);
+            _hoverWayBrief.Bind(way);
         }
 
         /// <summary>Call when nothing is under the mouse - hides the hover column.</summary>

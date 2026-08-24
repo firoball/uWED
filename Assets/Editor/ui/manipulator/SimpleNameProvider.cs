@@ -14,6 +14,7 @@ namespace Editor.UI.Manipulator
 
         public SimpleNameProvider(List<string> names)
         {
+            names.Sort();
             m_names = names;
         }
         public IReadOnlyList<string> GetNames() => m_names;
@@ -22,7 +23,6 @@ namespace Editor.UI.Manipulator
         {
             if (string.IsNullOrEmpty(sanitizedName) || m_names.Contains(sanitizedName))
                 return false;
-
             m_names.Add(sanitizedName);
             return true;
         }

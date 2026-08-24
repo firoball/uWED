@@ -167,10 +167,28 @@ public class MapData
         }
     }
 
+    public List<string> GetObjectNames()
+    {
+        // TODO: get names from defs in WDL - WMP data does not contain unused ones - may only serve as fallback
+        return m_data.Objects.Select(x => x.Name).Distinct().ToList();
+    }
+    
     public List<string> GetSegmentNames()
     {
-        // TODO: get names from segment defs in WDL - WMP data does not contain unused ones - may only serve as fallback
+        // TODO: get names from defs in WDL - WMP data does not contain unused ones - may only serve as fallback
         return m_data.Segments.Select(x => x.Name).Distinct().ToList();
+    }
+    
+    public List<string> GetRegionNames()
+    {
+        // TODO: get names from defs in WDL - WMP data does not contain unused ones - may only serve as fallback
+        return m_data.Regions.Select(x => x.Name).Distinct().ToList();
+    }
+    
+    public List<string> GetWayNames()
+    {
+        // TODO: get names from defs in WDL - WMP data does not contain unused ones - may only serve as fallback
+        return m_data.Ways.Select(x => x.Name).Distinct().ToList();
     }
     
     public List<Segment> FindSegments(Vertex v)
@@ -231,6 +249,19 @@ public class MapData
 
     #endregion
 
+    #region Way interfaces
+
+    public Way FindWay(Vertex v)
+    {
+        foreach (Way w in m_data.Ways)
+        {
+            if (w.Positions.Contains(v))
+                return w;
+        }
+
+        return null;
+    }
+    #endregion
 
     private void Rebuild() //TODO: this is required when loading from file
     {

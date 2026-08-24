@@ -5,27 +5,26 @@ using UnityEngine.UIElements;
 namespace Editor.UI.Manipulator
 {
     /// <summary>
-    /// MapObject tab. Position is read-only (shown Vertex-style, X/Y only - a
-    /// MapObject's Position is a Vector2, no Z), Angle is editable via a
-    /// NumberStepperField snapped to the shared Angle Step, Region is
-    /// read-only ("{Name} #{Index}", matches Segment's Left/Right formatting).
-    /// One NameTextureSlot, wired the same way as Segment's slot 1.
-    ///
-    /// MapObject(Vector2 position, float angle, Region region, string name) is
-    /// the only ctor that carries every field; MapObject(Vector2 position)
-    /// forwards to it with angle 0 / region null / name null and isn't used
-    /// here since Clone() always has a full source object to copy from.
+    /// MapObject tab. Position is a Vertex (X/Y readonly, double), shown
+    /// Vertex-style; Z is editable the same way VertexManipulator edits Z -
+    /// MapObject's ctor only takes a Vector2, so Clone() can't carry Z through
+    /// the constructor, and it's restored from OriginalTarget after cloning.
+    /// Angle is editable via a NumberStepperField snapped to the shared Angle
+    /// Step. Region is read-only ("{Name} #{Index}"). Standalone Name picker
+    /// (the ONE MapObject.Name - separate from the texture slot). One
+    /// NameTextureSlot for texture display only - Name/Offset sections hidden
+    /// (texture unrelated to MapObject.Name, no confirmed per-object offset).
     /// </summary>
     public class MapObjectManipulator : ManipulatorWindowBase<MapObject>
     {
         protected override string TypeLabel => "Object";
 
         INameProvider m_objectNameProvider;
-        INameProvider m_slotNameProvider;
         ITextureProvider m_textureProvider;
 
         Label m_posXValue;
         Label m_posYValue;
+        NumberStepperField m_zStepper;
         Label m_regionValue;
         NumberStepperField m_angleStepper;
 
@@ -42,24 +41,45 @@ namespace Editor.UI.Manipulator
         }
 
         /// <summary>Call once providers are ready. objectNameProvider backs MapObject.Name;
-        /// slotNameProvider/textureProvider back the texture slot (unwired name for now).</summary>
-        public void SetProviders(INameProvider objectNameProvider, INameProvider slotNameProvider, ITextureProvider textureProvider)
+        /// textureProvider backs the texture slot's "..." select (placeholder).</summary>
+        public void SetProviders(INameProvider objectNameProvider, ITextureProvider textureProvider)
         {
             m_objectNameProvider = objectNameProvider;
-            m_slotNameProvider = slotNameProvider;
             m_textureProvider = textureProvider;
+            RefreshObjectNameChoices();
         }
 
         protected override void PopulateContent(VisualElement container)
         {
             BuildReadonlyBlock(container);
+            BuildZField(container);
             BuildAngleField(container);
             BuildNameField(container);
             BuildSlot(container);
         }
 
+        void BuildZField(VisualElement container)
+        {
+            var row = new VisualElement();
+            row.AddToClassList("manip-field-row");
+
+            var label = new Label("Z");
+            label.AddToClassList("manip-field-label");
+            row.Add(label);
+
+            m_zStepper = new NumberStepperField { Step = CurrentLinearStep };
+            m_zStepper.ValueChanged += v =>
+            {
+                if (m_current != null)
+                    m_current.Position.Z = v;
+            };
+            row.Add(m_zStepper);
+
+            container.Add(row);
+        }
+
         // MapObject's own identity Name - standalone, separate from the
-        // texture slot's Name dropdown.
+        // texture slot's (hidden) Name dropdown.
         void BuildNameField(VisualElement container)
         {
             var title = new Label("Name");
@@ -111,20 +131,25 @@ namespace Editor.UI.Manipulator
             m_nameNewEntry.style.display = DisplayStyle.None;
             if (string.IsNullOrEmpty(sanitized)) return;
 
-            if (m_objectNameProvider != null && m_objectNameProvider.TryCreateName(sanitized))
-            {
-                RefreshObjectNameChoices();
-                m_nameDropdown.value = sanitized;
-            }
+            m_objectNameProvider?.TryCreateName(sanitized);
+            RefreshObjectNameChoices();
+            m_nameDropdown.value = sanitized; // always applied, regardless of provider outcome
         }
 
         void RefreshObjectNameChoices()
         {
-            if (m_objectNameProvider == null) return;
+            if (m_objectNameProvider == null || m_nameDropdown == null) return;
             var names = new List<string>(m_objectNameProvider.GetNames());
-            m_nameDropdown.schedule.Execute(() => m_nameDropdown.choices = names);
+            string currentValue = m_nameDropdown.value;
+            // choices + value set together in the same deferred frame - setting
+            // value immediately then choices a frame later (previous version) let
+            // the deferred choices assignment clobber the just-set value.
+            m_nameDropdown.schedule.Execute(() =>
+            {
+                m_nameDropdown.choices = names;
+                m_nameDropdown.SetValueWithoutNotify(currentValue);
+            });
         }
-
         void BuildReadonlyBlock(VisualElement container)
         {
             var block = new VisualElement();
@@ -181,84 +206,51 @@ namespace Editor.UI.Manipulator
 
             m_slot = new NameTextureSlot();
             m_slot.AddToClassList("manip-slot-first");
-            WireSlot(m_slot);
-            row.Add(m_slot);
 
-            container.Add(row);
-        }
+            m_slot.SetNameSectionVisible(false);
+            m_slot.SetOffsetSectionVisible(false);
 
-        // Slot Name dropdown here is the texture-pairing name, not MapObject.Name.
-        void WireSlot(NameTextureSlot slot)
-        {
-            slot.NameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
-            {
-                if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
-                {
-                    CommitNewSlotName(slot);
-                    evt.StopPropagation();
-                }
-            });
-
-            slot.TextureSelectButton.clicked += () =>
+            m_slot.TextureSelectButton.clicked += () =>
             {
                 var names = m_textureProvider != null
                     ? m_textureProvider.GetTextureNames()
                     : (IReadOnlyList<string>)new List<string>();
                 Debug.Log($"TODO: open texture selection menu. Available: {string.Join(", ", names)}");
             };
-        }
 
-        void CommitNewSlotName(NameTextureSlot slot)
-        {
-            string sanitized = NameSanitizer.Sanitize(slot.NameNewEntry.value);
-            slot.NameNewEntry.style.display = DisplayStyle.None;
-            if (string.IsNullOrEmpty(sanitized)) return;
-
-            if (m_slotNameProvider != null && m_slotNameProvider.TryCreateName(sanitized))
-            {
-                RefreshSlotNameChoices(slot);
-                slot.NameDropdown.value = sanitized;
-            }
-        }
-
-        // schedule.Execute defers one frame - avoids a DropdownField popup
-        // measuring against a not-yet-laid-out panel (blank rows until scrolled).
-        void RefreshSlotNameChoices(NameTextureSlot slot)
-        {
-            if (m_slotNameProvider == null) return;
-            var names = new List<string>(m_slotNameProvider.GetNames());
-            slot.schedule.Execute(() => slot.SetNameChoices(names));
+            row.Add(m_slot);
+            container.Add(row);
         }
 
         protected override MapObject Clone(MapObject source)
         {
-            // Position is exposed as a Vector2 (internally backed by a Vertex,
-            // but the ctor only ever takes the raw Vector2 - never the Vertex itself).
-            return new MapObject(source.Position, source.Angle, source.Region, source.Name);
+            // Ctor only takes a Vector2 - Position.Z can't be carried through
+            // construction, restored manually in LoadValues from OriginalTarget.
+            return new MapObject(new Vector2((float)source.Position.X, (float)source.Position.Y), source.Angle, source.Region, source.Name);
         }
 
         protected override void LoadValues(MapObject copy)
         {
             m_current = copy;
+            copy.Position.Z = OriginalTarget.Position.Z; // restore what Clone() couldn't carry through the ctor
 
             m_posXValue.text = copy.Position.X.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
             m_posYValue.text = copy.Position.Y.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
             m_regionValue.text = FormatRegionRef(OriginalTarget.Region);
 
+            m_zStepper.Step = CurrentLinearStep;
+            m_zStepper.Value = (float)copy.Position.Z;
+
             m_angleStepper.Step = CurrentAngleStep;
             m_angleStepper.Value = copy.Angle;
 
-            RefreshObjectNameChoices();
-            m_nameNewEntry.style.display = DisplayStyle.None;
             m_nameDropdown.SetValueWithoutNotify(copy.Name);
+            m_nameNewEntry.style.display = DisplayStyle.None;
+            RefreshObjectNameChoices(); // captures the just-set value, applies it after deferred choices assignment
 
-            RefreshSlotNameChoices(m_slot);
-            m_slot.NameNewEntry.style.display = DisplayStyle.None;
-            m_slot.OffsetStepper.Step = CurrentLinearStep;
+            m_slot.OffsetStepper.Value = Vector2.zero;
             LoadTextureInfo(m_slot, copy);
-            LoadSlot(m_slot, copy);
         }
-
         static string FormatRegionRef(Region region)
         {
             return region == null ? "-" : $"{region.Name} #{region.Index}";
@@ -266,31 +258,26 @@ namespace Editor.UI.Manipulator
 
         protected override void WriteBack(MapObject target, MapObject editedCopy)
         {
+            CommitPendingObjectNameIfAny();
+            target.Position.Z = editedCopy.Position.Z;
             target.Angle = m_angleStepper.Value;
             target.Name = m_nameDropdown.value;
-            WriteBackSlot(target, m_slot);
         }
 
-        // ---- Extension points (texture-pairing name, not MapObject.Name) ----
+        void CommitPendingObjectNameIfAny()
+        {
+            if (m_nameNewEntry.style.display == DisplayStyle.Flex && !string.IsNullOrEmpty(m_nameNewEntry.value))
+                CommitNewObjectName();
+        }
 
-        /// <summary>Texture Name/Scale for the slot. Override once real texture data exists.</summary>
+        // ---- Extension point ----
+
+        /// <summary>Texture Name/Scale for the slot (placeholder - textures do have names,
+        /// just no real data wired yet). Override once real texture data exists.</summary>
         protected virtual void LoadTextureInfo(NameTextureSlot slot, MapObject copy)
         {
-            slot.TextureHintValue.text = "Hint";
             slot.TextureNameValue.text = "-";
             slot.ScaleValue.text = "Scale X/Y: -";
-        }
-
-        /// <summary>No confirmed texture-pairing name/offset property on MapObject yet - unwired, like Segment's slot 2.</summary>
-        protected virtual void LoadSlot(NameTextureSlot slot, MapObject copy)
-        {
-            slot.NameDropdown.SetValueWithoutNotify(string.Empty);
-            slot.OffsetStepper.Value = Vector2.zero;
-        }
-
-        /// <summary>No-op until MapObject exposes a texture-pairing name property.</summary>
-        protected virtual void WriteBackSlot(MapObject target, NameTextureSlot slot)
-        {
         }
     }
 }

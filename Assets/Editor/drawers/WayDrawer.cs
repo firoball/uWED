@@ -48,14 +48,7 @@ namespace Editor.Drawers
             m_currentWay = null;
             if (on)
             {
-                foreach (Way w in m_mapData.Ways)
-                {
-                    if (w.Positions.Contains(m_focusedVertex))
-                    {
-                        m_currentWay = w;
-                        break;
-                    }
-                }
+                m_currentWay = m_mapData.FindWay(m_focusedVertex);
             }
         }
 
@@ -163,6 +156,9 @@ namespace Editor.Drawers
 
         protected override void HoverTest()
         {
+            //Hovered Way;
+            Way hoverWay = null;
+            
             //Hover vertex
             int pointHoverSize = 9;
             Vertex vertex = null;
@@ -186,11 +182,13 @@ namespace Editor.Drawers
                     {
                         vertex = way.Positions[p];
                         waypoint = null;
+                        hoverWay = way;
                     }
                     else if (vertexRect.Contains(m_mouseSnappedPos))
                     {
                         snappedVertex = way.Positions[p];
                         waypoint = null;
+                        hoverWay = way;
                     }
                     //Hover segment
                     else
@@ -202,11 +200,13 @@ namespace Editor.Drawers
                         {
                             minDist = sqrDist;
                             waypoint = way.Positions[p];
+                            hoverWay = way;
                         }
                     }
                 }
             }
 
+            m_cursorInfo.HoverWay = hoverWay;
             m_cursorInfo.HoverVertex = vertex;
             m_cursorInfo.NearVertex = snappedVertex;
             m_cursorInfo.Waypoint = waypoint;

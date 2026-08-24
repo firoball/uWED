@@ -6,11 +6,11 @@ namespace Editor.UI.Manipulator
 {
     /// <summary>
     /// Region tab. Min/Max read-only. FloorHgt/CeilHgt editable steppers.
-    /// Standalone Name picker (Region's own identity - separate from any
-    /// texture name). Two NameTextureSlots (Floor/Ceiling) for texture display
-    /// - each slot's own Name dropdown is a texture-pairing name, distinct from
-    /// Region.Name, and unwired for now (no confirmed Floor/Ceiling name
-    /// property), same as Segment's slot 2.
+    /// Standalone Name picker (the ONE Region.Name - separate from textures).
+    /// Two NameTextureSlots (Floor/Ceiling) for texture display only - Name
+    /// dropdown and Offset edit fields are hidden on both (textures are
+    /// unrelated to Region.Name, and Region has no per-slot offset property);
+    /// both slots share one ITextureProvider.
     /// </summary>
     public class RegionManipulator : ManipulatorWindowBase<Region>
     {
@@ -18,10 +18,7 @@ namespace Editor.UI.Manipulator
         protected override bool UsesAngleStep => false;
 
         INameProvider m_regionNameProvider;
-        INameProvider m_floorNameProvider;
-        ITextureProvider m_floorTextureProvider;
-        INameProvider m_ceilNameProvider;
-        ITextureProvider m_ceilTextureProvider;
+        ITextureProvider m_textureProvider;
 
         Label m_minValue;
         Label m_maxValue;
@@ -42,16 +39,12 @@ namespace Editor.UI.Manipulator
         }
 
         /// <summary>Call once providers are ready. regionNameProvider backs Region.Name;
-        /// floor/ceil pairs back their slots' texture displays (unwired name for now).</summary>
-        public void SetProviders(INameProvider regionNameProvider,
-            INameProvider floorNameProvider, ITextureProvider floorTextureProvider,
-            INameProvider ceilNameProvider, ITextureProvider ceilTextureProvider)
+        /// textureProvider is shared by both Floor and Ceiling slots.</summary>
+        public void SetProviders(INameProvider regionNameProvider, ITextureProvider textureProvider)
         {
             m_regionNameProvider = regionNameProvider;
-            m_floorNameProvider = floorNameProvider;
-            m_floorTextureProvider = floorTextureProvider;
-            m_ceilNameProvider = ceilNameProvider;
-            m_ceilTextureProvider = ceilTextureProvider;
+            m_textureProvider = textureProvider;
+            RefreshRegionNameChoices();
         }
 
         protected override void PopulateContent(VisualElement container)
@@ -105,8 +98,8 @@ namespace Editor.UI.Manipulator
             return stepper;
         }
 
-        // Region's own identity Name - standalone, same picker markup as
-        // NameTextureSlot's Name section but not paired with any texture.
+        // Region's own identity Name - standalone, separate from either
+        // texture slot.
         void BuildNameField(VisualElement container)
         {
             var title = new Label("Name");
@@ -158,18 +151,21 @@ namespace Editor.UI.Manipulator
             m_nameNewEntry.style.display = DisplayStyle.None;
             if (string.IsNullOrEmpty(sanitized)) return;
 
-            if (m_regionNameProvider != null && m_regionNameProvider.TryCreateName(sanitized))
-            {
-                RefreshRegionNameChoices();
-                m_nameDropdown.value = sanitized;
-            }
+            m_regionNameProvider?.TryCreateName(sanitized);
+            RefreshRegionNameChoices();
+            m_nameDropdown.value = sanitized; // always applied, regardless of provider outcome
         }
 
         void RefreshRegionNameChoices()
         {
-            if (m_regionNameProvider == null) return;
+            if (m_regionNameProvider == null || m_nameDropdown == null) return;
             var names = new List<string>(m_regionNameProvider.GetNames());
-            m_nameDropdown.schedule.Execute(() => m_nameDropdown.choices = names);
+            string currentValue = m_nameDropdown.value;
+            m_nameDropdown.schedule.Execute(() =>
+            {
+                m_nameDropdown.choices = names;
+                m_nameDropdown.SetValueWithoutNotify(currentValue);
+            });
         }
 
         void BuildSlots(VisualElement container)
@@ -179,59 +175,29 @@ namespace Editor.UI.Manipulator
 
             m_floorSlot = new NameTextureSlot();
             m_floorSlot.AddToClassList("manip-slot-first");
-            WireSlot(m_floorSlot, isFloor: true);
+            SetupTextureOnlySlot(m_floorSlot, hint: "Floor");
             row.Add(m_floorSlot);
 
             m_ceilSlot = new NameTextureSlot();
-            WireSlot(m_ceilSlot, isFloor: false);
+            SetupTextureOnlySlot(m_ceilSlot, hint: "Ceiling");
             row.Add(m_ceilSlot);
 
             container.Add(row);
         }
 
-        // Slot Name dropdown here is the texture-pairing name, not Region.Name.
-        void WireSlot(NameTextureSlot slot, bool isFloor)
+        void SetupTextureOnlySlot(NameTextureSlot slot, string hint)
         {
-            slot.NameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
-            {
-                if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
-                {
-                    CommitNewSlotName(slot, isFloor);
-                    evt.StopPropagation();
-                }
-            });
+            slot.SetNameSectionVisible(false);
+            slot.SetOffsetSectionVisible(false);
+            slot.TextureHintValue.text = hint;
 
             slot.TextureSelectButton.clicked += () =>
             {
-                var provider = TextureProviderFor(isFloor);
-                var names = provider != null ? provider.GetTextureNames() : (IReadOnlyList<string>)new List<string>();
+                var names = m_textureProvider != null
+                    ? m_textureProvider.GetTextureNames()
+                    : (IReadOnlyList<string>)new List<string>();
                 Debug.Log($"TODO: open texture selection menu. Available: {string.Join(", ", names)}");
             };
-        }
-
-        void CommitNewSlotName(NameTextureSlot slot, bool isFloor)
-        {
-            string sanitized = NameSanitizer.Sanitize(slot.NameNewEntry.value);
-            slot.NameNewEntry.style.display = DisplayStyle.None;
-            if (string.IsNullOrEmpty(sanitized)) return;
-
-            var provider = SlotNameProviderFor(isFloor);
-            if (provider != null && provider.TryCreateName(sanitized))
-            {
-                RefreshSlotNameChoices(slot, isFloor);
-                slot.NameDropdown.value = sanitized;
-            }
-        }
-
-        INameProvider SlotNameProviderFor(bool isFloor) => isFloor ? m_floorNameProvider : m_ceilNameProvider;
-        ITextureProvider TextureProviderFor(bool isFloor) => isFloor ? m_floorTextureProvider : m_ceilTextureProvider;
-
-        void RefreshSlotNameChoices(NameTextureSlot slot, bool isFloor)
-        {
-            var provider = SlotNameProviderFor(isFloor);
-            if (provider == null) return;
-            var names = new List<string>(provider.GetNames());
-            slot.schedule.Execute(() => slot.SetNameChoices(names));
         }
 
         protected override Region Clone(Region source)
@@ -254,18 +220,10 @@ namespace Editor.UI.Manipulator
             RefreshRegionNameChoices();
             m_nameNewEntry.style.display = DisplayStyle.None;
             m_nameDropdown.SetValueWithoutNotify(copy.Name);
+            RefreshRegionNameChoices(); // captures the just-set value, applies it after deferred choices assignment
 
-            RefreshSlotNameChoices(m_floorSlot, isFloor: true);
-            m_floorSlot.NameNewEntry.style.display = DisplayStyle.None;
-            m_floorSlot.OffsetStepper.Step = CurrentLinearStep;
             LoadTextureInfo(m_floorSlot, copy, isFloor: true);
-            LoadSlot(m_floorSlot, copy, isFloor: true);
-
-            RefreshSlotNameChoices(m_ceilSlot, isFloor: false);
-            m_ceilSlot.NameNewEntry.style.display = DisplayStyle.None;
-            m_ceilSlot.OffsetStepper.Step = CurrentLinearStep;
             LoadTextureInfo(m_ceilSlot, copy, isFloor: false);
-            LoadSlot(m_ceilSlot, copy, isFloor: false);
         }
 
         static string FormatVector(Vector3 v)
@@ -278,32 +236,26 @@ namespace Editor.UI.Manipulator
 
         protected override void WriteBack(Region target, Region editedCopy)
         {
+            CommitPendingRegionNameIfAny();
             target.FloorHgt = m_floorHgtStepper.Value;
             target.CeilHgt = m_ceilHgtStepper.Value;
             target.Name = m_nameDropdown.value;
-            WriteBackSlot(target, m_floorSlot, isFloor: true);
-            WriteBackSlot(target, m_ceilSlot, isFloor: false);
         }
 
-        // ---- Extension points (texture-pairing name, not Region.Name) ----
+        void CommitPendingRegionNameIfAny()
+        {
+            if (m_nameNewEntry.style.display == DisplayStyle.Flex && !string.IsNullOrEmpty(m_nameNewEntry.value))
+                CommitNewRegionName();
+        }
 
+        // ---- Extension point ----
+
+        /// <summary>Texture Name/Scale for a slot (placeholder - textures do have names,
+        /// just no real data wired yet). Override once real texture data exists.</summary>
         protected virtual void LoadTextureInfo(NameTextureSlot slot, Region copy, bool isFloor)
         {
-            slot.TextureHintValue.text = isFloor ? "Floor" : "Ceiling";
             slot.TextureNameValue.text = "-";
             slot.ScaleValue.text = "Scale X/Y: -";
-        }
-
-        /// <summary>No confirmed Floor/Ceiling name property on Region yet - unwired, like Segment's slot 2.</summary>
-        protected virtual void LoadSlot(NameTextureSlot slot, Region copy, bool isFloor)
-        {
-            slot.NameDropdown.SetValueWithoutNotify(string.Empty);
-            slot.OffsetStepper.Value = Vector2.zero;
-        }
-
-        /// <summary>No-op until Region exposes a Floor/Ceiling texture name property.</summary>
-        protected virtual void WriteBackSlot(Region target, NameTextureSlot slot, bool isFloor)
-        {
         }
     }
 }

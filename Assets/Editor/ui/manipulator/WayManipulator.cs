@@ -33,6 +33,7 @@ namespace Editor.UI.Manipulator
         public void SetProviders(INameProvider nameProvider)
         {
             m_nameProvider = nameProvider;
+            RefreshNameChoices();
         }
 
         protected override void PopulateContent(VisualElement container)
@@ -93,20 +94,21 @@ namespace Editor.UI.Manipulator
             m_nameNewEntry.style.display = DisplayStyle.None;
             if (string.IsNullOrEmpty(sanitized)) return;
 
-            if (m_nameProvider != null && m_nameProvider.TryCreateName(sanitized))
-            {
-                RefreshNameChoices();
-                m_nameDropdown.value = sanitized;
-            }
+            m_nameProvider?.TryCreateName(sanitized);
+            RefreshNameChoices();
+            m_nameDropdown.value = sanitized; // always applied, regardless of provider outcome
         }
 
-        // schedule.Execute defers one frame - avoids a DropdownField popup
-        // measuring against a not-yet-laid-out panel (blank rows until scrolled).
         void RefreshNameChoices()
         {
-            if (m_nameProvider == null) return;
+            if (m_nameProvider == null || m_nameDropdown == null) return;
             var names = new List<string>(m_nameProvider.GetNames());
-            m_nameDropdown.schedule.Execute(() => m_nameDropdown.choices = names);
+            string currentValue = m_nameDropdown.value;
+            m_nameDropdown.schedule.Execute(() =>
+            {
+                m_nameDropdown.choices = names;
+                m_nameDropdown.SetValueWithoutNotify(currentValue);
+            });
         }
 
         void BuildReadonlyBlock(VisualElement container)
@@ -148,6 +150,7 @@ namespace Editor.UI.Manipulator
             RefreshNameChoices();
             m_nameNewEntry.style.display = DisplayStyle.None;
             m_nameDropdown.SetValueWithoutNotify(copy.Name);
+            RefreshNameChoices(); // captures the just-set value, applies it after deferred choices assignment
 
             m_vertexCountValue.text = OriginalTarget.Positions != null
                 ? OriginalTarget.Positions.Count.ToString()
@@ -156,7 +159,14 @@ namespace Editor.UI.Manipulator
 
         protected override void WriteBack(Way target, Way editedCopy)
         {
+            CommitPendingNameIfAny();
             target.Name = m_nameDropdown.value;
+        }
+
+        void CommitPendingNameIfAny()
+        {
+            if (m_nameNewEntry.style.display == DisplayStyle.Flex && !string.IsNullOrEmpty(m_nameNewEntry.value))
+                CommitNewName();
         }
     }
 }

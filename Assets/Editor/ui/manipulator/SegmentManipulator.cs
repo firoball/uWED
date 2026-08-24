@@ -199,8 +199,16 @@ namespace Editor.UI.Manipulator
 
         protected override void WriteBack(Segment target, Segment editedCopy)
         {
+            CommitPendingSlotNameIfAny(m_slot1);
+            CommitPendingSlotNameIfAny(m_slot2);
             WriteBackSlot1(target, m_slot1);
             WriteBackSlot2(target, m_slot2);
+        }
+
+        void CommitPendingSlotNameIfAny(NameTextureSlot slot)
+        {
+            if (slot.NameNewEntry.style.display == DisplayStyle.Flex && !string.IsNullOrEmpty(slot.NameNewEntry.value))
+                CommitNewName(slot);
         }
 
         // ---- Extension points - see SegmentManipulator.md ----

@@ -79,7 +79,7 @@ namespace Editor.Modes
         {
             CursorInfo ci = m_drawer.CursorInfo;
             if  (ci.HoverObject != null)
-                ev.Interface.NotifyObjectEditListeners(ci.HoverObject, m_mapData.Objects.Select(o => o.Name).ToList());
+                ev.Interface.NotifyObjectEditListeners(ci.HoverObject, m_mapData.GetObjectNames());
         }
 
         public override void DeleteObject()

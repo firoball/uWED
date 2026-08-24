@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
@@ -11,22 +10,40 @@ namespace Editor.UI.Inspector
 
     internal sealed class VertexDetailView : DetailView
     {
-        readonly Label _x, _y, _z;
+        readonly Label _x, _y, _z, _wayName, _wayVertexCount;
 
         public VertexDetailView()
         {
             _x = AddParamRow("x");
             _y = AddParamRow("y");
             _z = AddParamRow("z");
+            _wayName = AddParamRow("way");
+            _wayVertexCount = AddParamRow("way vertices");
         }
 
-        public void Bind(Vertex v)
+        /// <summary>
+        /// owningWay is optional - pass it when this vertex belongs to a
+        /// Way (e.g. a way vertex being hovered) to show the way's name and
+        /// vertex count below the usual x/y/z; omit it (or pass null) for a
+        /// vertex with no way context, e.g. a Region-boundary vertex, and
+        /// those two rows stay hidden.
+        /// </summary>
+        public void Bind(Vertex v, Way owningWay = null)
         {
             SetHeader("Vertex", v.Index);
             SetName(null); // vertices never carry a name
             _x.text = FormatFloat((float)v.X);
             _y.text = FormatFloat((float)v.Y);
             _z.text = FormatFloat((float)v.Z);
+
+            bool hasWay = owningWay != null;
+            SetRowVisible(_wayName, hasWay);
+            SetRowVisible(_wayVertexCount, hasWay);
+            if (hasWay)
+            {
+                _wayName.text = string.IsNullOrEmpty(owningWay.Name) ? "—" : owningWay.Name;
+                _wayVertexCount.text = owningWay.Positions.Count.ToString();
+            }
         }
     }
 
@@ -118,33 +135,50 @@ namespace Editor.UI.Inspector
         {
             SetHeader("Object", o.Index);
             SetName(o.Name);
-            _angle.text = FormatFloat(o.Angle * 180 / UnityEngine.Mathf.PI) + "°";
+            _angle.text = FormatFloat(o.Angle - 90f) + "°";
             SetVertexSubBlock(_position, o.Position);
             _texture.Set(textureName);
         }
     }
 
     /// <summary>
-    /// Only ever used for a single-item selection (a way is never hovered
-    /// directly). Vertex count varies per way, so its rows are pooled: grown
-    /// on demand, hidden rather than destroyed when a shorter way follows a
-    /// longer one.
+    /// Way's name and vertex count only, no per-vertex breakdown - used when
+    /// a way's segment (the line between two consecutive way vertices, not
+    /// a real Segment object - Way has no Segment list of its own) is
+    /// hovered. WayDetailView extends this with the full vertex list for
+    /// the selection case.
     /// </summary>
-    internal sealed class WayDetailView : DetailView
+    internal class WayBriefView : DetailView
     {
-        readonly Label _vertexCount;
-        readonly List<Label> _vertexRows = new List<Label>();
+        protected readonly Label VertexCount;
 
-        public WayDetailView()
+        public WayBriefView()
         {
-            _vertexCount = AddParamRow("vertices");
+            VertexCount = AddParamRow("vertices");
         }
 
-        public void Bind(Way w)
+        public virtual void Bind(Way w)
         {
             SetHeader("Way", w.Index);
             SetName(w.Name);
-            _vertexCount.text = w.Positions.Count.ToString();
+            VertexCount.text = w.Positions.Count.ToString();
+        }
+    }
+
+    /// <summary>
+    /// Only ever used for a single-item selection (a way is never hovered
+    /// directly - only its vertices or segments are, see WayBriefView).
+    /// Vertex count varies per way, so its rows are pooled: grown on
+    /// demand, hidden rather than destroyed when a shorter way follows a
+    /// longer one.
+    /// </summary>
+    internal sealed class WayDetailView : WayBriefView
+    {
+        readonly List<Label> _vertexRows = new List<Label>();
+
+        public override void Bind(Way w)
+        {
+            base.Bind(w);
 
             for (int i = 0; i < w.Positions.Count; i++)
             {

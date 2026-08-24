@@ -36,6 +36,10 @@ namespace Editor.UI.Manipulator
         public Button TextureSelectButton { get; }
         public Label ScaleValue { get; }
 
+        readonly Label m_nameTitle;
+        readonly VisualElement m_nameRow;
+        readonly Label m_offsetTitle;
+
         public NameTextureSlot()
         {
             AddToClassList("manip-slot");
@@ -44,9 +48,11 @@ namespace Editor.UI.Manipulator
             var nameTitle = new Label("Name");
             nameTitle.AddToClassList("manip-section-title");
             Add(nameTitle);
+            m_nameTitle = nameTitle;
 
             var nameRow = new VisualElement();
             nameRow.AddToClassList("manip-picker-row");
+            m_nameRow = nameRow;
 
             NameDropdown = new DropdownField();
             NameDropdown.AddToClassList("manip-picker-dropdown");
@@ -70,6 +76,7 @@ namespace Editor.UI.Manipulator
             var offsetTitle = new Label("Texture Offset");
             offsetTitle.AddToClassList("manip-section-title");
             Add(offsetTitle);
+            m_offsetTitle = offsetTitle;
 
             OffsetStepper = new Vector2StepperField();
             Add(OffsetStepper);
@@ -126,5 +133,22 @@ namespace Editor.UI.Manipulator
         static string DisplayLowercase(string value) => string.IsNullOrEmpty(value) ? value : value.ToLowerInvariant();
 
         public void SetNameChoices(IReadOnlyList<string> names) => NameDropdown.choices = new List<string>(names);
+
+        /// <summary>Hides/shows the Name title, dropdown row, and new-entry field together.
+        /// Used where a slot's texture has no separate name (e.g. Region, MapObject) - unlike
+        /// Segment, whose slot Name is wired to Segment.Name.</summary>
+        public void SetNameSectionVisible(bool visible)
+        {
+            m_nameTitle.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            m_nameRow.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            if (!visible) NameNewEntry.style.display = DisplayStyle.None;
+        }
+
+        /// <summary>Hides/shows the Texture Offset title and stepper together.</summary>
+        public void SetOffsetSectionVisible(bool visible)
+        {
+            m_offsetTitle.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            OffsetStepper.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
     }
 }
