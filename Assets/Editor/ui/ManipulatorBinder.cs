@@ -37,12 +37,12 @@ using UnityEngine.UIElements;
                 Ordering = ComboBoxSortMode.Ascending
             };
             textbox.style.marginTop = 50;
-            string assetPath = "assets/editor/ui/comboboxfield/genericcomboboxfield.uss";
+            string assetPath = "assets/ext/GenericComboBoxField/genericcomboboxfield.uss";
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(assetPath);
             if (styleSheet != null)
                 textbox.styleSheets.Add(styleSheet);
             else
-                Debug.LogWarning($"StatisticsPanel: could not find stylesheet at '{assetPath}'. Panel will render unstyled.");
+                Debug.LogWarning($"ManipulatorBinder: could not find stylesheet at '{assetPath}'. Panel will render unstyled.");
             
             parent.Add(textbox);
 
