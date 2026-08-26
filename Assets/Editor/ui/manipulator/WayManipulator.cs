@@ -1,14 +1,13 @@
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UIElements;
+using UI.Controls;
 
 namespace Editor.UI.Manipulator
 {
     /// <summary>
-    /// Way tab. Only Name is editable (dropdown + create, same picker markup
-    /// NameTextureSlot uses for its Name section, built standalone here since
-    /// Way has no texture/offset to pair it with). Vertex list is shown
-    /// read-only as its Count.
+    /// Way tab. Name is a plain rename field (ComboBoxField, string-typed, via
+    /// IGenericNameProvider&lt;string&gt;) - same shape as MapObject/Region/Segment's
+    /// Name fields. Vertex list is shown read-only as its Count.
     /// </summary>
     public class WayManipulator : ManipulatorWindowBase<Way>
     {
@@ -16,11 +15,10 @@ namespace Editor.UI.Manipulator
         protected override bool UsesLinearStep => false;
         protected override bool UsesAngleStep => false;
 
-        INameProvider m_nameProvider;
+        IGenericNameProvider<string> m_nameProvider = new SimpleGenericNameProvider(new List<string>());
 
-        DropdownField m_nameDropdown;
-        Button m_nameNewButton;
-        TextField m_nameNewEntry;
+        VisualElement m_nameFieldContainer;
+        ComboBoxField m_nameCombo;
 
         Label m_vertexCountValue;
 
@@ -29,11 +27,25 @@ namespace Editor.UI.Manipulator
         {
         }
 
-        /// <summary>Call once the provider is ready (not necessarily at construction).</summary>
-        public void SetProviders(INameProvider nameProvider)
+        /// <summary>Call once the provider is ready (null falls back to the default in-memory provider).</summary>
+        public void SetProviders(IGenericNameProvider<string> nameProvider)
         {
-            m_nameProvider = nameProvider;
-            RefreshNameChoices();
+            m_nameProvider = nameProvider ?? new SimpleGenericNameProvider(new List<string>());
+            WireNameProvider();
+        }
+
+        void WireNameProvider()
+        {
+            m_nameCombo.Choices = m_nameProvider.Choices;
+            m_nameCombo.ItemFactory = m_nameProvider.ItemFactory;
+            m_nameCombo.Sanitizer = m_nameProvider.Sanitizer;
+        }
+
+        /// <summary>Hides the Name title + combo box together - for a subclass
+        /// that replaces the plain rename field with a template picker.</summary>
+        protected void SetNameFieldVisible(bool visible)
+        {
+            m_nameFieldContainer.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         protected override void PopulateContent(VisualElement container)
@@ -44,71 +56,19 @@ namespace Editor.UI.Manipulator
 
         void BuildNameField(VisualElement container)
         {
-            var nameTitle = new Label("Name");
-            nameTitle.AddToClassList("manip-section-title");
-            container.Add(nameTitle);
+            m_nameFieldContainer = new VisualElement();
 
-            var nameRow = new VisualElement();
-            nameRow.AddToClassList("manip-picker-row");
+            var title = new Label("Name");
+            title.AddToClassList("manip-section-title");
+            m_nameFieldContainer.Add(title);
 
-            m_nameDropdown = new DropdownField();
-            m_nameDropdown.AddToClassList("manip-picker-dropdown");
-            m_nameDropdown.formatListItemCallback = DisplayLowercase;
-            m_nameDropdown.formatSelectedValueCallback = DisplayLowercase;
-            nameRow.Add(m_nameDropdown);
+            m_nameCombo = new ComboBoxField();
+            m_nameCombo.AddToClassList("manip-picker-dropdown");
+            m_nameFieldContainer.Add(m_nameCombo);
 
-            m_nameNewButton = new Button { text = "+" };
-            m_nameNewButton.AddToClassList("manip-picker-new-button");
-            nameRow.Add(m_nameNewButton);
+            container.Add(m_nameFieldContainer);
 
-            container.Add(nameRow);
-
-            m_nameNewEntry = new TextField { isDelayed = false };
-            m_nameNewEntry.AddToClassList("manip-picker-new-entry");
-            container.Add(m_nameNewEntry);
-
-            m_nameNewButton.clicked += () => ShowNewEntry(m_nameNewEntry);
-
-            m_nameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
-            {
-                if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
-                {
-                    CommitNewName();
-                    evt.StopPropagation();
-                }
-            });
-        }
-
-        static void ShowNewEntry(TextField entry)
-        {
-            entry.style.display = DisplayStyle.Flex;
-            entry.SetValueWithoutNotify(string.Empty);
-            entry.Focus();
-        }
-
-        static string DisplayLowercase(string value) => string.IsNullOrEmpty(value) ? value : value.ToLowerInvariant();
-
-        void CommitNewName()
-        {
-            string sanitized = NameSanitizer.Sanitize(m_nameNewEntry.value);
-            m_nameNewEntry.style.display = DisplayStyle.None;
-            if (string.IsNullOrEmpty(sanitized)) return;
-
-            m_nameProvider?.TryCreateName(sanitized);
-            RefreshNameChoices();
-            m_nameDropdown.value = sanitized; // always applied, regardless of provider outcome
-        }
-
-        void RefreshNameChoices()
-        {
-            if (m_nameProvider == null || m_nameDropdown == null) return;
-            var names = new List<string>(m_nameProvider.GetNames());
-            string currentValue = m_nameDropdown.value;
-            m_nameDropdown.schedule.Execute(() =>
-            {
-                m_nameDropdown.choices = names;
-                m_nameDropdown.SetValueWithoutNotify(currentValue);
-            });
+            WireNameProvider(); // default provider active immediately, even before SetProviders is called
         }
 
         void BuildReadonlyBlock(VisualElement container)
@@ -147,10 +107,8 @@ namespace Editor.UI.Manipulator
 
         protected override void LoadValues(Way copy)
         {
-            RefreshNameChoices();
-            m_nameNewEntry.style.display = DisplayStyle.None;
-            m_nameDropdown.SetValueWithoutNotify(copy.Name);
-            RefreshNameChoices(); // captures the just-set value, applies it after deferred choices assignment
+            m_nameCombo.Refresh();
+            m_nameCombo.SetValueWithoutNotify(copy.Name);
 
             m_vertexCountValue.text = OriginalTarget.Positions != null
                 ? OriginalTarget.Positions.Count.ToString()
@@ -159,14 +117,7 @@ namespace Editor.UI.Manipulator
 
         protected override void WriteBack(Way target, Way editedCopy)
         {
-            CommitPendingNameIfAny();
-            target.Name = m_nameDropdown.value;
-        }
-
-        void CommitPendingNameIfAny()
-        {
-            if (m_nameNewEntry.style.display == DisplayStyle.Flex && !string.IsNullOrEmpty(m_nameNewEntry.value))
-                CommitNewName();
+            target.Name = m_nameCombo.value;
         }
     }
 }

@@ -1,21 +1,23 @@
-using System.Collections.Generic;
 using UnityEngine.UIElements;
 
 namespace Editor.UI.Manipulator
 {
     /// <summary>
-    /// One Name + Texture Offset + Texture "slot": Name picker (dropdown +
-    /// create) first, then the Texture Offset stepper, then a Texture card
-    /// (square preview with Hint overlaid top-left, read-only Texture Name
+    /// Texture Offset + Texture "slot": Texture Offset stepper, then a Texture
+    /// card (square preview with Hint overlaid top-left, read-only Texture Name
     /// label below the preview - not a dropdown, matching InfoPanel - Scale
     /// X/Y below that, and a placeholder "..." button for a future real
     /// texture-asset picker).
     ///
-    /// This is the basic repeatable unit for object types that can have more
-    /// than one Name/Offset/Texture pairing (Segment: up to 2 today). A
-    /// container hosts one or more of these side by side ("manip-slots-row" +
+    /// Every Name/variant picker across all manipulators is now a standalone
+    /// field built directly by the manipulator (see IGenericNameProvider&lt;T&gt;
+    /// / ComboBoxField / GenericComboBoxField&lt;T&gt;) - this slot no longer
+    /// hosts its own Name section, so it is uniformly texture-display-only
+    /// wherever it's used (MapObject, Region x2, Segment).
+    ///
+    /// A container hosts one or more of these side by side ("manip-slots-row" +
     /// "manip-slot") - a single visible slot naturally fills the row via
-    /// flex-grow, no extra layout logic needed when the second is hidden.
+    /// flex-grow, no extra layout logic needed when a second is hidden.
     ///
     /// The texture Hint is a plain, non-focusable Label (not backed by a
     /// provider/registry) sized to its own text, like InfoPanel - it's just a
@@ -24,10 +26,6 @@ namespace Editor.UI.Manipulator
     /// </summary>
     public class NameTextureSlot : VisualElement
     {
-        public DropdownField NameDropdown { get; }
-        public Button NameNewButton { get; }
-        public TextField NameNewEntry { get; }
-
         public Vector2StepperField OffsetStepper { get; }
 
         public VisualElement TexturePreview { get; }
@@ -36,47 +34,16 @@ namespace Editor.UI.Manipulator
         public Button TextureSelectButton { get; }
         public Label ScaleValue { get; }
 
-        readonly Label m_nameTitle;
-        readonly VisualElement m_nameRow;
         readonly Label m_offsetTitle;
 
         public NameTextureSlot()
         {
             AddToClassList("manip-slot");
 
-            // --- Name ---
-            var nameTitle = new Label("Name");
-            nameTitle.AddToClassList("manip-section-title");
-            Add(nameTitle);
-            m_nameTitle = nameTitle;
-
-            var nameRow = new VisualElement();
-            nameRow.AddToClassList("manip-picker-row");
-            m_nameRow = nameRow;
-
-            NameDropdown = new DropdownField();
-            NameDropdown.AddToClassList("manip-picker-dropdown");
-            NameDropdown.formatListItemCallback = DisplayLowercase;
-            NameDropdown.formatSelectedValueCallback = DisplayLowercase;
-            nameRow.Add(NameDropdown);
-
-            NameNewButton = new Button { text = "+" };
-            NameNewButton.AddToClassList("manip-picker-new-button");
-            nameRow.Add(NameNewButton);
-
-            Add(nameRow);
-
-            NameNewEntry = new TextField { isDelayed = false };
-            NameNewEntry.AddToClassList("manip-picker-new-entry");
-            Add(NameNewEntry);
-
-            NameNewButton.clicked += () => ShowNewEntry(NameNewEntry);
-
             // --- Texture Offset ---
-            var offsetTitle = new Label("Texture Offset");
-            offsetTitle.AddToClassList("manip-section-title");
-            Add(offsetTitle);
-            m_offsetTitle = offsetTitle;
+            m_offsetTitle = new Label("Texture Offset");
+            m_offsetTitle.AddToClassList("manip-section-title");
+            Add(m_offsetTitle);
 
             OffsetStepper = new Vector2StepperField();
             Add(OffsetStepper);
@@ -123,32 +90,13 @@ namespace Editor.UI.Manipulator
             Add(textureCard);
         }
 
-        static void ShowNewEntry(TextField entry)
-        {
-            entry.style.display = DisplayStyle.Flex;
-            entry.SetValueWithoutNotify(string.Empty);
-            entry.Focus();
-        }
-
-        static string DisplayLowercase(string value) => string.IsNullOrEmpty(value) ? value : value.ToLowerInvariant();
-
-        public void SetNameChoices(IReadOnlyList<string> names) => NameDropdown.choices = new List<string>(names);
-
-        /// <summary>Hides/shows the Name title, dropdown row, and new-entry field together.
-        /// Used where a slot's texture has no separate name (e.g. Region, MapObject) - unlike
-        /// Segment, whose slot Name is wired to Segment.Name.</summary>
-        public void SetNameSectionVisible(bool visible)
-        {
-            m_nameTitle.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
-            m_nameRow.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
-            if (!visible) NameNewEntry.style.display = DisplayStyle.None;
-        }
-
-        /// <summary>Hides/shows the Texture Offset title and stepper together.</summary>
+        /// <summary>Hides the Texture Offset title/stepper, for object types
+        /// with no per-slot offset property.</summary>
         public void SetOffsetSectionVisible(bool visible)
         {
-            m_offsetTitle.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
-            OffsetStepper.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            var display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            m_offsetTitle.style.display = display;
+            OffsetStepper.style.display = display;
         }
     }
 }

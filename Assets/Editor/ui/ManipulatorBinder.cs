@@ -37,7 +37,7 @@ using UnityEngine.UIElements;
                 Ordering = ComboBoxSortMode.Ascending
             };
             textbox.style.marginTop = 50;
-            string assetPath = "assets/ext/GenericComboBoxField/genericcomboboxfield.uss";
+            string assetPath = "assets/ext/GenericComboBoxField/resources/genericcomboboxfield.uss";
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(assetPath);
             if (styleSheet != null)
                 textbox.styleSheets.Add(styleSheet);
@@ -61,7 +61,7 @@ using UnityEngine.UIElements;
         
         private void OnEditObject(MapObject mapObject, List<string> names)
         {
-            SimpleNameProvider objectNames = new SimpleNameProvider(names);
+            SimpleGenericNameProvider objectNames = new SimpleGenericNameProvider(names);
             m_mapObjectManipulator.SetProviders(objectNames, objectTextures);
             m_mapObjectManipulator.Open(mapObject);
 
@@ -76,22 +76,22 @@ using UnityEngine.UIElements;
         
         private void OnEditSegment(Segment segment, List<string> names)
         {
-            SimpleNameProvider segmentNames = new SimpleNameProvider(names);
-            //m_segmentManipulator.SetProviders(segmentNames, segmentTextures);
-            m_segmentManipulator.SetProviders(segmentNames, segmentTextures, segmentNames, segmentTextures);
+            SimpleGenericNameProvider segmentNames = new SimpleGenericNameProvider(names);
+            m_segmentManipulator.SetProviders(segmentNames, segmentTextures);
+            //m_segmentManipulator.SetProviders(segmentNames, segmentTextures, segmentNames, segmentTextures);
             m_segmentManipulator.Open(segment);
         }
 
         private void OnEditRegion(Region region, List<string> names)
         {
-            SimpleNameProvider regionNames = new SimpleNameProvider(names);
+            SimpleGenericNameProvider regionNames = new SimpleGenericNameProvider(names);
             m_regionManipulator.SetProviders(regionNames, regionTextures);
             m_regionManipulator.Open(region);
         }
 
         private void OnEditWay(Way way, List<string> names)
         {
-            SimpleNameProvider wayNames = new SimpleNameProvider(names);
+            SimpleGenericNameProvider wayNames = new SimpleGenericNameProvider(names);
             m_wayManipulator.SetProviders(wayNames);
             m_wayManipulator.Open(way);
         }

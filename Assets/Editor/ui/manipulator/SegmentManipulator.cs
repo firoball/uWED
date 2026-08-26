@@ -1,21 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UI.Controls;
 
 namespace Editor.UI.Manipulator
 {
     /// <summary>
-    /// Segment tab. See SegmentManipulator.md for extension points.
+    /// Segment tab. Vertex1/Vertex2/Left Region/Right Region/Length read-only.
+    /// Name is a plain rename field (ComboBoxField, string-typed, via
+    /// IGenericNameProvider&lt;string&gt;) - same shape as MapObject/Region/Way's
+    /// Name fields (no special-cased template type at the base level). One
+    /// NameTextureSlot, mandatory - Offset section stays visible (genuinely
+    /// instance data, backed by Segment.Offset directly, unrelated to Name).
+    ///
+    /// A second slot is not base-class behavior - see
+    /// docs/SegmentManipulator.md for the extension pattern (a derived
+    /// ExtendedSegment adding Offset2, built the same way MapObject's template
+    /// picker extension is built).
     /// </summary>
     public class SegmentManipulator : ManipulatorWindowBase<Segment>
     {
         protected override string TypeLabel => "Segment";
         protected override bool UsesAngleStep => false;
 
-        INameProvider m_nameProvider;
+        IGenericNameProvider<string> m_nameProvider = new SimpleGenericNameProvider(new List<string>());
         ITextureProvider m_textureProvider;
-        INameProvider m_nameProvider2;
-        ITextureProvider m_textureProvider2;
 
         Label m_vertex1Value;
         Label m_vertex2Value;
@@ -23,29 +32,46 @@ namespace Editor.UI.Manipulator
         Label m_regionRightValue;
         Label m_lengthValue;
 
-        NameTextureSlot m_slot1;
-        NameTextureSlot m_slot2;
+        VisualElement m_nameFieldContainer;
+        ComboBoxField m_nameCombo;
+
+        NameTextureSlot m_slot;
 
         public SegmentManipulator(VisualTreeAsset baseUxml, IManipulatorSettings settings)
             : base(baseUxml, settings)
         {
         }
 
-        /// <summary>Call once providers are ready (not necessarily at construction).
-        /// Second pair is optional and makes slot 2 visible.</summary>
-        public void SetProviders(INameProvider nameProvider, ITextureProvider textureProvider,
-            INameProvider nameProvider2 = null, ITextureProvider textureProvider2 = null)
+        /// <summary>Call once providers are ready. nameProvider backs the Name combo box
+        /// (null falls back to the default in-memory provider); textureProvider backs the
+        /// texture slot's "..." select (placeholder).</summary>
+        public void SetProviders(IGenericNameProvider<string> nameProvider, ITextureProvider textureProvider)
         {
-            m_nameProvider = nameProvider;
+            m_nameProvider = nameProvider ?? new SimpleGenericNameProvider(new List<string>());
             m_textureProvider = textureProvider;
-            m_nameProvider2 = nameProvider2;
-            m_textureProvider2 = textureProvider2;
+            WireNameProvider();
+        }
+
+        void WireNameProvider()
+        {
+            m_nameCombo.Choices = m_nameProvider.Choices;
+            m_nameCombo.ItemFactory = m_nameProvider.ItemFactory;
+            m_nameCombo.Sanitizer = m_nameProvider.Sanitizer;
+        }
+
+        /// <summary>Hides the Name title + combo box together - for a subclass
+        /// that replaces the plain rename field with a template picker (see
+        /// docs/SegmentManipulator.md).</summary>
+        protected void SetNameFieldVisible(bool visible)
+        {
+            m_nameFieldContainer.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         protected override void PopulateContent(VisualElement container)
         {
             BuildReadonlyBlock(container);
-            BuildSlots(container);
+            BuildNameField(container);
+            BuildSlot(container);
         }
 
         void BuildReadonlyBlock(VisualElement container)
@@ -79,68 +105,43 @@ namespace Editor.UI.Manipulator
             return value;
         }
 
-        void BuildSlots(VisualElement container)
+        void BuildNameField(VisualElement container)
+        {
+            m_nameFieldContainer = new VisualElement();
+
+            var title = new Label("Name");
+            title.AddToClassList("manip-section-title");
+            m_nameFieldContainer.Add(title);
+
+            m_nameCombo = new ComboBoxField();
+            m_nameCombo.AddToClassList("manip-picker-dropdown");
+            m_nameFieldContainer.Add(m_nameCombo);
+
+            container.Add(m_nameFieldContainer);
+
+            WireNameProvider(); // default provider active immediately, even before SetProviders is called
+        }
+
+        void BuildSlot(VisualElement container)
         {
             var row = new VisualElement();
             row.AddToClassList("manip-slots-row");
 
-            m_slot1 = new NameTextureSlot();
-            m_slot1.AddToClassList("manip-slot-first");
-            WireSlot(m_slot1);
-            row.Add(m_slot1);
+            m_slot = new NameTextureSlot();
+            m_slot.AddToClassList("manip-slot-first");
+            // Offset section stays visible (default) - Segment.Offset is real,
+            // instance-specific data, unlike MapObject/Region's hidden offsets.
 
-            m_slot2 = new NameTextureSlot();
-            WireSlot(m_slot2);
-            m_slot2.AddToClassList("hidden");
-            row.Add(m_slot2);
-
-            container.Add(row);
-        }
-
-        void WireSlot(NameTextureSlot slot)
-        {
-            slot.NameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
+            m_slot.TextureSelectButton.clicked += () =>
             {
-                if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
-                {
-                    CommitNewName(slot);
-                    evt.StopPropagation();
-                }
-            });
-
-            slot.TextureSelectButton.clicked += () =>
-            {
-                var provider = TextureProviderFor(slot);
-                var names = provider != null ? provider.GetTextureNames() : (IReadOnlyList<string>)new List<string>();
+                var names = m_textureProvider != null
+                    ? m_textureProvider.GetTextureNames()
+                    : (IReadOnlyList<string>)new List<string>();
                 Debug.Log($"TODO: open texture selection menu. Available: {string.Join(", ", names)}");
             };
-        }
 
-        void CommitNewName(NameTextureSlot slot)
-        {
-            string sanitized = NameSanitizer.Sanitize(slot.NameNewEntry.value);
-            slot.NameNewEntry.style.display = DisplayStyle.None;
-            if (string.IsNullOrEmpty(sanitized)) return;
-
-            var provider = NameProviderFor(slot);
-            if (provider != null && provider.TryCreateName(sanitized))
-            {
-                RefreshNameChoices(slot);
-                slot.NameDropdown.value = sanitized;
-            }
-        }
-
-        INameProvider NameProviderFor(NameTextureSlot slot) => slot == m_slot1 ? m_nameProvider : m_nameProvider2;
-        ITextureProvider TextureProviderFor(NameTextureSlot slot) => slot == m_slot1 ? m_textureProvider : m_textureProvider2;
-
-        // schedule.Execute defers one frame - avoids a DropdownField popup
-        // measuring against a not-yet-laid-out panel (blank rows until scrolled).
-        void RefreshNameChoices(NameTextureSlot slot)
-        {
-            var provider = NameProviderFor(slot);
-            if (provider == null) return;
-            var names = new List<string>(provider.GetNames());
-            slot.schedule.Execute(() => slot.SetNameChoices(names));
+            row.Add(m_slot);
+            container.Add(row);
         }
 
         protected override Segment Clone(Segment source)
@@ -161,21 +162,12 @@ namespace Editor.UI.Manipulator
             m_regionRightValue.text = FormatRegionRef(OriginalTarget.Right);
             m_lengthValue.text = FormatSegmentLength(OriginalTarget.Length);
 
-            RefreshNameChoices(m_slot1);
-            m_slot1.NameNewEntry.style.display = DisplayStyle.None;
-            m_slot1.OffsetStepper.Step = CurrentLinearStep;
-            LoadTextureInfo(m_slot1, copy);
-            LoadSlot1(m_slot1, copy);
+            m_nameCombo.Refresh();
+            m_nameCombo.SetValueWithoutNotify(copy.Name);
 
-            bool hasSecondSlot = m_nameProvider2 != null || m_textureProvider2 != null;
-            if (hasSecondSlot) m_slot2.RemoveFromClassList("hidden");
-            else m_slot2.AddToClassList("hidden");
-
-            RefreshNameChoices(m_slot2);
-            m_slot2.NameNewEntry.style.display = DisplayStyle.None;
-            m_slot2.OffsetStepper.Step = CurrentLinearStep;
-            LoadTextureInfo(m_slot2, copy);
-            LoadSlot2(m_slot2, copy);
+            m_slot.OffsetStepper.Step = CurrentLinearStep;
+            m_slot.OffsetStepper.Value = copy.Offset;
+            LoadTextureInfo(m_slot, copy);
         }
 
         static string FormatVertex(Vertex v)
@@ -199,52 +191,17 @@ namespace Editor.UI.Manipulator
 
         protected override void WriteBack(Segment target, Segment editedCopy)
         {
-            CommitPendingSlotNameIfAny(m_slot1);
-            CommitPendingSlotNameIfAny(m_slot2);
-            WriteBackSlot1(target, m_slot1);
-            WriteBackSlot2(target, m_slot2);
+            target.Name = m_nameCombo.value;
+            target.Offset = m_slot.OffsetStepper.Value;
         }
 
-        void CommitPendingSlotNameIfAny(NameTextureSlot slot)
-        {
-            if (slot.NameNewEntry.style.display == DisplayStyle.Flex && !string.IsNullOrEmpty(slot.NameNewEntry.value))
-                CommitNewName(slot);
-        }
+        // ---- Extension point ----
 
-        // ---- Extension points - see SegmentManipulator.md ----
-
-        /// <summary>Texture Name/Scale for a slot. Override once real texture data exists.</summary>
+        /// <summary>Texture Name/Scale for the slot (placeholder). Override once real texture data exists.</summary>
         protected virtual void LoadTextureInfo(NameTextureSlot slot, Segment copy)
         {
-            slot.TextureHintValue.text = "Hint";
             slot.TextureNameValue.text = "-";
             slot.ScaleValue.text = "Scale X/Y: -";
-        }
-
-        /// <summary>Slot 1's Name/Offset display. Override to change what backs it.</summary>
-        protected virtual void LoadSlot1(NameTextureSlot slot1, Segment copy)
-        {
-            slot1.NameDropdown.SetValueWithoutNotify(copy.Name);
-            slot1.OffsetStepper.Value = copy.Offset;
-        }
-
-        /// <summary>Write slot 1 back onto Segment.Name/Offset. Override to change what it writes to.</summary>
-        protected virtual void WriteBackSlot1(Segment target, NameTextureSlot slot1)
-        {
-            target.Name = slot1.NameDropdown.value;
-            target.Offset = slot1.OffsetStepper.Value;
-        }
-
-        /// <summary>Slot 2's Name/Offset display. Override once Segment exposes a second one.</summary>
-        protected virtual void LoadSlot2(NameTextureSlot slot2, Segment copy)
-        {
-            slot2.NameDropdown.SetValueWithoutNotify(string.Empty);
-            slot2.OffsetStepper.Value = Vector2.zero;
-        }
-
-        /// <summary>Write slot 2 back. No-op until Segment exposes a second Name/Offset.</summary>
-        protected virtual void WriteBackSlot2(Segment target, NameTextureSlot slot2)
-        {
         }
     }
 }

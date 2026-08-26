@@ -61,7 +61,6 @@ namespace Editor.UI.Manipulator
 
             m_typeLabel = instance.Q<Label>("manip-type-label");
             m_closeButton = instance.Q<Button>("manip-close-button");
-            m_closeButton.focusable = false; // same function as Cancel, not a separate Tab stop
             m_linearStepField = instance.Q<FloatField>("manip-linear-step");
             m_angleStepField = instance.Q<FloatField>("manip-angle-step");
             m_contentContainer = instance.Q<VisualElement>("manip-content-container");
@@ -81,6 +80,9 @@ namespace Editor.UI.Manipulator
             if (!UsesLinearStep) m_linearStepField.tooltip = "Not used by this object type";
             if (!UsesAngleStep) m_angleStepField.tooltip = "Not used by this object type";
 
+            // Close ("X") performs the same function as Cancel - not a separate
+            // Tab stop, same as Cancel/OK remain normal Tab stops in the footer.
+            m_closeButton.focusable = false;
             m_closeButton.clicked += Cancel;
             m_cancelButton.clicked += Cancel;
             m_okButton.clicked += Apply;

@@ -1,23 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UI.Controls;
 
 namespace Editor.UI.Manipulator
 {
     /// <summary>
-    /// Region tab. Min/Max read-only. FloorHgt/CeilHgt editable steppers.
-    /// Standalone Name picker (the ONE Region.Name - separate from textures).
-    /// Two NameTextureSlots (Floor/Ceiling) for texture display only - Name
-    /// dropdown and Offset edit fields are hidden on both (textures are
-    /// unrelated to Region.Name, and Region has no per-slot offset property);
-    /// both slots share one ITextureProvider.
+    /// Region tab. Min/Max read-only. FloorHgt/CeilHgt editable steppers. Name
+    /// is a plain rename field (ComboBoxField, string-typed, via
+    /// IGenericNameProvider&lt;string&gt;) - same shape as MapObject/Way/Segment's
+    /// Name fields. Two NameTextureSlots (Floor/Ceiling) for texture display
+    /// only (Offset section hidden on both - no confirmed per-surface offset
+    /// property); both slots share one texture provider.
     /// </summary>
     public class RegionManipulator : ManipulatorWindowBase<Region>
     {
         protected override string TypeLabel => "Region";
         protected override bool UsesAngleStep => false;
 
-        INameProvider m_regionNameProvider;
+        IGenericNameProvider<string> m_nameProvider = new SimpleGenericNameProvider(new List<string>());
         ITextureProvider m_textureProvider;
 
         Label m_minValue;
@@ -25,8 +26,8 @@ namespace Editor.UI.Manipulator
         NumberStepperField m_floorHgtStepper;
         NumberStepperField m_ceilHgtStepper;
 
-        DropdownField m_nameDropdown;
-        TextField m_nameNewEntry;
+        VisualElement m_nameFieldContainer;
+        ComboBoxField m_nameCombo;
 
         NameTextureSlot m_floorSlot;
         NameTextureSlot m_ceilSlot;
@@ -38,13 +39,28 @@ namespace Editor.UI.Manipulator
         {
         }
 
-        /// <summary>Call once providers are ready. regionNameProvider backs Region.Name;
-        /// textureProvider is shared by both Floor and Ceiling slots.</summary>
-        public void SetProviders(INameProvider regionNameProvider, ITextureProvider textureProvider)
+        /// <summary>Call once providers are ready. nameProvider backs the Name combo box
+        /// (null falls back to the default in-memory provider); textureProvider backs both
+        /// texture slots' "..." select (placeholder, shared between Floor and Ceiling).</summary>
+        public void SetProviders(IGenericNameProvider<string> nameProvider, ITextureProvider textureProvider)
         {
-            m_regionNameProvider = regionNameProvider;
+            m_nameProvider = nameProvider ?? new SimpleGenericNameProvider(new List<string>());
             m_textureProvider = textureProvider;
-            RefreshRegionNameChoices();
+            WireNameProvider();
+        }
+
+        void WireNameProvider()
+        {
+            m_nameCombo.Choices = m_nameProvider.Choices;
+            m_nameCombo.ItemFactory = m_nameProvider.ItemFactory;
+            m_nameCombo.Sanitizer = m_nameProvider.Sanitizer;
+        }
+
+        /// <summary>Hides the Name title + combo box together - for a subclass
+        /// that replaces the plain rename field with a template picker.</summary>
+        protected void SetNameFieldVisible(bool visible)
+        {
+            m_nameFieldContainer.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         protected override void PopulateContent(VisualElement container)
@@ -98,74 +114,21 @@ namespace Editor.UI.Manipulator
             return stepper;
         }
 
-        // Region's own identity Name - standalone, separate from either
-        // texture slot.
         void BuildNameField(VisualElement container)
         {
+            m_nameFieldContainer = new VisualElement();
+
             var title = new Label("Name");
             title.AddToClassList("manip-section-title");
-            container.Add(title);
+            m_nameFieldContainer.Add(title);
 
-            var row = new VisualElement();
-            row.AddToClassList("manip-picker-row");
+            m_nameCombo = new ComboBoxField();
+            m_nameCombo.AddToClassList("manip-picker-dropdown");
+            m_nameFieldContainer.Add(m_nameCombo);
 
-            m_nameDropdown = new DropdownField();
-            m_nameDropdown.AddToClassList("manip-picker-dropdown");
-            m_nameDropdown.formatListItemCallback = DisplayLowercase;
-            m_nameDropdown.formatSelectedValueCallback = DisplayLowercase;
-            row.Add(m_nameDropdown);
+            container.Add(m_nameFieldContainer);
 
-            var newButton = new Button { text = "+" };
-            newButton.AddToClassList("manip-picker-new-button");
-            row.Add(newButton);
-
-            container.Add(row);
-
-            m_nameNewEntry = new TextField { isDelayed = false };
-            m_nameNewEntry.AddToClassList("manip-picker-new-entry");
-            container.Add(m_nameNewEntry);
-
-            newButton.clicked += () => ShowNewEntry(m_nameNewEntry);
-            m_nameNewEntry.RegisterCallback<KeyDownEvent>(evt =>
-            {
-                if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
-                {
-                    CommitNewRegionName();
-                    evt.StopPropagation();
-                }
-            });
-        }
-
-        static void ShowNewEntry(TextField entry)
-        {
-            entry.style.display = DisplayStyle.Flex;
-            entry.SetValueWithoutNotify(string.Empty);
-            entry.Focus();
-        }
-
-        static string DisplayLowercase(string value) => string.IsNullOrEmpty(value) ? value : value.ToLowerInvariant();
-
-        void CommitNewRegionName()
-        {
-            string sanitized = NameSanitizer.Sanitize(m_nameNewEntry.value);
-            m_nameNewEntry.style.display = DisplayStyle.None;
-            if (string.IsNullOrEmpty(sanitized)) return;
-
-            m_regionNameProvider?.TryCreateName(sanitized);
-            RefreshRegionNameChoices();
-            m_nameDropdown.value = sanitized; // always applied, regardless of provider outcome
-        }
-
-        void RefreshRegionNameChoices()
-        {
-            if (m_regionNameProvider == null || m_nameDropdown == null) return;
-            var names = new List<string>(m_regionNameProvider.GetNames());
-            string currentValue = m_nameDropdown.value;
-            m_nameDropdown.schedule.Execute(() =>
-            {
-                m_nameDropdown.choices = names;
-                m_nameDropdown.SetValueWithoutNotify(currentValue);
-            });
+            WireNameProvider(); // default provider active immediately, even before SetProviders is called
         }
 
         void BuildSlots(VisualElement container)
@@ -175,22 +138,20 @@ namespace Editor.UI.Manipulator
 
             m_floorSlot = new NameTextureSlot();
             m_floorSlot.AddToClassList("manip-slot-first");
-            SetupTextureOnlySlot(m_floorSlot, hint: "Floor");
+            m_floorSlot.SetOffsetSectionVisible(false); // no confirmed per-surface offset property
+            WireSlotTextureButton(m_floorSlot);
             row.Add(m_floorSlot);
 
             m_ceilSlot = new NameTextureSlot();
-            SetupTextureOnlySlot(m_ceilSlot, hint: "Ceiling");
+            m_ceilSlot.SetOffsetSectionVisible(false);
+            WireSlotTextureButton(m_ceilSlot);
             row.Add(m_ceilSlot);
 
             container.Add(row);
         }
 
-        void SetupTextureOnlySlot(NameTextureSlot slot, string hint)
+        void WireSlotTextureButton(NameTextureSlot slot)
         {
-            slot.SetNameSectionVisible(false);
-            slot.SetOffsetSectionVisible(false);
-            slot.TextureHintValue.text = hint;
-
             slot.TextureSelectButton.clicked += () =>
             {
                 var names = m_textureProvider != null
@@ -217,10 +178,8 @@ namespace Editor.UI.Manipulator
             m_ceilHgtStepper.Step = CurrentLinearStep;
             m_ceilHgtStepper.Value = copy.CeilHgt;
 
-            RefreshRegionNameChoices();
-            m_nameNewEntry.style.display = DisplayStyle.None;
-            m_nameDropdown.SetValueWithoutNotify(copy.Name);
-            RefreshRegionNameChoices(); // captures the just-set value, applies it after deferred choices assignment
+            m_nameCombo.Refresh();
+            m_nameCombo.SetValueWithoutNotify(copy.Name);
 
             LoadTextureInfo(m_floorSlot, copy, isFloor: true);
             LoadTextureInfo(m_ceilSlot, copy, isFloor: false);
@@ -236,24 +195,17 @@ namespace Editor.UI.Manipulator
 
         protected override void WriteBack(Region target, Region editedCopy)
         {
-            CommitPendingRegionNameIfAny();
             target.FloorHgt = m_floorHgtStepper.Value;
             target.CeilHgt = m_ceilHgtStepper.Value;
-            target.Name = m_nameDropdown.value;
-        }
-
-        void CommitPendingRegionNameIfAny()
-        {
-            if (m_nameNewEntry.style.display == DisplayStyle.Flex && !string.IsNullOrEmpty(m_nameNewEntry.value))
-                CommitNewRegionName();
+            target.Name = m_nameCombo.value;
         }
 
         // ---- Extension point ----
 
-        /// <summary>Texture Name/Scale for a slot (placeholder - textures do have names,
-        /// just no real data wired yet). Override once real texture data exists.</summary>
+        /// <summary>Texture Name/Scale for a slot (placeholder). Override once real texture data exists.</summary>
         protected virtual void LoadTextureInfo(NameTextureSlot slot, Region copy, bool isFloor)
         {
+            slot.TextureHintValue.text = isFloor ? "Floor" : "Ceiling";
             slot.TextureNameValue.text = "-";
             slot.ScaleValue.text = "Scale X/Y: -";
         }
