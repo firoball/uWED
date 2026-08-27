@@ -50,11 +50,6 @@ namespace Editor.UI.View2D
             });
         }
 
-        /*void GenerateVisualContent(MeshGenerationContext m) //TODO: use this hook for drawing textured regions
-        {
-            Debug.Log("GenerateVisualContent");
-        }*/
-
         public Matrix4x4 WorldToScreenMatrix()
         {
             //layout offset - this is already in screen coordinates

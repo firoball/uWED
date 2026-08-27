@@ -123,3 +123,10 @@
     border-width: 1px;
     background-color: rgba(0, 0, 0, 0);
 }
+
+GridBackground {
+    --grid-background-color: rgba(32,32,32,1);
+    --line-color: rgba(255,255,255,0.1);
+    --thick-line-color: rgba(255,255,255,0.2);
+    --spacing: 32;
+}

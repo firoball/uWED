@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -8,11 +6,9 @@ namespace Editor.UI.View2D
 {
     public class GridManipulator : MouseManipulator
     {
-        GridBackground m_grid;
+        private readonly GridBackground m_grid;
         private float m_gridScale = 5f; //2^m_gridScale must be m_gridSpacing
         private float m_gridSpacing = 32f; //must match GridBackground --spacing:
-        private Color m_lineColor;
-        private Color m_thickLineColor;
         private bool m_gridEnabled = true;
 
         public float GridSpacing
@@ -33,8 +29,6 @@ namespace Editor.UI.View2D
 
         private void OnCustomStyleResolved(CustomStyleResolvedEvent e)
         {
-            m_lineColor = m_grid.LineColor;
-            m_thickLineColor = m_grid.ThickLineColor;
             //only load prefs once grid has loaded its stylesheet - otherwise it won't update correctly
             LoadPrefs();
             //pass defaults to all listeners
@@ -107,31 +101,32 @@ namespace Editor.UI.View2D
 
         private void HideBackground()
         {
-            Color bg = m_grid.GridBackgroundColor;
-            m_grid.LineColor = bg;
-            m_grid.ThickLineColor = bg;
-            m_grid.Spacing = 10000f; //something big - renders faster*/
+            m_grid.EnableDraw = false;
         }
 
         private void ShowBackground()
         {
-            m_grid.LineColor = m_lineColor;
-            m_grid.ThickLineColor = m_thickLineColor;
-            m_grid.Spacing = m_gridSpacing;
+            m_grid.EnableDraw = true;
         }
 
         private void UpdateBackground()
         {
             if (m_gridEnabled)
             {
-                EditorView editorView = target as EditorView;
-                Vector2 v1 = editorView.WorldtoScreenSpace(new Vector2(m_gridSpacing, 0));
-                Vector2 v2 = editorView.WorldtoScreenSpace(new Vector2(0, 0));
+                if (target is EditorView editorView)
+                {
+                    Vector2 v1 = editorView.WorldtoScreenSpace(new Vector2(m_gridSpacing, 0));
+                    Vector2 v2 = editorView.WorldtoScreenSpace(new Vector2(0, 0));
 
-                if ((v1 - v2).x < c_gridVisibilityThresholdPx)
-                    HideBackground();
+                    if ((v1 - v2).x < c_gridVisibilityThresholdPx)
+                        HideBackground();
+                    else
+                        ShowBackground();
+                }
                 else
+                {
                     ShowBackground();
+                }
             }
             else
             {

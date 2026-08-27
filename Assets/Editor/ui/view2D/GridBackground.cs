@@ -17,74 +17,45 @@ namespace Editor.UI.View2D
 {
     public class GridBackground : ImmediateModeElement
     {
-        static CustomStyleProperty<float> s_SpacingProperty = new CustomStyleProperty<float>("--spacing");
-        static CustomStyleProperty<int> s_ThickLinesProperty = new CustomStyleProperty<int>("--thick-lines");
-        static CustomStyleProperty<Color> s_LineColorProperty = new CustomStyleProperty<Color>("--line-color");
+        static readonly CustomStyleProperty<float> s_spacingProperty = new CustomStyleProperty<float>("--spacing");
+        static readonly CustomStyleProperty<int> s_thickLinesProperty = new CustomStyleProperty<int>("--thick-lines");
+        static readonly CustomStyleProperty<Color> s_lineColorProperty = new CustomStyleProperty<Color>("--line-color");
 
-        static CustomStyleProperty<Color> s_ThickLineColorProperty =
+        static readonly CustomStyleProperty<Color> s_thickLineColorProperty =
             new CustomStyleProperty<Color>("--thick-line-color");
 
-        static CustomStyleProperty<Color> s_GridBackgroundColorProperty =
+        static readonly CustomStyleProperty<Color> s_gridBackgroundColorProperty =
             new CustomStyleProperty<Color>("--grid-background-color");
 
-        static readonly float s_DefaultSpacing = 50f;
-        static readonly int s_DefaultThickLines = 10;
-        static readonly Color s_DefaultLineColor = new Color(0f, 0f, 0f, 0.18f);
-        static readonly Color s_DefaultThickLineColor = new Color(0f, 0f, 0f, 0.38f);
-        static readonly Color s_DefaultGridBackgroundColor = new Color(0.17f, 0.17f, 0.17f, 1.0f);
+        static readonly float s_defaultSpacing = 50f;
+        static readonly int s_defaultThickLines = 10;
+        static readonly Color s_defaultLineColor = new Color(0f, 0f, 0f, 0.18f);
+        static readonly Color s_defaultThickLineColor = new Color(0f, 0f, 0f, 0.38f);
+        static readonly Color s_defaultGridBackgroundColor = new Color(0.17f, 0.17f, 0.17f, 1.0f);
 
-        float m_Spacing = s_DefaultSpacing;
-        private float spacing => m_Spacing;
+        private float m_spacing = s_defaultSpacing;
+        private int m_thickLines = s_defaultThickLines;
+        private Color m_lineColor = s_defaultLineColor;
+        private Color m_thickLineColor = s_defaultThickLineColor;
+        private Color m_gridBackgroundColor = s_defaultGridBackgroundColor;
+        private VisualElement m_container;
+        private bool m_enableDraw;
 
-        int m_ThickLines = s_DefaultThickLines;
-        private int thickLines => m_ThickLines;
-
-        Color m_LineColor = s_DefaultLineColor;
-        private Color lineColor => m_LineColor * Color.white; // UIElementsUtility.editorPlayModeTintColor;
-
-        Color m_ThickLineColor = s_DefaultThickLineColor;
-        private Color thickLineColor => m_ThickLineColor * Color.white; // UIElementsUtility.editorPlayModeTintColor;
-
-        Color m_GridBackgroundColor = s_DefaultGridBackgroundColor;
-
-        private Color gridBackgroundColor =>
-            m_GridBackgroundColor * Color.white; // UIElementsUtility.editorPlayModeTintColor;
-
-        private VisualElement m_Container;
-
-//PATCH - start
-        private MethodInfo m_handleUtility;
+        //PATCH - start
+        private readonly MethodInfo m_handleUtility;
+        //PATCH - end
 
         public float Spacing
         {
-            get => m_Spacing;
-            set => m_Spacing = value;
+            get => m_spacing;
+            set => m_spacing = value;
         }
-
-        public int ThickLines
+        
+        public bool EnableDraw
         {
-            get => m_ThickLines;
-            set => m_ThickLines = value;
+            get => m_enableDraw;
+            set => m_enableDraw = value;
         }
-
-        public Color LineColor
-        {
-            get => m_LineColor;
-            set => m_LineColor = value;
-        }
-
-        public Color ThickLineColor
-        {
-            get => m_ThickLineColor;
-            set => m_ThickLineColor = value;
-        }
-
-        public Color GridBackgroundColor
-        {
-            get => m_GridBackgroundColor;
-            set => m_GridBackgroundColor = value;
-        }
-//PATCH - end
 
         public GridBackground()
         {
@@ -100,46 +71,41 @@ namespace Editor.UI.View2D
                 Debug.LogError(
                     "Unable to bind 'HandleUtility.ApplyWireMaterial' - review whether Unity internals have changed");
             //PATCH - end
+            m_enableDraw = true;
         }
 
-        private Vector3 Clip(Rect clipRect, Vector3 _in)
+        private static Vector3 Clip(Rect clipRect, Vector3 inVec)
         {
-            if (_in.x < clipRect.xMin)
-                _in.x = clipRect.xMin;
-            if (_in.x > clipRect.xMax)
-                _in.x = clipRect.xMax;
+            if (inVec.x < clipRect.xMin)
+                inVec.x = clipRect.xMin;
+            if (inVec.x > clipRect.xMax)
+                inVec.x = clipRect.xMax;
 
-            if (_in.y < clipRect.yMin)
-                _in.y = clipRect.yMin;
-            if (_in.y > clipRect.yMax)
-                _in.y = clipRect.yMax;
+            if (inVec.y < clipRect.yMin)
+                inVec.y = clipRect.yMin;
+            if (inVec.y > clipRect.yMax)
+                inVec.y = clipRect.yMax;
 
-            return _in;
+            return inVec;
         }
 
         private void OnCustomStyleResolved(CustomStyleResolvedEvent e)
         {
-            float spacingValue = 0f;
-            int thicklinesValue = 0;
-            Color thicklineColorValue = Color.clear;
-            Color lineColorValue = Color.clear;
-            Color gridColorValue = Color.clear;
-
             ICustomStyle customStyle = e.customStyle;
-            if (customStyle.TryGetValue(s_SpacingProperty, out spacingValue))
-                m_Spacing = spacingValue;
+            if (customStyle.TryGetValue(s_spacingProperty, out var spacingValue))
+                m_spacing = spacingValue;
 
-            if (customStyle.TryGetValue(s_ThickLinesProperty, out thicklinesValue))
-                m_ThickLines = thickLines;
+            if (customStyle.TryGetValue(s_thickLinesProperty, out var thicklinesValue))
+                m_thickLines = thicklinesValue;
 
-            if (customStyle.TryGetValue(s_ThickLineColorProperty, out thicklineColorValue))
-                m_ThickLineColor = thicklineColorValue;
+            if (customStyle.TryGetValue(s_thickLineColorProperty, out var thicklineColorValue))
+                m_thickLineColor = thicklineColorValue;
 
-            if (customStyle.TryGetValue(s_LineColorProperty, out lineColorValue))
-                m_LineColor = lineColorValue;
+            if (customStyle.TryGetValue(s_lineColorProperty, out var lineColorValue))
+                m_lineColor = lineColorValue;
 
-            if (customStyle.TryGetValue(s_GridBackgroundColorProperty, out gridColorValue))
-                m_GridBackgroundColor = gridColorValue;
+            if (customStyle.TryGetValue(s_gridBackgroundColorProperty, out var gridColorValue))
+                m_gridBackgroundColor = gridColorValue;
         }
 
         protected override void ImmediateRepaint()
@@ -152,34 +118,42 @@ namespace Editor.UI.View2D
                 throw new InvalidOperationException("GridBackground can only be added to a GridView");
             }
 
-            m_Container = gridView.contentViewContainer;
-            Rect clientRect = gridView.layout;
-
-            // Since we're always stretch to parent size, we will use (0,0) as (x,y) coordinates
-            clientRect.x = 0;
-            clientRect.y = 0;
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            var containerScale = new Vector3(m_Container.transform.matrix.GetColumn(0).magnitude,
-                m_Container.transform.matrix.GetColumn(1).magnitude,
-                m_Container.transform.matrix.GetColumn(2).magnitude);
-            var containerTranslation = m_Container.transform.matrix.GetColumn(3);
-#pragma warning restore CS0618 // Type or member is obsolete
-            var containerPosition = m_Container.layout;
-
             // background
 //PATCH - start
             //HandleUtility.ApplyWireMaterial();
             m_handleUtility?.Invoke(null, null);
 //PATCH - end
 
+            m_container = gridView.contentViewContainer;
+            Rect clientRect = gridView.layout;
+
+            // Since we're always stretch to parent size, we will use (0,0) as (x,y) coordinates
+            clientRect.x = 0;
+            clientRect.y = 0;
+            
+            DrawBackground(clientRect);
+            if (m_enableDraw)
+                DrawGrid(clientRect);
+        }
+
+        private void DrawBackground(Rect clientRect)
+        {
             GL.Begin(GL.QUADS);
-            GL.Color(gridBackgroundColor);
+            GL.Color(m_gridBackgroundColor);
             GL.Vertex(new Vector3(clientRect.x, clientRect.y));
             GL.Vertex(new Vector3(clientRect.xMax, clientRect.y));
             GL.Vertex(new Vector3(clientRect.xMax, clientRect.yMax));
             GL.Vertex(new Vector3(clientRect.x, clientRect.yMax));
             GL.End();
+        }
+        
+        private void DrawGrid(Rect clientRect)
+        {
+            var containerScale = m_container.resolvedStyle.scale.value;
+
+            var t = m_container.resolvedStyle.translate;
+            var containerTranslation = new Vector3(t.x, t.y, t.z);
+            var containerPosition = m_container.layout;
 
             // vertical lines
             Vector3 from = new Vector3(clientRect.x, clientRect.y, 0.0f);
@@ -199,7 +173,7 @@ namespace Editor.UI.View2D
             float thickGridLineY = from.y;
 
             // Update from/to to start at beginning of clientRect
-            from.x = (from.x % (spacing * (containerScale.x)) - (spacing * (containerScale.x)));
+            from.x = (from.x % (m_spacing * (containerScale.x)) - (m_spacing * (containerScale.x)));
             to.x = from.x;
 
             from.y = clientRect.y;
@@ -207,30 +181,30 @@ namespace Editor.UI.View2D
 
             while (from.x < clientRect.width)
             {
-                from.x += spacing * containerScale.x;
-                to.x += spacing * containerScale.x;
+                from.x += m_spacing * containerScale.x;
+                to.x += m_spacing * containerScale.x;
 
                 GL.Begin(GL.LINES);
-                GL.Color(lineColor);
+                GL.Color(m_lineColor);
                 GL.Vertex(Clip(clientRect, from));
                 GL.Vertex(Clip(clientRect, to));
                 GL.End();
             }
 
-            float thickLineSpacing = (spacing * thickLines);
+            float thickLineSpacing = (m_spacing * m_thickLines);
             from.x = to.x = (thickGridLineX % (thickLineSpacing * (containerScale.x)) -
                              (thickLineSpacing * (containerScale.x)));
 
             while (from.x < clientRect.width + thickLineSpacing)
             {
                 GL.Begin(GL.LINES);
-                GL.Color(thickLineColor);
+                GL.Color(m_thickLineColor);
                 GL.Vertex(Clip(clientRect, from));
                 GL.Vertex(Clip(clientRect, to));
                 GL.End();
 
-                from.x += (spacing * containerScale.x * thickLines);
-                to.x += (spacing * containerScale.x * thickLines);
+                from.x += (m_spacing * containerScale.x * m_thickLines);
+                to.x += (m_spacing * containerScale.x * m_thickLines);
             }
 
             // horizontal lines
@@ -245,36 +219,36 @@ namespace Editor.UI.View2D
             from = tx.MultiplyPoint(from);
             to = tx.MultiplyPoint(to);
 
-            from.y = to.y = (from.y % (spacing * (containerScale.y)) - (spacing * (containerScale.y)));
+            from.y = to.y = (from.y % (m_spacing * (containerScale.y)) - (m_spacing * (containerScale.y)));
             from.x = clientRect.x;
             to.x = clientRect.width;
 
             while (from.y < clientRect.height)
             {
-                from.y += spacing * containerScale.y;
-                to.y += spacing * containerScale.y;
+                from.y += m_spacing * containerScale.y;
+                to.y += m_spacing * containerScale.y;
 
                 GL.Begin(GL.LINES);
-                GL.Color(lineColor);
+                GL.Color(m_lineColor);
                 GL.Vertex(Clip(clientRect, from));
                 GL.Vertex(Clip(clientRect, to));
                 GL.End();
             }
 
-            thickLineSpacing = spacing * thickLines;
+            thickLineSpacing = m_spacing * m_thickLines;
             from.y = to.y = (thickGridLineY % (thickLineSpacing * (containerScale.y)) -
                              (thickLineSpacing * (containerScale.y)));
 
             while (from.y < clientRect.height + thickLineSpacing)
             {
                 GL.Begin(GL.LINES);
-                GL.Color(thickLineColor);
+                GL.Color(m_thickLineColor);
                 GL.Vertex(Clip(clientRect, from));
                 GL.Vertex(Clip(clientRect, to));
                 GL.End();
 
-                from.y += spacing * containerScale.y * thickLines;
-                to.y += spacing * containerScale.y * thickLines;
+                from.y += m_spacing * containerScale.y * m_thickLines;
+                to.y += m_spacing * containerScale.y * m_thickLines;
             }
         }
     }
