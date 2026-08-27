@@ -19,8 +19,7 @@ using UnityEngine.UIElements;
         private readonly SegmentManipulator m_segmentManipulator;
         private readonly RegionManipulator m_regionManipulator;
         private readonly WayManipulator m_wayManipulator;
-
-        private ComboBoxField textbox;
+        
         public ManipulatorBinder(EditorView editorView, VisualTreeAsset uxml, VisualElement parent, IManipulatorSettings settings)
         {
             m_mapObjectManipulator = new MapObjectManipulator(uxml, settings);
@@ -28,24 +27,7 @@ using UnityEngine.UIElements;
             m_segmentManipulator = new SegmentManipulator(uxml, settings);
             m_regionManipulator = new RegionManipulator(uxml, settings);
             m_wayManipulator = new WayManipulator(uxml, settings);
-
-            textbox = new ComboBoxField()
-            {
-                VisibleRowCount = 6, 
-                AllowAdd = true,
-                AllowDelete = false,//true,
-                Ordering = ComboBoxSortMode.Ascending
-            };
-            textbox.style.marginTop = 50;
-            string assetPath = "assets/ext/GenericComboBoxField/resources/genericcomboboxfield.uss";
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(assetPath);
-            if (styleSheet != null)
-                textbox.styleSheets.Add(styleSheet);
-            else
-                Debug.LogWarning($"ManipulatorBinder: could not find stylesheet at '{assetPath}'. Panel will render unstyled.");
             
-            parent.Add(textbox);
-
             parent.Add(m_mapObjectManipulator);
             parent.Add(m_vertexManipulator);
             parent.Add(m_segmentManipulator);
@@ -64,9 +46,6 @@ using UnityEngine.UIElements;
             SimpleGenericNameProvider objectNames = new SimpleGenericNameProvider(names);
             m_mapObjectManipulator.SetProviders(objectNames, objectTextures);
             m_mapObjectManipulator.Open(mapObject);
-
-            textbox.Choices = names;
-            textbox.value = mapObject.Name;
         }
             
         private void OnEditVertex(Vertex vertex)
@@ -78,7 +57,6 @@ using UnityEngine.UIElements;
         {
             SimpleGenericNameProvider segmentNames = new SimpleGenericNameProvider(names);
             m_segmentManipulator.SetProviders(segmentNames, segmentTextures);
-            //m_segmentManipulator.SetProviders(segmentNames, segmentTextures, segmentNames, segmentTextures);
             m_segmentManipulator.Open(segment);
         }
 

@@ -13,9 +13,14 @@
 }
 
 .manip-panel {
+    /* height (not max-height): the panel must be a fixed size so header/
+       settings-bar/footer stay put and only manip-scroll's ScrollView
+       absorbs overflow - including a combo box's popup opening. max-height
+       lets the panel hug growing content up to the cap, which is exactly
+       what caused the popup to visibly grow the whole dialog. */
     width: 80%;
     max-width: 640px;
-    max-height: 85%;
+    height: 85%;
     background-color: rgb(45, 45, 45);
     border-radius: 8px;
     border-width: 1px;
