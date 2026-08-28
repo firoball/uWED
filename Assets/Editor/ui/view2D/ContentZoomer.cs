@@ -146,12 +146,12 @@ namespace Editor.UI.View2D
             if (panel.GetCapturingElement(PointerId.mousePointerId) != null)
                 return;
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            Vector3 position = gridView.viewTransform.position;
-            Vector3 scale = gridView.viewTransform.scale;
-#pragma warning restore CS0618 // Type or member is obsolete
+            Vector3 position = gridView.contentViewContainer.resolvedStyle.translate;
+            Vector3 scale = gridView.contentViewContainer.resolvedStyle.scale.value;
 
-            Vector2 zoomCenter = gridView.viewTransform.matrix.inverse.MultiplyPoint3x4(evt.localMousePosition);
+            Vector2 zoomCenter = new Vector2(
+                (evt.localMousePosition.x - position.x) / scale.x,
+                (evt.localMousePosition.y - position.y) / scale.y);
             float x = zoomCenter.x + gridView.contentViewContainer.layout.x;
             float y = zoomCenter.y + gridView.contentViewContainer.layout.y;
             position += Vector3.Scale(new Vector3(x, y, 0), scale);

@@ -5,7 +5,6 @@
 // Copyright (c) Unity Technologies. For terms of use, see
 // https://unity3d.com/legal/licenses/Unity_Reference_Only_License
 
-using System;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -16,7 +15,7 @@ namespace Editor.UI.View2D
     public abstract class GridView : VisualElement
     {
 
-        private MethodInfo m_roundToPixelGrid;
+        private PropertyInfo m_roundToPixelGrid;
 
         public delegate void ViewTransformChanged(GridView gridView);
 
@@ -33,15 +32,7 @@ namespace Editor.UI.View2D
 
         private VisualElement gridViewContainer { get; }
         public VisualElement contentViewContainer { get; private set; }
-
-
-        public ITransform viewTransform
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            get { return contentViewContainer.transform; }
-#pragma warning restore CS0618 // Type or member is obsolete
-        }
-
+        
         protected GridView()
         {
             AddToClassList("gridView");
@@ -68,8 +59,8 @@ namespace Editor.UI.View2D
             gridViewContainer.Add(contentViewContainer);
 
             focusable = true;
-            m_roundToPixelGrid = typeof(GUIUtility).GetMethod("RoundToPixelGrid",
-                BindingFlags.NonPublic | BindingFlags.Static, Type.DefaultBinder, new Type[] { typeof(float) }, null);
+            m_roundToPixelGrid =
+                typeof(GUIUtility).GetProperty("pixelsPerPoint", BindingFlags.NonPublic | BindingFlags.Static);
             if (m_roundToPixelGrid == null)
                 Debug.LogError(
                     "Unable to bind 'GUIUtility.RoundToPixelGrid' - review whether Unity internals have changed");
@@ -81,32 +72,11 @@ namespace Editor.UI.View2D
         private float m_ScaleStep = ContentZoomer.DefaultScaleStep;
         private float m_ReferenceScale = ContentZoomer.DefaultReferenceScale;
 
-        public float minScale
-        {
-            get { return m_MinScale; }
-        }
-
-        public float maxScale
-        {
-            get { return m_MaxScale; }
-        }
-
-        public float scaleStep
-        {
-            get { return m_ScaleStep; }
-        }
-
-        public float referenceScale
-        {
-            get { return m_ReferenceScale; }
-        }
-
-        public float scale
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            get { return viewTransform.scale.x; }
-#pragma warning restore CS0618 // Type or member is obsolete
-        }
+        public float minScale => m_MinScale;
+        public float maxScale => m_MaxScale;
+        public float scaleStep => m_ScaleStep;
+        public float referenceScale => m_ReferenceScale;
+        public float scale => contentViewContainer.resolvedStyle.scale.value.x;
 
         public void SetupZoom(float minScaleSetup, float maxScaleSetup)
         {
@@ -128,15 +98,11 @@ namespace Editor.UI.View2D
             if (float.IsInfinity(validateFloat) || float.IsNaN(validateFloat))
                 return;
 
-            //newPosition.x = GUIUtility.RoundToPixelGrid(newPosition.x);
-            //newPosition.y = GUIUtility.RoundToPixelGrid(newPosition.y);
             newPosition.x = RoundToPixelGrid(newPosition.x);
             newPosition.y = RoundToPixelGrid(newPosition.y);
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            contentViewContainer.transform.position = newPosition;
-            contentViewContainer.transform.scale = newScale;
-#pragma warning restore CS0618 // Type or member is obsolete
+            contentViewContainer.style.translate = newPosition;
+            contentViewContainer.style.scale = newScale;
 
             if (viewTransformChanged != null)
                 viewTransformChanged(this);
@@ -146,7 +112,10 @@ namespace Editor.UI.View2D
         {
             float ret;
             if (m_roundToPixelGrid != null)
-                ret = (float)m_roundToPixelGrid.Invoke(null, new[] { (object)pos });
+            {
+                float pixelsPerPoint = (float)m_roundToPixelGrid.GetValue(null);
+                ret = Mathf.Round(pos * pixelsPerPoint) / pixelsPerPoint;
+            }
             else
                 ret = pos;
 
@@ -181,16 +150,11 @@ namespace Editor.UI.View2D
         {
             if (contentViewContainer == null)
                 return;
-#pragma warning disable CS0618 // Type or member is obsolete
-            Vector3 transformScale = viewTransform.scale;
-#pragma warning restore CS0618 // Type or member is obsolete
-
+            
+            Vector3 transformScale = contentViewContainer.resolvedStyle.scale.value;
             transformScale.x = Mathf.Clamp(transformScale.x, minScale, maxScale);
             transformScale.y = Mathf.Clamp(transformScale.y, minScale, maxScale);
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            viewTransform.scale = transformScale;
-#pragma warning restore CS0618 // Type or member is obsolete
+            contentViewContainer.style.scale = transformScale;
         }
 
     }

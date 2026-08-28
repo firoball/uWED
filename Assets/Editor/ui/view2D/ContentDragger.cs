@@ -37,8 +37,7 @@ namespace Editor.UI.View2D
 
         protected override void RegisterCallbacksOnTarget()
         {
-            var graphView = target as GridView;
-            if (graphView == null)
+            if (target is not GridView)
             {
                 throw new InvalidOperationException("Manipulator can only be added to a GraphView");
             }
@@ -66,8 +65,7 @@ namespace Editor.UI.View2D
             if (!CanStartManipulation(e))
                 return;
 
-            var gridView = target as GridView;
-            if (gridView == null)
+            if (target is not GridView gridView)
                 return;
 
             m_Start = gridView.ChangeCoordinatesTo(gridView.contentViewContainer, e.localMousePosition);
@@ -82,17 +80,13 @@ namespace Editor.UI.View2D
             if (!m_Active)
                 return;
 
-            var gridView = target as GridView;
-            if (gridView == null)
+            if (target is not GridView gridView)
                 return;
 
             Vector2 diff = gridView.ChangeCoordinatesTo(gridView.contentViewContainer, e.localMousePosition) - m_Start;
-
-            // During the drag update only the view
-#pragma warning disable CS0618 // Type or member is obsolete
-            Vector3 s = gridView.contentViewContainer.transform.scale;
-            gridView.viewTransform.position += Vector3.Scale(diff, s);
-#pragma warning restore CS0618 // Type or member is obsolete
+            Vector3 s = gridView.contentViewContainer.resolvedStyle.scale.value;
+            gridView.contentViewContainer.style.translate =
+                gridView.contentViewContainer.resolvedStyle.translate + Vector3.Scale(diff, s);
 
             e.StopPropagation();
         }
@@ -102,14 +96,11 @@ namespace Editor.UI.View2D
             if (!m_Active || !CanStopManipulation(e))
                 return;
 
-            var gridView = target as GridView;
-            if (gridView == null)
+            if (target is not GridView gridView)
                 return;
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            Vector3 p = gridView.contentViewContainer.transform.position;
-            Vector3 s = gridView.contentViewContainer.transform.scale;
-#pragma warning restore CS0618 // Type or member is obsolete
+            
+            Vector3 p = gridView.contentViewContainer.resolvedStyle.translate;
+            Vector3 s = gridView.contentViewContainer.resolvedStyle.scale.value;
 
             gridView.UpdateViewTransform(p, s);
 
