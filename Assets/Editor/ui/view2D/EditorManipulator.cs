@@ -248,6 +248,16 @@ namespace Editor.UI.View2D
             }
         }
 
+        public Vector2 GetMapMin()
+        {
+            return m_mapData.Min();
+        }
+
+        public Vector2 GetMapMax()
+        {
+            return m_mapData.Max();
+        }
+        
         public void LoadMap(IMapLoader loader, string name)
         {
             if (loader != null && !string.IsNullOrWhiteSpace(name))

@@ -114,6 +114,16 @@ public class EditorInterface
         m_em?.WriteMap(writer, name);
     }
 
+    public void OnCenterView()
+    {
+        m_ev?.CenterView();
+    }
+
+    public void OnFitView()
+    {
+        m_ev?.FitViewToWindow();        
+    }
+    
     #endregion
 
     #region outgoing events

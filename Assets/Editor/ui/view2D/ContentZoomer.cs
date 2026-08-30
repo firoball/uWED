@@ -21,10 +21,10 @@ namespace Editor.UI.View2D
         /// <summary>
         /// Scale that should be computed when scroll wheel offset is at zero.
         /// </summary>
-        public float referenceScale { get; set; } = DefaultReferenceScale;
+        public float ReferenceScale { get; set; } = DefaultReferenceScale;
 
-        public float minScale { get; set; } = DefaultMinScale;
-        public float maxScale { get; set; } = DefaultMaxScale;
+        public float MinScale { get; set; } = DefaultMinScale;
+        public float MaxScale { get; set; } = DefaultMaxScale;
 
         /// <summary>
         /// Relative scale change when zooming in/out (e.g. For 15%, use 0.15).
@@ -33,7 +33,7 @@ namespace Editor.UI.View2D
         /// Depending on the values of <c>minScale</c>, <c>maxScale</c> and <c>scaleStep</c>, it is not guaranteed that
         /// the first and last two scale steps will correspond exactly to the value specified in <c>scaleStep</c>.
         /// </remarks>
-        public float scaleStep { get; set; } = DefaultScaleStep;
+        public float ScaleStep { get; set; } = DefaultScaleStep;
 
         protected override void RegisterCallbacksOnTarget()
         {
@@ -157,7 +157,7 @@ namespace Editor.UI.View2D
             position += Vector3.Scale(new Vector3(x, y, 0), scale);
 
             // Apply the new zoom.
-            float zoom = CalculateNewZoom(scale.y, -evt.delta.y, scaleStep, referenceScale, minScale, maxScale);
+            float zoom = CalculateNewZoom(scale.y, -evt.delta.y, ScaleStep, ReferenceScale, MinScale, MaxScale);
             scale.x = zoom;
             scale.y = zoom;
             scale.z = 1;
@@ -167,6 +167,109 @@ namespace Editor.UI.View2D
             gridView.UpdateViewTransform(position, scale);
 
             evt.StopPropagation();
+        }
+
+        /// <summary>
+        /// Calculates the zoom level that fits a content-space rect (defined by <paramref name="min"/> and
+        /// <paramref name="max"/>) into a viewport of the given size, respecting <paramref name="minScale"/> and
+        /// <paramref name="maxScale"/>. Does not touch position or apply the transform — callers are responsible
+        /// for that (typically via <c>GridView.UpdateViewTransform</c>, to stay consistent with the state
+        /// <see cref="OnWheel"/> reads).
+        /// </summary>
+        /// <param name="min">Lower corner of the rect to fit, in content space.</param>
+        /// <param name="max">Upper corner of the rect to fit, in content space.</param>
+        /// <param name="viewportSize">Size of the viewport the rect must fit into.</param>
+        /// <param name="minScale">Lower zoom bound to clamp to.</param>
+        /// <param name="maxScale">Upper zoom bound to clamp to.</param>
+        /// <param name="padding">
+        /// Fraction of the fitted zoom to keep as margin (e.g. 0.9 leaves a 10% margin around the rect).
+        /// Must be greater than zero. Defaults to 1 (no margin).
+        /// </param>
+        public static float CalculateZoomToFit(Vector2 min, Vector2 max, Vector2 viewportSize, float minScale,
+            float maxScale, float padding = 1f)
+        {
+            if (padding <= 0)
+            {
+                Debug.LogError($"The padding ({padding}) must be greater than zero.");
+                padding = 1f;
+            }
+
+            if (viewportSize.x <= 0 || viewportSize.y <= 0)
+            {
+                return Mathf.Clamp(1f, minScale, maxScale);
+            }
+
+            Vector2 rectSize = max - min;
+            // Guard against degenerate rects (zero width/height, e.g. a single point or a line).
+            bool validX = rectSize.x > Mathf.Epsilon;
+            bool validY = rectSize.y > Mathf.Epsilon;
+
+            if (!validX && !validY)
+            {
+                // Nothing to fit to: fall back to the reference scale.
+                return Mathf.Clamp(DefaultReferenceScale, minScale, maxScale);
+            }
+
+            float zoomX = validX ? viewportSize.x / rectSize.x : float.PositiveInfinity;
+            float zoomY = validY ? viewportSize.y / rectSize.y : float.PositiveInfinity;
+            float zoom = Mathf.Min(zoomX, zoomY) * padding;
+            return Mathf.Clamp(zoom, minScale, maxScale);
+        }
+
+        /// <summary>
+        /// Applies a zoom (typically from <see cref="CalculateZoomToFit"/>) so that the given content-space rect
+        /// ends up centered in the target's viewport. Goes through the same <c>UpdateViewTransform</c> path as
+        /// <see cref="OnWheel"/>, so subsequent wheel zooming reads a consistent, up-to-date scale.
+        /// </summary>
+        /// <param name="min">Lower corner of the rect being framed, in content space.</param>
+        /// <param name="max">Upper corner of the rect being framed, in content space.</param>
+        /// <param name="zoom">
+        /// The zoom level to apply, typically obtained via <see cref="CalculateZoomToFit"/>. If omitted, the
+        /// current zoom is kept and only the position is adjusted to center the rect.
+        /// </param>
+        public void ApplyFrame(Vector2 min, Vector2 max, float? zoom = null)
+        {
+            if (target is not GridView gridView)
+            {
+                throw new InvalidOperationException("Manipulator can only be added to a GraphView");
+            }
+
+            float appliedZoom = zoom ?? gridView.contentViewContainer.resolvedStyle.scale.value.x;
+
+            Vector2 viewportSize = gridView.layout.size;
+            Vector2 rectCenter = (min + max) * 0.5f;
+            Vector2 viewportCenter = viewportSize * 0.5f;
+
+            // Same transform convention as OnWheel: screenPoint = contentPoint * scale + position
+            Vector3 position = new Vector3(
+                viewportCenter.x - rectCenter.x * appliedZoom,
+                viewportCenter.y - rectCenter.y * appliedZoom,
+                0);
+            Vector3 scale = new Vector3(appliedZoom, appliedZoom, 1);
+
+            gridView.UpdateViewTransform(position, scale);
+        }
+
+        /// <summary>
+        /// Convenience combination of <see cref="CalculateZoomToFit"/> and <see cref="ApplyFrame"/>: computes the
+        /// zoom that fits the given content-space rect into the viewport (respecting <see cref="MinScale"/> and
+        /// <see cref="MaxScale"/>) and applies it, centering the rect.
+        /// </summary>
+        /// <param name="min">Lower corner of the rect to frame, in content space.</param>
+        /// <param name="max">Upper corner of the rect to frame, in content space.</param>
+        /// <param name="padding">
+        /// Fraction of the fitted zoom to keep as margin (e.g. 0.9 leaves a 10% margin around the framed rect).
+        /// Must be greater than zero. Defaults to 1 (no margin).
+        /// </param>
+        public void FrameToFit(Vector2 min, Vector2 max, float padding = 1f)
+        {
+            if (target is not GridView gridView)
+            {
+                throw new InvalidOperationException("Manipulator can only be added to a GraphView");
+            }
+
+            float zoom = CalculateZoomToFit(min, max, gridView.layout.size, MinScale, MaxScale, padding);
+            ApplyFrame(min, max, zoom);
         }
     }
 }

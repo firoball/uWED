@@ -39,7 +39,6 @@ namespace Editor.UI.View2D
             m_interface.NotifyLockAngleListeners(m_lockAngle);
             m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
 
-            //this.generateVisualContent += GenerateVisualContent; //TODO: use this hook for drawing textured regions
             contentViewContainer.BringToFront();
             //TODO: only perform schedule.Execute when prefs were not found/loaded (e.g. new map)
             schedule.Execute(() =>
@@ -48,10 +47,33 @@ namespace Editor.UI.View2D
                 //TODO: don't load transform prefs when map is new or has changed
                 LoadPrefs();
             });
+            
+            RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+        }
+
+        public Matrix4x4 WorldToContentMatrix()
+        {
+            //layout offset - this is already in screen coordinates
+            Vector3 layoutTranslate =
+                new Vector3(contentViewContainer.layout.position.x, contentViewContainer.layout.position.y);
+            //invert y if configured
+            Vector3 s = new Vector3(1, 1, 1);
+            if (c_invertYPosition)
+                s.y = -s.y;
+            //configured pixel resolution
+            Vector3 pixelScale = new Vector3(c_pixelsPerUnit, c_pixelsPerUnit);
+            //build actual world to content matrix
+            return Matrix4x4.Translate(layoutTranslate) * Matrix4x4.Scale(s) * Matrix4x4.Scale(pixelScale);
+        }
+        
+        public Vector2 WorldToContentSpace(Vector2 pos)
+        {
+            return WorldToContentMatrix().MultiplyPoint3x4(pos);
         }
 
         public Matrix4x4 WorldToScreenMatrix()
         {
+            return GetViewContainerMatrix() * WorldToContentMatrix();
             //layout offset - this is already in screen coordinates
             Vector3 layoutTranslate =
                 new Vector3(contentViewContainer.layout.position.x, contentViewContainer.layout.position.y);
@@ -66,7 +88,7 @@ namespace Editor.UI.View2D
                    Matrix4x4.Scale(pixelScale);
         }
 
-        public Vector2 WorldtoScreenSpace(Vector2 pos)
+        public Vector2 WorldToScreenSpace(Vector2 pos)
         {
             var position = TransformScreenPos(pos * c_pixelsPerUnit - contentViewContainer.layout.position);
             return GetViewContainerMatrix().MultiplyPoint3x4(position);
@@ -112,7 +134,7 @@ namespace Editor.UI.View2D
             {
                 Vector2 worldPos = ScreenToWorldSpace(pos);
                 Vector2 snappedPos = SnapWorldPos(worldPos);
-                return WorldtoScreenSpace(snappedPos);
+                return WorldToScreenSpace(snappedPos);
             }
             else
             {
@@ -152,6 +174,32 @@ namespace Editor.UI.View2D
             m_interface.NotifyLockAngleListeners(m_lockAngle);
         }
 
+        private void OnKeyDown(KeyDownEvent evt)
+        {
+            if (evt.keyCode == KeyCode.C) CenterView();
+            if (evt.keyCode == KeyCode.F) FitViewToWindow();
+        }
+        
+        public void FitViewToWindow()
+        {
+            Vector2 minTrans = WorldToContentSpace(m_editorManipulator.GetMapMin());
+            Vector2 maxTrans = WorldToContentSpace(m_editorManipulator.GetMapMax());
+            
+            Vector2 min = Vector2.Min(minTrans, maxTrans);
+            Vector2 max = Vector2.Max(minTrans, maxTrans);
+            Zoomer.FrameToFit(min, max, 0.95f);
+        }
+
+        public void CenterView()
+        {
+            Vector2 minTrans = WorldToContentSpace(m_editorManipulator.GetMapMin());
+            Vector2 maxTrans = WorldToContentSpace(m_editorManipulator.GetMapMax());
+            
+            Vector2 min = Vector2.Min(minTrans, maxTrans);
+            Vector2 max = Vector2.Max(minTrans, maxTrans);
+            Zoomer.ApplyFrame(min, max);
+        }
+        
         public void SavePrefs()
         {
             m_gridManipulator?.SavePrefs();

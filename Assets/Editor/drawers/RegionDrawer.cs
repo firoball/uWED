@@ -86,8 +86,8 @@ namespace Editor.Drawers
                 foreach (Region r in m_mapData.Regions)
                 {
                     if (!m_cursorInfo.SelectedRegions.Contains(r) &&
-                        selection.Contains(ev.WorldtoScreenSpace(r.Min)) &&
-                        selection.Contains(ev.WorldtoScreenSpace(r.Max))
+                        selection.Contains(ev.WorldToScreenSpace(r.Min)) &&
+                        selection.Contains(ev.WorldToScreenSpace(r.Max))
                        )
                         m_cursorInfo.SelectedRegions.Add(r);
                 }

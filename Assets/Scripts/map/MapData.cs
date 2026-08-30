@@ -50,6 +50,62 @@ public class MapData
         }
     }
 
+    public Vector2 Min()
+    {
+        if (Vertices.Count == 0 && Objects.Count == 0 && Ways.Count == 0)
+            return Vector2.zero;
+        
+        Vector2 min = new Vector2(float.MaxValue,float.MaxValue);
+        foreach (Vertex v in Vertices)
+        {
+            if (v.X < min.x) min.x = (float)v.X;
+            if (v.Y < min.y) min.y = (float)v.Y;
+        }
+        foreach (MapObject o in Objects)
+        {
+            if (o.Position.X < min.x) min.x = (float)o.Position.X;
+            if (o.Position.Y < min.y) min.y = (float)o.Position.Y;
+        }
+        foreach (Way w in Ways)
+        {
+            foreach (Vertex p in w.Positions)
+            {
+                if (p.X < min.x) min.x = (float)p.X;
+                if (p.Y < min.y) min.y = (float)p.Y;
+            }
+        }
+
+        return min;
+    }
+
+    public Vector2 Max()
+    {
+        if (Vertices.Count == 0 && Objects.Count == 0 && Ways.Count == 0)
+            return Vector2.zero;
+        
+        Vector2 max = new Vector2(float.MinValue,float.MinValue);
+        foreach (Vertex v in Vertices)
+        {
+            if (v.X > max.x) max.x = (float)v.X;
+            if (v.Y > max.y) max.y = (float)v.Y;
+        }
+        foreach (MapObject o in Objects)
+        {
+            if (o.Position.X > max.x) max.x = (float)o.Position.X;
+            if (o.Position.Y > max.y) max.y = (float)o.Position.Y;
+        }
+        foreach (Way w in Ways)
+        {
+            foreach (Vertex p in w.Positions)
+            {
+                if (p.X > max.x) max.x = (float)p.X;
+                if (p.Y > max.y) max.y = (float)p.Y;
+            }
+        }
+
+        return max;
+    }
+
     #region MapObject interfaces
 
     public void Add(MapObject m)

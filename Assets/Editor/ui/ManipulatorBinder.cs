@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using Editor.UI.Manipulator;
 using Editor.UI.View2D;
-using UI.Controls;
-using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 //namespace Editor.ui

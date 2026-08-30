@@ -217,11 +217,11 @@ namespace Editor.Drawers
 
                 //calculate screen positions
                 foreach (Vertex v in m_mapData.Vertices)
-                    v.ScreenPosition = editorView.WorldtoScreenSpace(v.WorldPosition);
+                    v.ScreenPosition = editorView.WorldToScreenSpace(v.WorldPosition);
                 foreach (Way w in m_mapData.Ways)
-                    w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldtoScreenSpace(p.WorldPosition));
+                    w.Positions.ForEach(p => p.ScreenPosition = editorView.WorldToScreenSpace(p.WorldPosition));
                 foreach (MapObject o in m_mapData.Objects)
-                    o.Position.ScreenPosition = editorView.WorldtoScreenSpace(o.Position.WorldPosition);
+                    o.Position.ScreenPosition = editorView.WorldToScreenSpace(o.Position.WorldPosition);
 
                 PreEditorRedraw(editorView);
 
@@ -342,10 +342,10 @@ namespace Editor.Drawers
             EditorView editorView = parent as EditorView;
             if (editorView != null)
             {
-                Vector2 p0 = editorView.WorldtoScreenSpace(new Vector2(-c_centerLength, 0));
-                Vector2 p1 = editorView.WorldtoScreenSpace(new Vector2(c_centerLength, 0));
-                Vector2 p2 = editorView.WorldtoScreenSpace(new Vector2(0, -c_centerLength));
-                Vector2 p3 = editorView.WorldtoScreenSpace(new Vector2(0, c_centerLength));
+                Vector2 p0 = editorView.WorldToScreenSpace(new Vector2(-c_centerLength, 0));
+                Vector2 p1 = editorView.WorldToScreenSpace(new Vector2(c_centerLength, 0));
+                Vector2 p2 = editorView.WorldToScreenSpace(new Vector2(0, -c_centerLength));
+                Vector2 p3 = editorView.WorldToScreenSpace(new Vector2(0, c_centerLength));
                 DrawLine(p0, p1, Colors.CenterColor);
                 DrawLine(p2, p3, Colors.CenterColor);
             }

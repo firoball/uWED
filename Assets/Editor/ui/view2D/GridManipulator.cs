@@ -115,8 +115,8 @@ namespace Editor.UI.View2D
             {
                 if (target is EditorView editorView)
                 {
-                    Vector2 v1 = editorView.WorldtoScreenSpace(new Vector2(m_gridSpacing, 0));
-                    Vector2 v2 = editorView.WorldtoScreenSpace(new Vector2(0, 0));
+                    Vector2 v1 = editorView.WorldToScreenSpace(new Vector2(m_gridSpacing, 0));
+                    Vector2 v2 = editorView.WorldToScreenSpace(new Vector2(0, 0));
 
                     if ((v1 - v2).x < c_gridVisibilityThresholdPx)
                         HideBackground();

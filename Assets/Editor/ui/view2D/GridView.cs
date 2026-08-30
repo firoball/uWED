@@ -66,29 +66,30 @@ namespace Editor.UI.View2D
                     "Unable to bind 'GUIUtility.RoundToPixelGrid' - review whether Unity internals have changed");
         }
 
-        private ContentZoomer m_Zoomer;
-        private float m_MinScale = ContentZoomer.DefaultMinScale;
-        private float m_MaxScale = ContentZoomer.DefaultMaxScale;
-        private float m_ScaleStep = ContentZoomer.DefaultScaleStep;
-        private float m_ReferenceScale = ContentZoomer.DefaultReferenceScale;
+        private ContentZoomer m_zoomer;
+        private float m_minScale = ContentZoomer.DefaultMinScale;
+        private float m_maxScale = ContentZoomer.DefaultMaxScale;
+        private float m_scaleStep = ContentZoomer.DefaultScaleStep;
+        private float m_referenceScale = ContentZoomer.DefaultReferenceScale;
 
-        public float minScale => m_MinScale;
-        public float maxScale => m_MaxScale;
-        public float scaleStep => m_ScaleStep;
-        public float referenceScale => m_ReferenceScale;
-        public float scale => contentViewContainer.resolvedStyle.scale.value.x;
+        protected ContentZoomer Zoomer => m_zoomer;
+        public float MinScale => m_minScale;
+        public float MaxScale => m_maxScale;
+        public float ScaleStep => m_scaleStep;
+        public float ReferenceScale => m_referenceScale;
+        public float Scale => contentViewContainer.resolvedStyle.scale.value.x;
 
         public void SetupZoom(float minScaleSetup, float maxScaleSetup)
         {
-            SetupZoom(minScaleSetup, maxScaleSetup, m_ScaleStep, m_ReferenceScale);
+            SetupZoom(minScaleSetup, maxScaleSetup, m_scaleStep, m_referenceScale);
         }
 
         public void SetupZoom(float minScaleSetup, float maxScaleSetup, float scaleStepSetup, float referenceScaleSetup)
         {
-            m_MinScale = minScaleSetup;
-            m_MaxScale = maxScaleSetup;
-            m_ScaleStep = scaleStepSetup;
-            m_ReferenceScale = referenceScaleSetup;
+            m_minScale = minScaleSetup;
+            m_maxScale = maxScaleSetup;
+            m_scaleStep = scaleStepSetup;
+            m_referenceScale = referenceScaleSetup;
             UpdateContentZoomer();
         }
 
@@ -124,23 +125,23 @@ namespace Editor.UI.View2D
 
         private void UpdateContentZoomer()
         {
-            if (m_MinScale != m_MaxScale)
+            if (m_minScale != m_maxScale)
             {
-                if (m_Zoomer == null)
+                if (m_zoomer == null)
                 {
-                    m_Zoomer = new ContentZoomer();
-                    this.AddManipulator(m_Zoomer);
+                    m_zoomer = new ContentZoomer();
+                    this.AddManipulator(m_zoomer);
                 }
 
-                m_Zoomer.minScale = m_MinScale;
-                m_Zoomer.maxScale = m_MaxScale;
-                m_Zoomer.scaleStep = m_ScaleStep;
-                m_Zoomer.referenceScale = m_ReferenceScale;
+                m_zoomer.MinScale = m_minScale;
+                m_zoomer.MaxScale = m_maxScale;
+                m_zoomer.ScaleStep = m_scaleStep;
+                m_zoomer.ReferenceScale = m_referenceScale;
             }
             else
             {
-                if (m_Zoomer != null)
-                    this.RemoveManipulator(m_Zoomer);
+                if (m_zoomer != null)
+                    this.RemoveManipulator(m_zoomer);
             }
 
             ValidateTransform();
@@ -152,8 +153,8 @@ namespace Editor.UI.View2D
                 return;
             
             Vector3 transformScale = contentViewContainer.resolvedStyle.scale.value;
-            transformScale.x = Mathf.Clamp(transformScale.x, minScale, maxScale);
-            transformScale.y = Mathf.Clamp(transformScale.y, minScale, maxScale);
+            transformScale.x = Mathf.Clamp(transformScale.x, MinScale, MaxScale);
+            transformScale.y = Mathf.Clamp(transformScale.y, MinScale, MaxScale);
             contentViewContainer.style.scale = transformScale;
         }
 

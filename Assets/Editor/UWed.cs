@@ -48,11 +48,18 @@ public class UWed : EditorWindow
         VisualElement ui = m_uxml.Instantiate();
         rootVisualElement.Add(ui);
         ui.StretchToParentSize();
+
         IEnumerable<VisualElement> containers = ui.Children();
         VisualElement menu = containers.FirstOrDefault(x => x.name == "menu");
         VisualElement editor = containers.FirstOrDefault(x => x.name == "editor");
         VisualElement inspector = containers.FirstOrDefault(x => x.name == "inspector");
 
+        VisualElement dialogContainer = new VisualElement();
+        rootVisualElement.Add(dialogContainer);
+        dialogContainer.name = "dialogContainer";
+        dialogContainer.pickingMode = PickingMode.Ignore;
+        dialogContainer.StretchToParentSize();
+        
         IManipulatorSettings settings = new ManipulatorSettings();
 
         // all Elements interacting with EditorView events must be created earlier for event registration
@@ -69,13 +76,13 @@ public class UWed : EditorWindow
         editor?.Add(m_editorView);
         editor?.Add(m_infoPanel);
         editor?.Add(m_meshPreviewPanel);
-        ui.Add(m_editorHelp);
+        dialogContainer.Add(m_editorHelp);
         inspector?.Add(statisticsPanel);
 
         // glue things together
         MenuBinder menuBinder = new MenuBinder(m_editorView, m_editorHelp, menu, this); 
         InspectorBinder inspectorBinder = new InspectorBinder(m_editorView, m_infoPanel, m_meshPreviewPanel, statisticsPanel);
-        ManipulatorBinder manipulatorBinder = new ManipulatorBinder(m_editorView, m_manipulatorUxml, ui, settings);
+        ManipulatorBinder manipulatorBinder = new ManipulatorBinder(m_editorView, m_manipulatorUxml, dialogContainer, settings);
         
         AssemblyReloadEvents.beforeAssemblyReload += m_editorView.SavePrefs;
     }
