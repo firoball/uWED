@@ -156,14 +156,14 @@ namespace Editor.Modes
             // handle Vertex
             if (m_drawer.CursorInfo.HoverVertex != null)
             {
-                ev.Interface.NotifyVertexEditListeners(m_drawer.CursorInfo.HoverVertex);
+                EditorEventBus.Instance.EditVertex.Raise(m_drawer.CursorInfo.HoverVertex);
             }
 
             // handle Segment
             if (m_drawer.CursorInfo.HoverSegment != null)
             {
                 List<string> names = m_mapData.GetSegmentNames();
-                ev.Interface.NotifySegmentEditListeners(m_drawer.CursorInfo.HoverSegment, names);
+                EditorEventBus.Instance.EditSegment.Raise(m_drawer.CursorInfo.HoverSegment, names);
             }
         }
 

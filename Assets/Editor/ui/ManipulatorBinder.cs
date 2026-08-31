@@ -31,11 +31,11 @@ using UnityEngine.UIElements;
             parent.Add(m_regionManipulator);
             parent.Add(m_wayManipulator);
 
-            editorView.Interface.OnEditObject += OnEditObject;
-            editorView.Interface.OnEditVertex += OnEditVertex;
-            editorView.Interface.OnEditSegment += OnEditSegment;
-            editorView.Interface.OnEditRegion += OnEditRegion;
-            editorView.Interface.OnEditWay += OnEditWay;
+            EditorEventBus.Instance.EditObject.Subscribe(OnEditObject);
+            EditorEventBus.Instance.EditVertex.Subscribe(OnEditVertex);
+            EditorEventBus.Instance.EditSegment.Subscribe(OnEditSegment);
+            EditorEventBus.Instance.EditRegion.Subscribe(OnEditRegion);
+            EditorEventBus.Instance.EditWay.Subscribe(OnEditWay);
         }
         
         private void OnEditObject(MapObject mapObject, List<string> names)

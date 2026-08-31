@@ -18,6 +18,8 @@ namespace Editor.UI.View2D
         public static readonly float DefaultMaxScale = 1;
         public static readonly float DefaultScaleStep = 0.15f;
 
+        private Vector2 m_mousePosition = Vector2.zero;
+
         /// <summary>
         /// Scale that should be computed when scroll wheel offset is at zero.
         /// </summary>
@@ -44,11 +46,15 @@ namespace Editor.UI.View2D
             }
 
             target.RegisterCallback<WheelEvent>(OnWheel);
+            target.RegisterCallback<MouseMoveEvent>(OnMouseMove);
+            EditorEventBus.Instance.ZoomChanged.Subscribe(OnZoomChanged);
         }
 
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<WheelEvent>(OnWheel);
+            target.UnregisterCallback<MouseMoveEvent>(OnMouseMove);
+            EditorEventBus.Instance.ZoomChanged.Unsubscribe(OnZoomChanged);
         }
 
         // Compute the parameters of our exponential model:
@@ -136,28 +142,45 @@ namespace Editor.UI.View2D
             return (float)(Math.Pow(1 + zoomStep, currentWheel + a) + b);
         }
 
-        void OnWheel(WheelEvent evt)
+        private void OnWheel(WheelEvent evt)
+        {
+            IPanel panel = (evt.target as VisualElement)?.panel;
+            if (panel.GetCapturingElement(PointerId.mousePointerId) != null)
+                return;
+
+            m_mousePosition = evt.localMousePosition;
+            PrepareZoom(-evt.delta.y);
+            evt.StopPropagation();
+        }
+
+        private void OnMouseMove(MouseMoveEvent evt)
+        {
+            m_mousePosition = evt.localMousePosition;
+        }
+
+        private void OnZoomChanged(bool zoomedIn)
+        {
+            PrepareZoom(zoomedIn? 1.0f : -1.0f);
+        }
+        
+        private void PrepareZoom(float delta)
         {
             var gridView = target as GridView;
             if (gridView == null)
-                return;
-
-            IPanel panel = (evt.target as VisualElement)?.panel;
-            if (panel.GetCapturingElement(PointerId.mousePointerId) != null)
                 return;
 
             Vector3 position = gridView.contentViewContainer.resolvedStyle.translate;
             Vector3 scale = gridView.contentViewContainer.resolvedStyle.scale.value;
 
             Vector2 zoomCenter = new Vector2(
-                (evt.localMousePosition.x - position.x) / scale.x,
-                (evt.localMousePosition.y - position.y) / scale.y);
+                (m_mousePosition.x - position.x) / scale.x,
+                (m_mousePosition.y - position.y) / scale.y);
             float x = zoomCenter.x + gridView.contentViewContainer.layout.x;
             float y = zoomCenter.y + gridView.contentViewContainer.layout.y;
             position += Vector3.Scale(new Vector3(x, y, 0), scale);
 
             // Apply the new zoom.
-            float zoom = CalculateNewZoom(scale.y, -evt.delta.y, ScaleStep, ReferenceScale, MinScale, MaxScale);
+            float zoom = CalculateNewZoom(scale.y, delta, ScaleStep, ReferenceScale, MinScale, MaxScale);
             scale.x = zoom;
             scale.y = zoom;
             scale.z = 1;
@@ -166,7 +189,6 @@ namespace Editor.UI.View2D
 
             gridView.UpdateViewTransform(position, scale);
 
-            evt.StopPropagation();
         }
 
         /// <summary>

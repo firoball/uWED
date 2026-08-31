@@ -32,29 +32,29 @@ namespace Editor.UI.View2D
             //only load prefs once grid has loaded its stylesheet - otherwise it won't update correctly
             LoadPrefs();
             //pass defaults to all listeners
-            EditorView ev = target as EditorView;
-            ev?.Interface.NotifyScaleGridListeners(m_gridScale);
-            ev?.Interface.NotifyToggleGridListeners(m_gridEnabled);
+            EditorEventBus.Instance.ScaleGrid.Raise(m_gridScale);
+            EditorEventBus.Instance.ToggleGrid.Raise(m_gridEnabled);
         }
 
         protected override void RegisterCallbacksOnTarget()
         {
             target.RegisterCallback<WheelEvent>(OnWheel);
             //pass defaults to all listeners - OnCustomStyleResolved is too late for init phase
-            EditorView ev = target as EditorView;
-            ev?.Interface.NotifyScaleGridListeners(m_gridScale);
-            ev?.Interface.NotifyToggleGridListeners(m_gridEnabled);
+            EditorEventBus.Instance.ScaleGrid.Raise(m_gridScale);
+            EditorEventBus.Instance.ToggleGrid.Raise(m_gridEnabled);
         }
 
         protected override void UnregisterCallbacksFromTarget()
         {
             target.UnregisterCallback<WheelEvent>(OnWheel);
             target.UnregisterCallback<WheelEvent>(OnWheelLate); //does this break things?
+            EditorEventBus.Instance.ZoomChanged.Unsubscribe(OnZoomChanged);
         }
 
         public void RegisterCallbacksLate()
         {
             target.RegisterCallback<WheelEvent>(OnWheelLate);
+            EditorEventBus.Instance.ZoomChanged.Subscribe(OnZoomChanged);
         }
 
         private void OnWheel(WheelEvent evt)
@@ -73,8 +73,7 @@ namespace Editor.UI.View2D
         public void ToggleGrid(bool enable)
         {
             m_gridEnabled = enable;
-            EditorView ev = target as EditorView;
-            ev?.Interface.NotifyToggleGridListeners(m_gridEnabled);
+            EditorEventBus.Instance.ToggleGrid.Raise(m_gridEnabled);
             UpdateBackground();
         }
 
@@ -83,14 +82,18 @@ namespace Editor.UI.View2D
             UpdateBackground();
         }
 
+        private void OnZoomChanged(bool zoomedIn)
+        {
+            UpdateBackground();
+        }
+        
         public void ScaleGrid(float scale)
         {
             float oldScale = m_gridScale;
             m_gridScale = Mathf.Clamp(scale, c_minGridScale, c_maxGridScale);
             if (m_gridScale != oldScale)
             {
-                EditorView ev = target as EditorView;
-                ev?.Interface.NotifyScaleGridListeners(m_gridScale);
+                EditorEventBus.Instance.ScaleGrid.Raise(m_gridScale);
             }
 
             float spacing = (1 << (int)m_gridScale);

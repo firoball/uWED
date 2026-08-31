@@ -236,7 +236,7 @@ namespace Editor.Drawers
                 HoverTest();
                 UpdateCursorInfo();
 
-                editorView.Interface.NotifyCursorInfoChangedListeners(m_cursorInfo);
+                EditorEventBus.Instance.CursorInfoChanged.Raise(m_cursorInfo);
 
                 PostEditorRedraw(editorView);
             }

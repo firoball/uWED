@@ -36,8 +36,8 @@ namespace Editor.UI.View2D
             //TODO: don't load transform prefs when map is new or has changed
             LoadPrefs();
             //pass defaults to all listeners
-            m_interface.NotifyLockAngleListeners(m_lockAngle);
-            m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
+            EditorEventBus.Instance.LockAngle.Raise(m_lockAngle);
+            EditorEventBus.Instance.ToggleSnapping.Raise(m_enableSnapping);
 
             contentViewContainer.BringToFront();
             //TODO: only perform schedule.Execute when prefs were not found/loaded (e.g. new map)
@@ -48,7 +48,8 @@ namespace Editor.UI.View2D
                 LoadPrefs();
             });
             
-            RegisterCallback<KeyDownEvent>(OnKeyDown, TrickleDown.TrickleDown);
+            EditorEventBus.Instance.FitViewToWindow.Subscribe(OnFitViewToWindow);
+            EditorEventBus.Instance.CenterView.Subscribe(OnCenterView);
         }
 
         public Matrix4x4 WorldToContentMatrix()
@@ -165,22 +166,16 @@ namespace Editor.UI.View2D
         public void ToggleSnapping(bool enable)
         {
             m_enableSnapping = enable;
-            m_interface.NotifyToggleSnappingListeners(m_enableSnapping);
+            EditorEventBus.Instance.ToggleSnapping.Raise(m_enableSnapping);
         }
 
         public void LockAngle(float angle)
         {
             m_lockAngle = angle;
-            m_interface.NotifyLockAngleListeners(m_lockAngle);
+            EditorEventBus.Instance.LockAngle.Raise(m_lockAngle);
         }
 
-        private void OnKeyDown(KeyDownEvent evt)
-        {
-            if (evt.keyCode == KeyCode.C) CenterView();
-            if (evt.keyCode == KeyCode.F) FitViewToWindow();
-        }
-        
-        public void FitViewToWindow()
+        private void OnFitViewToWindow()
         {
             Vector2 minTrans = WorldToContentSpace(m_editorManipulator.GetMapMin());
             Vector2 maxTrans = WorldToContentSpace(m_editorManipulator.GetMapMax());
@@ -190,7 +185,7 @@ namespace Editor.UI.View2D
             Zoomer.FrameToFit(min, max, 0.95f);
         }
 
-        public void CenterView()
+        private void OnCenterView()
         {
             Vector2 minTrans = WorldToContentSpace(m_editorManipulator.GetMapMin());
             Vector2 maxTrans = WorldToContentSpace(m_editorManipulator.GetMapMax());

@@ -126,7 +126,7 @@ namespace Editor.Modes
         {
             CursorInfo ci = m_drawer.CursorInfo;
             if (ci.HoverWay != null)
-                ev.Interface.NotifyWayEditListeners(ci.HoverWay, m_mapData.GetWayNames());
+                EditorEventBus.Instance.EditWay.Raise(ci.HoverWay, m_mapData.GetWayNames());
         }
 
         public override void DeleteObject()

@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Editor.UI.View2D;
 using Triangulator;
-using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -208,7 +206,7 @@ namespace Editor.Drawers
                         m_polygonMesh.uv = uvs.ToArray();
                         m_polygonMesh.SetIndices(triangles, MeshTopology.Triangles, 0);
 
-                        ev?.Interface.NotifyRegionMeshChangedListeners(m_polygonMesh);
+                        EditorEventBus.Instance.RegionMeshChanged.Raise(m_polygonMesh);
                     }
                 }
             }

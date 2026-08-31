@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Editor.Assets;
+using Editor.Ui;
 using Editor.Ui.Help;
 using Editor.UI.Inspector;
 using Editor.UI.Manipulator;
@@ -27,6 +28,7 @@ public class UWed : EditorWindow
     private InfoPanel m_infoPanel;
     private MeshPreviewPanel m_meshPreviewPanel;
     private EditorHelp m_editorHelp;
+    private VisualElement m_ui;
 
     private static UWed s_instance = null;
 
@@ -40,16 +42,19 @@ public class UWed : EditorWindow
 
     public static void OpenMap(string assetName)
     {
-        s_instance?.m_editorView.Interface.OnLoadMap(new MapAssetLoader(), assetName);
+        EditorEventBus.Instance.LoadMap.Raise(new MapAssetLoader(), assetName);
     }
 
     public void CreateGUI()
     {
-        VisualElement ui = m_uxml.Instantiate();
-        rootVisualElement.Add(ui);
-        ui.StretchToParentSize();
+        m_ui = m_uxml.Instantiate();
+        m_ui.name = "editorContainer";
+        rootVisualElement.Add(m_ui);
+        m_ui.StretchToParentSize();
+        m_ui.focusable = true;
+        m_ui.tabIndex = 0;
 
-        IEnumerable<VisualElement> containers = ui.Children();
+        IEnumerable<VisualElement> containers = m_ui.Children();
         VisualElement menu = containers.FirstOrDefault(x => x.name == "menu");
         VisualElement editor = containers.FirstOrDefault(x => x.name == "editor");
         VisualElement inspector = containers.FirstOrDefault(x => x.name == "inspector");
@@ -65,7 +70,7 @@ public class UWed : EditorWindow
         // all Elements interacting with EditorView events must be created earlier for event registration
         m_infoPanel = new InfoPanel();
         m_meshPreviewPanel = new MeshPreviewPanel();
-        m_editorHelp = new EditorHelp(ui, m_helpUxml);
+        m_editorHelp = new EditorHelp(m_ui, m_helpUxml);
         StatisticsPanel statisticsPanel = new StatisticsPanel();
 
         // now create the EditorView
@@ -83,8 +88,10 @@ public class UWed : EditorWindow
         MenuBinder menuBinder = new MenuBinder(m_editorView, m_editorHelp, menu, this); 
         InspectorBinder inspectorBinder = new InspectorBinder(m_editorView, m_infoPanel, m_meshPreviewPanel, statisticsPanel);
         ManipulatorBinder manipulatorBinder = new ManipulatorBinder(m_editorView, m_manipulatorUxml, dialogContainer, settings);
+        KeyBinder keyBinder = new KeyBinder(m_ui);
         
         AssemblyReloadEvents.beforeAssemblyReload += m_editorView.SavePrefs;
+        m_ui.Focus();
     }
 
     public void OnEnable()
@@ -98,4 +105,5 @@ public class UWed : EditorWindow
         m_meshPreviewPanel?.Dispose(); // required for properly freeing PreviewRenderUtility 
         s_instance = null;
     }
+
 }

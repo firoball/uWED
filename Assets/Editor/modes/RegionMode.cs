@@ -44,7 +44,7 @@ namespace Editor.Modes
         {
             CursorInfo ci = m_drawer.CursorInfo;
             if  (ci.HoverRegion != null)
-                ev.Interface.NotifyRegionEditListeners(ci.HoverRegion, m_mapData.GetRegionNames());
+                EditorEventBus.Instance.EditRegion.Raise(ci.HoverRegion, m_mapData.GetRegionNames());
 
             //TEMP
             if (m_drawer.CursorInfo.HoverContour != null)

@@ -33,14 +33,15 @@ namespace Editor.UI.View2D
             };
 
             InitializeActiveMode();
+            EditorEventBus.Instance.LoadMap.Subscribe(OnLoadMap);
+            EditorEventBus.Instance.WriteMap.Subscribe(OnWriteMap);
         }
 
         protected override void RegisterCallbacksOnTarget()
         {
-            //pass defaults to all listeners
-            EditorView ev = target as EditorView;
+            //pass defaults to all subscribers
             m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
-            ev?.Interface.NotifySetModeListeners(m_mode);
+            EditorEventBus.Instance.ModeChanged.Raise(m_mode);
 
             //add all editor mode drawers as children
             foreach (BaseEditorMode em in m_editorModes)
@@ -70,11 +71,10 @@ namespace Editor.UI.View2D
 
         private void OnMouseMove(MouseMoveEvent evt)
         {
-            var editorView = target as EditorView;
-            if (editorView != null)
+            if (target is EditorView editorView)
             {
                 Vector2 snappedPos = editorView.SnapWorldPos(editorView.ScreenToWorldSpace(evt.localMousePosition));
-                editorView.Interface.NotifyMouseMoveListeners(snappedPos);
+                EditorEventBus.Instance.MouseMoved.Raise(snappedPos);
             }
 
             m_editorModes[(int)m_mode].Drawer.SetLocalMousePosition(evt.localMousePosition);
@@ -111,7 +111,7 @@ namespace Editor.UI.View2D
 
             if (m_constructMode != lastconstructMode)
             {
-                editorView?.Interface.NotifySetConstructionModeListeners(m_constructMode);
+                EditorEventBus.Instance.ConstructionModeChanged.Raise(m_constructMode);
             }
         }
 
@@ -218,8 +218,7 @@ namespace Editor.UI.View2D
 
             if (m_constructMode != lastconstructMode)
             {
-                EditorView ev = target as EditorView;
-                ev?.Interface.NotifySetConstructionModeListeners(m_constructMode);
+                EditorEventBus.Instance.ConstructionModeChanged.Raise(m_constructMode);
             }
         }
 
@@ -232,9 +231,8 @@ namespace Editor.UI.View2D
         {
             m_editorModes[(int)m_mode].Initialize();
             m_constructMode = EditorStatus.Construct.Idle;
-            EditorView ev = target as EditorView;
-            ev?.Interface.NotifySetModeListeners(m_mode);
-            ev?.Interface.NotifySetConstructionModeListeners(m_constructMode);
+            EditorEventBus.Instance.ModeChanged.Raise(m_mode);
+            EditorEventBus.Instance.ConstructionModeChanged.Raise(m_constructMode);
         }
 
         public void SetMode(EditorStatus.Mode mode)
@@ -245,6 +243,7 @@ namespace Editor.UI.View2D
                 m_mode = mode;
                 InitializeActiveMode();
                 m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
+                EditorEventBus.Instance.ModeChanged.Raise(m_mode);
             }
         }
 
@@ -258,7 +257,7 @@ namespace Editor.UI.View2D
             return m_mapData.Max();
         }
         
-        public void LoadMap(IMapLoader loader, string name)
+        public void OnLoadMap(IMapLoader loader, string name)
         {
             if (loader != null && !string.IsNullOrWhiteSpace(name))
             {
@@ -267,7 +266,7 @@ namespace Editor.UI.View2D
             }
         }
 
-        public void WriteMap(IMapWriter writer, string name)
+        public void OnWriteMap(IMapWriter writer, string name)
         {
             if (writer != null && !string.IsNullOrWhiteSpace(name))
                 m_mapData?.Write(writer, name);

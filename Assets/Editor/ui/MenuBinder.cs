@@ -1,3 +1,4 @@
+using System.Globalization;
 using Editor.Ui.Help;
 using Editor.UI.View2D;
 using UnityEditor.UIElements;
@@ -16,8 +17,6 @@ public class MenuBinder
         BindSnapControl(ev, menuParent);
         BindHelpButton(eh, menuParent);
 
-        //Update initial values of all controls
-        ev.Interface.RefreshListeners();
     }
 
     private void BindFileMenu(EditorView ev, VisualElement parent, UWed wnd)
@@ -25,7 +24,7 @@ public class MenuBinder
         ToolbarMenu toolbarMenu = parent.Q("fileMenu") as ToolbarMenu;
         if (toolbarMenu != null && ev != null)
         {
-            FileDialog fileDialog = new FileDialog(ev.Interface);
+            FileDialog fileDialog = new FileDialog();
             toolbarMenu.menu.AppendAction("New", null);
             toolbarMenu.menu.AppendAction("Load", fileDialog.Load);
             toolbarMenu.menu.AppendAction("Save", fileDialog.Save);
@@ -42,23 +41,24 @@ public class MenuBinder
         DropdownField editorModes = parent.Q("editorModes") as DropdownField;
         if (editorModes != null)
         {
-            ev.Interface.SetModeListeners.Add(editorModes);
+            EditorEventBus.Instance.ModeChanged.Subscribe(v => editorModes.index = (int)v);
             editorModes.RegisterCallback<ChangeEvent<string>>(ev.Interface.OnSetMode);
             editorModes.RegisterCallback<ChangeEvent<string>>(eh.OnSetMode);
         }
         else
             Debug.LogError("Element 'editorModes' not found.");
     }
+    
     private void BindSnapControl(EditorView ev, VisualElement parent)
     {
         SliderInt angleSize = parent.Q("angleSize") as SliderInt;
         m_angleSizeValue = parent.Q("angleSizeValue") as Label;
         if (angleSize != null && m_angleSizeValue != null)
         {
-            ev.Interface.LockAngleListeners.Add(angleSize);
-            angleSize.RegisterCallback<ChangeEvent<int>>(OnAngleSizeChange);
+            EditorEventBus.Instance.LockAngle.Subscribe(v => angleSize.value = LockAngleUtility.DegreesToIndex(v));
             angleSize.RegisterCallback<ChangeEvent<int>>(ev.Interface.OnLockAngle);
-            m_angleSizeValue.text = FormatAngleSizeValue(angleSize.value);
+            angleSize.RegisterCallback<ChangeEvent<int>>(OnAngleSizeChange);
+            m_angleSizeValue.text = LockAngleUtility.IndexToDegrees(angleSize.value).ToString(CultureInfo.InvariantCulture);
         }
         else
             Debug.LogError("Element 'angleSize' or 'angleSizeValue' not found.");
@@ -67,7 +67,7 @@ public class MenuBinder
         Toggle gridShow = parent.Q("gridShow") as Toggle;
         if (gridShow != null) 
         {
-            ev.Interface.ToggleGridListeners.Add(gridShow);
+            EditorEventBus.Instance.ToggleGrid.Subscribe(v => gridShow.value = v ?? !gridShow.value);
             gridShow.RegisterCallback<ChangeEvent<bool>>(ev.Interface.OnToggleGrid);
         }
         else
@@ -77,9 +77,9 @@ public class MenuBinder
         m_gridSizeValue = parent.Q("gridSizeValue") as Label;
         if (gridSize != null && m_gridSizeValue != null)
         {
-            ev.Interface.ScaleGridListeners.Add(gridSize);
-            gridSize.RegisterCallback<ChangeEvent<int>>(OnGridSizeChange);
+            EditorEventBus.Instance.ScaleGrid.Subscribe(v => gridSize.value = (int)v);
             gridSize.RegisterCallback<ChangeEvent<int>>(ev.Interface.OnScaleGrid);
+            gridSize.RegisterCallback<ChangeEvent<int>>(OnGridSizeChange);
             m_gridSizeValue.text = FormatGridSizeValue(gridSize.value);
         }
         else
@@ -88,7 +88,7 @@ public class MenuBinder
         Toggle enableSnap = parent.Q("enableSnap") as Toggle;
         if (enableSnap != null) 
         {
-            ev.Interface.ToggleSnappingListeners.Add(enableSnap);
+            EditorEventBus.Instance.ToggleSnapping.Subscribe(v => enableSnap.value = v ?? !enableSnap.value);
             enableSnap.RegisterCallback<ChangeEvent<bool>>(ev.Interface.OnToggleSnapping);
         }
         else
@@ -120,19 +120,7 @@ public class MenuBinder
     private void OnAngleSizeChange(ChangeEvent<int> evt)
     {
         if (m_angleSizeValue != null)
-            m_angleSizeValue.text = FormatAngleSizeValue(evt.newValue);
-    }
-
-    private string FormatAngleSizeValue(int value)
-    {
-        if (value == 1 || value == 2) //1, 2
-            return value.ToString();
-        else if (value == 3 || value == 4) //5, 10
-            return ((value - 2) * 5).ToString();
-        else if (value == 11) //120
-            return 120.ToString();
-        else //15, 30, 45, 60, 75, 90
-            return ((value - 4) * 15).ToString();
+            m_angleSizeValue.text = LockAngleUtility.IndexToDegrees(evt.newValue).ToString(CultureInfo.InvariantCulture);
     }
 
 }

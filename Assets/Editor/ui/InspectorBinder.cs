@@ -22,23 +22,23 @@ public class InspectorBinder
         m_construct = EditorStatus.Construct.Idle;
         m_mousePos = Vector2.zero;
 
-        ev.Interface.OnModeChanged += OnEditorModeChanged;
-        ev.Interface.OnCursorInfoChanged += OnCursorInfoChanged;
-        ev.Interface.OnRegionMeshChanged += OnRegionMeshChanged;
-        ev.Interface.OnConstructionModeChanged += OnConstructionModeChanged;
-        ev.Interface.OnMouseMoved += OnMouseMoved;
+        EditorEventBus.Instance.ModeChanged.Subscribe(OnEditorModeChanged);
+        EditorEventBus.Instance.CursorInfoChanged.Subscribe(OnCursorInfoChanged);
+        EditorEventBus.Instance.RegionMeshChanged.Subscribe(OnRegionMeshChanged);
+        EditorEventBus.Instance.ConstructionModeChanged.Subscribe(OnConstructionModeChanged);
+        EditorEventBus.Instance.MouseMoved.Subscribe(OnMouseMoved);
         
         m_infoPanel.ClearAll();
-
-        //Update initial values
-        ev.Interface.RefreshListeners();
     }
 
     private void OnEditorModeChanged(EditorStatus.Mode mode)
     {
-        m_mode = mode;
-        m_infoPanel.ClearAll();
-        m_meshPreviewPanel.Clear();
+        if (m_mode != mode)
+        {
+            m_mode = mode;
+            m_infoPanel.ClearAll();
+            m_meshPreviewPanel.Clear();
+        }
     }
 
     private void OnCursorInfoChanged(CursorInfo ci)
