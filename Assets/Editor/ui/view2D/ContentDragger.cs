@@ -29,17 +29,11 @@ namespace Editor.UI.View2D
             panSpeed = new Vector2(1, 1);
         }
 
-        protected Rect CalculatePosition(float x, float y, float width, float height)
-        {
-            var rect = new Rect(x, y, width, height);
-            return rect;
-        }
-
         protected override void RegisterCallbacksOnTarget()
         {
             if (target is not GridView)
             {
-                throw new InvalidOperationException("Manipulator can only be added to a GraphView");
+                throw new InvalidOperationException("Manipulator can only be added to a GridView");
             }
 
             target.RegisterCallback<MouseDownEvent>(OnMouseDown);

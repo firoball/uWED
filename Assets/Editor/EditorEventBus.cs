@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Runtime.Platform;
 using UnityEngine;
 
 /// <summary>
@@ -118,6 +119,8 @@ public sealed class EditorEventBus
     public readonly BusEvent<bool> ZoomChanged = new BusEvent<bool>();
     public readonly BusEvent<IMapLoader, string> LoadMap = new BusEvent<IMapLoader, string>();
     public readonly BusEvent<IMapWriter, string> WriteMap = new BusEvent<IMapWriter, string>();
+    public readonly BusEvent<IPrefsProvider> LoadPrefs = new BusEvent<IPrefsProvider>();
+    public readonly BusEvent<IPrefsProvider> SavePrefs = new BusEvent<IPrefsProvider>();
 
     #endregion
 }

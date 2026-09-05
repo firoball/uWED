@@ -9,6 +9,7 @@ public class MeshManager
     private int[] m_indices;
     private Color[] m_colors;
     private int m_count;
+    private bool m_buffersPrepared;
 
     public Vector3[] Vertices { get => m_vertices; }
     public int[] Indices { get => m_indices; }
@@ -19,6 +20,7 @@ public class MeshManager
     {
         m_mesh = new Mesh() { indexFormat = IndexFormat.UInt32 };
         m_topology = topology;
+        m_buffersPrepared = false;
     }
 
     public void PrepareBuffers(int count)
@@ -36,6 +38,7 @@ public class MeshManager
             m_mesh.Clear(); //buffer size changed - mesh needs to be rebuilt
             m_mesh.vertices = m_vertices;
             m_mesh.SetIndices(m_indices, m_topology, 0);
+            m_buffersPrepared = true;
         }
     }
 
@@ -46,6 +49,8 @@ public class MeshManager
 
     public void DrawMesh(Matrix4x4 matrix)
     {
+        if (!m_buffersPrepared)
+            return;
         m_mesh.vertices = m_vertices;
         m_mesh.colors = m_colors;
         Graphics.DrawMeshNow(m_mesh, matrix);

@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+﻿using Runtime.Platform;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,25 +31,24 @@ namespace Editor.UI.View2D
             m_gridManipulator.RegisterCallbacksLate(); //must be registered after Zoomer setup
             Add(grid);
             this.AddManipulator(new ContentDragger());
+            this.AddManipulator(new ContentKeyPanner());
             this.AddManipulator(m_editorManipulator);
 
             //TODO: don't load transform prefs when map is new or has changed
-            LoadPrefs();
-            //pass defaults to all listeners
-            EditorEventBus.Instance.LockAngle.Raise(m_lockAngle);
-            EditorEventBus.Instance.ToggleSnapping.Raise(m_enableSnapping);
-
+ 
             contentViewContainer.BringToFront();
             //TODO: only perform schedule.Execute when prefs were not found/loaded (e.g. new map)
-            schedule.Execute(() =>
-            {
-                contentViewContainer.style.translate = parent.worldBound.size / 2f;
+            //TODO: use fit to view here if an actual map is loaded
+            //schedule.Execute(() =>
+            //{
+            //    contentViewContainer.style.translate = parent.worldBound.size / 2f;
                 //TODO: don't load transform prefs when map is new or has changed
-                LoadPrefs();
-            });
+            //});
             
             EditorEventBus.Instance.FitViewToWindow.Subscribe(OnFitViewToWindow);
             EditorEventBus.Instance.CenterView.Subscribe(OnCenterView);
+            EditorEventBus.Instance.LoadPrefs.Subscribe(OnLoadPrefs);
+            EditorEventBus.Instance.SavePrefs.Subscribe(OnSavePrefs);
         }
 
         public Matrix4x4 WorldToContentMatrix()
@@ -75,18 +74,6 @@ namespace Editor.UI.View2D
         public Matrix4x4 WorldToScreenMatrix()
         {
             return GetViewContainerMatrix() * WorldToContentMatrix();
-            //layout offset - this is already in screen coordinates
-            Vector3 layoutTranslate =
-                new Vector3(contentViewContainer.layout.position.x, contentViewContainer.layout.position.y);
-            //invert y if configured
-            Vector3 s = new Vector3(1, 1, 1);
-            if (c_invertYPosition)
-                s.y = -s.y;
-            //configured pixel resolution
-            Vector3 pixelScale = new Vector3(c_pixelsPerUnit, c_pixelsPerUnit);
-            //build actual world to screen matrix
-            return GetViewContainerMatrix() * Matrix4x4.Translate(layoutTranslate) * Matrix4x4.Scale(s) *
-                   Matrix4x4.Scale(pixelScale);
         }
 
         public Vector2 WorldToScreenSpace(Vector2 pos)
@@ -195,42 +182,48 @@ namespace Editor.UI.View2D
             Zoomer.ApplyFrame(min, max);
         }
         
-        public void SavePrefs()
+        private void OnSavePrefs(IPrefsProvider prefsProvider)
         {
-            m_gridManipulator?.SavePrefs();
-            m_editorManipulator?.SavePrefs();
-            EditorPrefs.SetBool("uWED::EditorView::enableSnapping", m_enableSnapping);
-            EditorPrefs.SetFloat("uWED::EditorView::lockAngle", m_lockAngle);
-            EditorPrefs.SetFloat("uWED::EditorView::transform.position.x",
+            if (prefsProvider == null)
+            {
+                Debug.LogWarning("EditorView.OnSavePrefs: no IPrefsProvider set, skipping save.");
+                return;
+            }
+
+            prefsProvider.SetBool("uWED::EditorView::enableSnapping", m_enableSnapping);
+            prefsProvider.SetFloat("uWED::EditorView::lockAngle", m_lockAngle);
+            prefsProvider.SetFloat("uWED::EditorView::transform.position.x",
                 contentViewContainer.resolvedStyle.translate.x);
-            EditorPrefs.SetFloat("uWED::EditorView::transform.position.y",
+            prefsProvider.SetFloat("uWED::EditorView::transform.position.y",
                 contentViewContainer.resolvedStyle.translate.y);
-            EditorPrefs.SetFloat("uWED::EditorView::transform.scale.x",
+            prefsProvider.SetFloat("uWED::EditorView::transform.scale.x",
                 contentViewContainer.resolvedStyle.scale.value.x);
-            EditorPrefs.SetFloat("uWED::EditorView::transform.scale.y",
+            prefsProvider.SetFloat("uWED::EditorView::transform.scale.y",
                 contentViewContainer.resolvedStyle.scale.value.y);
         }
 
-        private void LoadPrefs()
+        private void OnLoadPrefs(IPrefsProvider prefsProvider)
         {
-            if (EditorPrefs.HasKey("uWED::EditorView::enableSnapping"))
-                m_enableSnapping = EditorPrefs.GetBool("uWED::EditorView::enableSnapping");
-            if (EditorPrefs.HasKey("uWED::EditorView::lockAngle"))
-                m_lockAngle = EditorPrefs.GetFloat("uWED::EditorView::lockAngle");
+            if (prefsProvider == null)
+            {
+                Debug.LogWarning("EditorView.OnLoadPrefs: no IPrefsProvider set, skipping load.");
+                return;
+            }
 
-            //TODO: load pos and scale only if map has not changed
+            bool enableSnapping = prefsProvider.GetBool("uWED::EditorView::enableSnapping", m_enableSnapping);
+            ToggleSnapping(enableSnapping);
+            float lockAngle = prefsProvider.GetFloat("uWED::EditorView::lockAngle", m_lockAngle);
+            LockAngle(lockAngle);
+
+            //TODO: load pos and scale only if map has not changed --> check for map change after load prefs and fit to view
             Vector3 pos = contentViewContainer.resolvedStyle.translate;
-            if (EditorPrefs.HasKey("uWED::EditorView::transform.position.x"))
-                pos.x = EditorPrefs.GetFloat("uWED::EditorView::transform.position.x");
-            if (EditorPrefs.HasKey("uWED::EditorView::transform.position.y"))
-                pos.y = EditorPrefs.GetFloat("uWED::EditorView::transform.position.y");
+            pos.x = prefsProvider.GetFloat("uWED::EditorView::transform.position.x", pos.x);
+            pos.y = prefsProvider.GetFloat("uWED::EditorView::transform.position.y", pos.y);
             contentViewContainer.style.translate = pos;
 
             Vector3 scale = contentViewContainer.resolvedStyle.scale.value;
-            if (EditorPrefs.HasKey("uWED::EditorView::transform.scale.x"))
-                scale.x = EditorPrefs.GetFloat("uWED::EditorView::transform.scale.x");
-            if (EditorPrefs.HasKey("uWED::EditorView::transform.scale.y"))
-                scale.y = EditorPrefs.GetFloat("uWED::EditorView::transform.scale.y");
+            scale.x = prefsProvider.GetFloat("uWED::EditorView::transform.scale.x", scale.x);
+            scale.y = prefsProvider.GetFloat("uWED::EditorView::transform.scale.y", scale.y);
             contentViewContainer.style.scale = scale;
         }
 

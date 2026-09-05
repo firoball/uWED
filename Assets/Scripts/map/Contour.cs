@@ -4,7 +4,6 @@ using Triangulator;
 using UnityEngine;
 using System.Linq;
 
-[Serializable]
 public class Contour : IContour<Vertex>
 {
     private readonly List<Vertex> m_vertices;

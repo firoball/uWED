@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Editor.UI.Inspector;
-using Editor.UI.View2D;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class InspectorBinder
 {
@@ -13,7 +13,7 @@ public class InspectorBinder
     private EditorStatus.Construct m_construct;
     private Vector2 m_mousePos;
 
-    public InspectorBinder(EditorView ev, InfoPanel infoPanel, MeshPreviewPanel meshPreviewPanel, StatisticsPanel statistics)
+    public InspectorBinder(VisualElement parent, InfoPanel infoPanel, MeshPreviewPanel meshPreviewPanel, StatisticsPanel statistics)
     {
         m_infoPanel = infoPanel;
         m_meshPreviewPanel = meshPreviewPanel;
@@ -27,10 +27,50 @@ public class InspectorBinder
         EditorEventBus.Instance.RegionMeshChanged.Subscribe(OnRegionMeshChanged);
         EditorEventBus.Instance.ConstructionModeChanged.Subscribe(OnConstructionModeChanged);
         EditorEventBus.Instance.MouseMoved.Subscribe(OnMouseMoved);
-        
+
+        //SetupMeshPreviewPanel(m_meshPreviewPanel);
         m_infoPanel.ClearAll();
     }
 
+    private void SetupMeshPreviewPanel(MeshPreviewPanel panel)
+    {
+        panel.parent.RegisterCallback<MouseDownEvent>(evt =>
+        {
+            if (evt.button == 0 && evt.ctrlKey && m_mode == EditorStatus.Mode.Regions)
+            {
+                panel.BeginOrbit(evt.mousePosition);
+                panel.parent.CaptureMouse(); // keep receiving move events past window edges
+                evt.StopPropagation();
+            }
+        }, TrickleDown.TrickleDown);
+
+        panel.parent.RegisterCallback<MouseMoveEvent>(evt =>
+        {
+            if (!panel.IsOrbiting)
+                return;
+
+            if (!evt.ctrlKey)
+            {
+                panel.EndOrbit();
+                panel.parent.ReleaseMouse();
+                return;
+            }
+
+            panel.UpdateOrbit(evt.mousePosition);
+            evt.StopPropagation();
+        }, TrickleDown.TrickleDown);
+
+        panel.parent.RegisterCallback<MouseUpEvent>(evt =>
+        {
+            if (!panel.IsOrbiting)
+                return;
+
+            panel.EndOrbit();
+            panel.parent.ReleaseMouse();
+            evt.StopPropagation();
+        }, TrickleDown.TrickleDown);
+    }
+    
     private void OnEditorModeChanged(EditorStatus.Mode mode)
     {
         if (m_mode != mode)

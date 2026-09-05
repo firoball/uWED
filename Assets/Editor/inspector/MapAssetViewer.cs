@@ -35,16 +35,21 @@ namespace Editor.Inspector
             Shader shader = Shader.Find("Hidden/Internal-Colored");
             m_material = new Material(shader);
             m_mapAsset = mapAsset;
+            m_aspect = 1f;
             UpdateMap();
         }
 
         public void UpdateMap()
         {
             m_mapData = m_mapAsset.Data;
+            PrepareMesh();
+            
+            if (m_mapData.Segments.Count == 0)
+                return;
+
             m_mapMin = Min();
             m_mapMax = Max();
             m_aspect = (m_mapMax.y - m_mapMin.y) / (m_mapMax.x - m_mapMin.x);
-            PrepareMesh();
             UpdateRect();
         }
 

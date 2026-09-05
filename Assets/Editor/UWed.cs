@@ -7,10 +7,12 @@ using Editor.Ui.Help;
 using Editor.UI.Inspector;
 using Editor.UI.Manipulator;
 using Editor.UI.View2D;
+using Runtime.Platform;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UWED.Platform;
 
 public class UWed : EditorWindow
 {
@@ -29,15 +31,13 @@ public class UWed : EditorWindow
     private MeshPreviewPanel m_meshPreviewPanel;
     private EditorHelp m_editorHelp;
     private VisualElement m_ui;
-
-    private static UWed s_instance = null;
-
+    private IPrefsProvider m_prefsProvider;
+    
     [MenuItem("Window/uWED/Map Editor")]
     public static void OpenWindow()
     {
         UWed wnd = GetWindow<UWed>();
         wnd.titleContent = new GUIContent("uWED");
-        s_instance = wnd;
     }
 
     public static void OpenMap(string assetName)
@@ -47,12 +47,16 @@ public class UWed : EditorWindow
 
     public void CreateGUI()
     {
+        Debug.Log("UWed.CreateGUI");
         m_ui = m_uxml.Instantiate();
         m_ui.name = "editorContainer";
         rootVisualElement.Add(m_ui);
         m_ui.StretchToParentSize();
         m_ui.focusable = true;
         m_ui.tabIndex = 0;
+
+        //m_prefsProvider = new EditorPrefsProvider();
+        m_prefsProvider = ServiceLocator.Get<IPrefsProvider>();
 
         IEnumerable<VisualElement> containers = m_ui.Children();
         VisualElement menu = containers.FirstOrDefault(x => x.name == "menu");
@@ -86,12 +90,14 @@ public class UWed : EditorWindow
 
         // glue things together
         MenuBinder menuBinder = new MenuBinder(m_editorView, m_editorHelp, menu, this); 
-        InspectorBinder inspectorBinder = new InspectorBinder(m_editorView, m_infoPanel, m_meshPreviewPanel, statisticsPanel);
+        InspectorBinder inspectorBinder = new InspectorBinder(m_ui, m_infoPanel, m_meshPreviewPanel, statisticsPanel);
         ManipulatorBinder manipulatorBinder = new ManipulatorBinder(m_editorView, m_manipulatorUxml, dialogContainer, settings);
         KeyBinder keyBinder = new KeyBinder(m_ui);
         
-        AssemblyReloadEvents.beforeAssemblyReload += m_editorView.SavePrefs;
+        LoadPrefs();
         m_ui.Focus();
+
+        AssemblyReloadEvents.beforeAssemblyReload += SavePrefs;//m_editorView.SavePrefs;
     }
 
     public void OnEnable()
@@ -101,9 +107,17 @@ public class UWed : EditorWindow
 
     public void OnDestroy()
     {
-        m_editorView?.SavePrefs();
+        SavePrefs();
         m_meshPreviewPanel?.Dispose(); // required for properly freeing PreviewRenderUtility 
-        s_instance = null;
     }
 
+    private void LoadPrefs()
+    {
+        EditorEventBus.Instance.LoadPrefs.Raise(m_prefsProvider);
+    }
+    
+    private void SavePrefs()
+    {
+        EditorEventBus.Instance.SavePrefs.Raise(m_prefsProvider);
+    }
 }

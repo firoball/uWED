@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Editor.Assets;
 using Editor.Modes;
-using UnityEditor;
+using Runtime.Platform;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -21,9 +21,7 @@ namespace Editor.UI.View2D
             m_mapData = new MapData();
             m_mode = EditorStatus.Mode.Segments;
             m_constructMode = EditorStatus.Construct.Idle;
-            LoadPrefs();
 
-            //only construct modes after default map data was loaded
             m_editorModes = new List<BaseEditorMode>
             {
                 new ObjectMode(m_mapData),
@@ -32,16 +30,15 @@ namespace Editor.UI.View2D
                 new WayMode(m_mapData)
             };
 
-            InitializeActiveMode();
             EditorEventBus.Instance.LoadMap.Subscribe(OnLoadMap);
             EditorEventBus.Instance.WriteMap.Subscribe(OnWriteMap);
+            EditorEventBus.Instance.LoadPrefs.Subscribe(OnLoadPrefs);
+            EditorEventBus.Instance.SavePrefs.Subscribe(OnSavePrefs);
         }
 
         protected override void RegisterCallbacksOnTarget()
         {
-            //pass defaults to all subscribers
             m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
-            EditorEventBus.Instance.ModeChanged.Raise(m_mode);
 
             //add all editor mode drawers as children
             foreach (BaseEditorMode em in m_editorModes)
@@ -123,7 +120,7 @@ namespace Editor.UI.View2D
             Vector2 mouseWorldPos = t.ScreenToWorldSpace(evt.localMousePosition);
             Vector2 mouseSnappedWorldPos = t.SnapWorldPos(mouseWorldPos);
 
-            EditorStatus.Construct lastconstructMode = m_constructMode;
+            EditorStatus.Construct lastConstructMode = m_constructMode;
             switch (m_constructMode)
             {
                 case EditorStatus.Construct.Idle: //start construction
@@ -216,7 +213,7 @@ namespace Editor.UI.View2D
                     break;
             }
 
-            if (m_constructMode != lastconstructMode)
+            if (m_constructMode != lastConstructMode)
             {
                 EditorEventBus.Instance.ConstructionModeChanged.Raise(m_constructMode);
             }
@@ -243,7 +240,6 @@ namespace Editor.UI.View2D
                 m_mode = mode;
                 InitializeActiveMode();
                 m_editorModes[(int)m_mode].Drawer.SetEnabled(true);
-                EditorEventBus.Instance.ModeChanged.Raise(m_mode);
             }
         }
 
@@ -257,7 +253,7 @@ namespace Editor.UI.View2D
             return m_mapData.Max();
         }
         
-        public void OnLoadMap(IMapLoader loader, string name)
+        private void OnLoadMap(IMapLoader loader, string name)
         {
             if (loader != null && !string.IsNullOrWhiteSpace(name))
             {
@@ -266,23 +262,37 @@ namespace Editor.UI.View2D
             }
         }
 
-        public void OnWriteMap(IMapWriter writer, string name)
+        private void OnWriteMap(IMapWriter writer, string name)
         {
             if (writer != null && !string.IsNullOrWhiteSpace(name))
                 m_mapData?.Write(writer, name);
         }
 
-        public void SavePrefs()
+        private void OnSavePrefs(IPrefsProvider prefsProvider)
         {
+            if (prefsProvider == null)
+            {
+                Debug.LogWarning("EditorManipulator.OnSavePrefs: no IPrefsProvider set, skipping save.");
+                return;
+            }
+
             m_mapData?.Write(new MapAssetWriter(), c_defaultAsset);
-            EditorPrefs.SetFloat("uWED::EditorManipulator::mode", (int)m_mode);
+            prefsProvider.SetFloat("uWED::EditorManipulator::mode", (int)m_mode);
         }
 
-        private void LoadPrefs()
+        private void OnLoadPrefs(IPrefsProvider prefsProvider)
         {
+            Debug.Log("EditorManipulator.OnLoadPrefs");
+            if (prefsProvider == null)
+            {
+                Debug.LogWarning("EditorManipulator.OnLoadPrefs: no IPrefsProvider set, skipping load.");
+                return;
+            }
+
             m_mapData?.Load(new MapAssetLoader(), c_defaultAsset);
-            if (EditorPrefs.HasKey("uWED::EditorManipulator::mode"))
-                m_mode = (EditorStatus.Mode)EditorPrefs.GetFloat("uWED::EditorManipulator::mode");
+            EditorStatus.Mode mode = (EditorStatus.Mode)prefsProvider.GetFloat("uWED::EditorManipulator::mode", (float)m_mode);
+            SetMode(mode);
+
         }
 
     }

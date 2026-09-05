@@ -1,4 +1,4 @@
-using UnityEditor;
+using Runtime.Platform;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,24 +24,14 @@ namespace Editor.UI.View2D
         public GridManipulator(GridBackground grid)
         {
             m_grid = grid;
-            m_grid.RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
-        }
-
-        private void OnCustomStyleResolved(CustomStyleResolvedEvent e)
-        {
-            //only load prefs once grid has loaded its stylesheet - otherwise it won't update correctly
-            LoadPrefs();
-            //pass defaults to all listeners
-            EditorEventBus.Instance.ScaleGrid.Raise(m_gridScale);
-            EditorEventBus.Instance.ToggleGrid.Raise(m_gridEnabled);
+            EditorEventBus.Instance.LoadPrefs.Subscribe(OnLoadPrefs);
+            EditorEventBus.Instance.SavePrefs.Subscribe(OnSavePrefs);
         }
 
         protected override void RegisterCallbacksOnTarget()
         {
             target.RegisterCallback<WheelEvent>(OnWheel);
             //pass defaults to all listeners - OnCustomStyleResolved is too late for init phase
-            EditorEventBus.Instance.ScaleGrid.Raise(m_gridScale);
-            EditorEventBus.Instance.ToggleGrid.Raise(m_gridEnabled);
         }
 
         protected override void UnregisterCallbacksFromTarget()
@@ -57,6 +47,24 @@ namespace Editor.UI.View2D
             EditorEventBus.Instance.ZoomChanged.Subscribe(OnZoomChanged);
         }
 
+        public void ToggleGrid(bool enable)
+        {
+            m_gridEnabled = enable;
+            EditorEventBus.Instance.ToggleGrid.Raise(m_gridEnabled);
+            UpdateBackground();
+        }
+
+        public void ScaleGrid(float scale)
+        {
+            m_gridScale = Mathf.Clamp(scale, c_minGridScale, c_maxGridScale);
+            EditorEventBus.Instance.ScaleGrid.Raise(m_gridScale);
+
+            float spacing = (1 << (int)m_gridScale);
+            m_grid.Spacing = spacing;
+            m_gridSpacing = spacing;
+            UpdateBackground();
+        }
+
         private void OnWheel(WheelEvent evt)
         {
             if (evt.ctrlKey)
@@ -70,13 +78,6 @@ namespace Editor.UI.View2D
             }
         }
 
-        public void ToggleGrid(bool enable)
-        {
-            m_gridEnabled = enable;
-            EditorEventBus.Instance.ToggleGrid.Raise(m_gridEnabled);
-            UpdateBackground();
-        }
-
         private void OnWheelLate(WheelEvent evt)
         {
             UpdateBackground();
@@ -87,21 +88,6 @@ namespace Editor.UI.View2D
             UpdateBackground();
         }
         
-        public void ScaleGrid(float scale)
-        {
-            float oldScale = m_gridScale;
-            m_gridScale = Mathf.Clamp(scale, c_minGridScale, c_maxGridScale);
-            if (m_gridScale != oldScale)
-            {
-                EditorEventBus.Instance.ScaleGrid.Raise(m_gridScale);
-            }
-
-            float spacing = (1 << (int)m_gridScale);
-            m_grid.Spacing = spacing;
-            m_gridSpacing = spacing;
-            UpdateBackground();
-        }
-
         private void HideBackground()
         {
             m_grid.EnableDraw = false;
@@ -137,19 +123,31 @@ namespace Editor.UI.View2D
             }
         }
 
-        public void SavePrefs()
+        private void OnSavePrefs(IPrefsProvider prefsProvider)
         {
-            EditorPrefs.SetFloat("uWED::GridManipulator::gridScale", m_gridScale);
-            EditorPrefs.SetBool("uWED::GridManipulator::gridEnabled", m_gridEnabled);
+            if (prefsProvider == null)
+            {
+                Debug.LogWarning("GridManipulator.OnSavePrefs: no IPrefsProvider set, skipping save.");
+                return;
+            }
+
+            prefsProvider.SetFloat("uWED::GridManipulator::gridScale", m_gridScale);
+            prefsProvider.SetBool("uWED::GridManipulator::gridEnabled", m_gridEnabled);
         }
 
-        private void LoadPrefs()
+        private void OnLoadPrefs(IPrefsProvider prefsProvider)
         {
-            if (EditorPrefs.HasKey("uWED::GridManipulator::gridScale"))
-                m_gridScale = EditorPrefs.GetFloat("uWED::GridManipulator::gridScale");
+            if (prefsProvider == null)
+            {
+                Debug.LogWarning("GridManipulator.OnLoadPrefs: no IPrefsProvider set, skipping load.");
+                return;
+            }
 
-            if (EditorPrefs.HasKey("uWED::GridManipulator::gridEnabled"))
-                m_gridEnabled = EditorPrefs.GetBool("uWED::GridManipulator::gridEnabled");
+            float gridScale = prefsProvider.GetFloat("uWED::GridManipulator::gridScale", m_gridScale);
+            bool gridEnabled = prefsProvider.GetBool("uWED::GridManipulator::gridEnabled", m_gridEnabled);
+
+            ToggleGrid(gridEnabled);
+            ScaleGrid(gridScale);
         }
 
     }
