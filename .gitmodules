@@ -10,3 +10,6 @@
 [submodule "Assets/ext/GenericComboBoxField"]
 	path = Assets/ext/GenericComboBoxField
 	url = git@github.com:firoball/GenericComboBoxField.git
+[submodule "Assets/ext/MenuButton"]
+	path = Assets/ext/MenuButton
+	url = git@github.com:firoball/MenuButton.git
