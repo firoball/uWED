@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -63,11 +61,12 @@ namespace Editor.UI.Inspector
         {
             AddToClassList(UssClassName);
 
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(ResolveUssPath());
+            string path = "MeshPreviewPanel";
+            StyleSheet styleSheet = Resources.Load<StyleSheet>(path);
             if (styleSheet != null)
                 styleSheets.Add(styleSheet);
             else
-                Debug.LogWarning($"MeshPreviewPanel: could not load stylesheet at '{ResolveUssPath()}'. " +
+                Debug.LogWarning($"MeshPreviewPanel: could not load stylesheet at '{path}'. " +
                                   "Make sure MeshPreviewPanel.uss sits next to MeshPreviewPanel.cs.");
 
             m_PreviewImage = new Image { image = null };
@@ -214,18 +213,6 @@ namespace Editor.UI.Inspector
                 m_DefaultMaterial.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Back);
 
             return m_DefaultMaterial;
-        }
-
-        // Resolves to the Unity project-relative path of MeshPreviewPanel.uss
-        // next to this .cs file, regardless of where the folder actually
-        // sits in the project - avoids a hardcoded path going stale on move.
-        private static string ResolveUssPath([CallerFilePath] string sourceFilePath = "")
-        {
-            string path = sourceFilePath.Replace('\\', '/');
-            path = Path.ChangeExtension(path, ".uss");
-
-            string dataPath = Application.dataPath.Replace('\\', '/');
-            return path.StartsWith(dataPath) ? "Assets" + path.Substring(dataPath.Length) : path;
         }
 
         // =========================================================================

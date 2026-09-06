@@ -13,8 +13,13 @@ namespace Editor.Ui.Help
         const int ModeTabOffset = 1;
 
 
-        public EditorHelp(VisualElement parent, VisualTreeAsset uxml)
+        public EditorHelp()
         {
+            VisualTreeAsset uxml = Resources.Load<VisualTreeAsset>("EditorHelp");
+            StyleSheet uss = Resources.Load<StyleSheet>("EditorHelp");
+
+            uxml.CloneTree(this);
+            styleSheets.Add(uss);
             this.StretchToParentSize();
             pickingMode = PickingMode.Position; // explicit: acts as the click barrier
             focusable = true;                   // needed so it can receive KeyDownEvent
@@ -38,7 +43,7 @@ namespace Editor.Ui.Help
                     CloseHelp();
                     evt.StopPropagation(); // don't let ESC also trigger "Exit Construction Mode" underneath
                 }
-            });            
+            });
         }
 
         public void OnSetMode(ChangeEvent<string> evt)

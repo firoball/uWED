@@ -17,7 +17,7 @@ using UnityEngine.UIElements;
         private readonly RegionManipulator m_regionManipulator;
         private readonly WayManipulator m_wayManipulator;
         
-        public ManipulatorBinder(EditorView editorView, VisualTreeAsset uxml, VisualElement parent, IManipulatorSettings settings)
+        public ManipulatorBinder(VisualTreeAsset uxml, VisualElement parent, IManipulatorSettings settings)
         {
             m_mapObjectManipulator = new MapObjectManipulator(uxml, settings);
             m_vertexManipulator = new VertexManipulator(uxml, settings);

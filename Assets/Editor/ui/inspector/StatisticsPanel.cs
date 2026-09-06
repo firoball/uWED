@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -86,12 +85,12 @@ namespace Editor.UI.Inspector
                 return;
             }
 
-            var assetPath = "Assets" + ussPath.Substring(dataPath.Length);
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(assetPath);
+            string path = "StatisticsPanel";
+            StyleSheet styleSheet = Resources.Load<StyleSheet>(path);
             if (styleSheet != null)
                 styleSheets.Add(styleSheet);
             else
-                Debug.LogWarning($"StatisticsPanel: could not find stylesheet at '{assetPath}'. Panel will render unstyled.");
+                Debug.LogWarning($"StatisticsPanel: could not find stylesheet at '{path}'. Panel will render unstyled.");
         }
         
         private static string FormatFloat(float value) => value.ToString("0.0", CultureInfo.InvariantCulture);

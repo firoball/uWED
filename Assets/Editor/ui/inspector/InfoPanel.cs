@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -343,29 +341,16 @@ namespace Editor.UI.Inspector
         /// AddToClassList only attaches class names - without a StyleSheet
         /// actually loaded into this element's styleSheets, none of the USS
         /// rules (including position/layout) take effect. Loads
-        /// InfoPanel.uss from the same folder as this script, so nothing
-        /// needs to be wired manually by the host tool.
+        /// InfoPanel.uss from the resources folder.
         /// </summary>
-        void LoadStyleSheet([CallerFilePath] string sourceFilePath = "")
+        void LoadStyleSheet()
         {
-            var directory = Path.GetDirectoryName(sourceFilePath);
-            if (string.IsNullOrEmpty(directory))
-                return;
-
-            var ussPath = Path.Combine(directory, "InfoPanel.uss").Replace('\\', '/');
-            var dataPath = Application.dataPath;
-            if (!ussPath.StartsWith(dataPath))
-            {
-                Debug.LogWarning($"InfoPanel: script path '{ussPath}' is outside Assets/, cannot resolve stylesheet automatically.");
-                return;
-            }
-
-            var assetPath = "Assets" + ussPath.Substring(dataPath.Length);
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(assetPath);
+            string path = "InfoPanel";
+            StyleSheet styleSheet = Resources.Load<StyleSheet>(path);
             if (styleSheet != null)
                 styleSheets.Add(styleSheet);
             else
-                Debug.LogWarning($"InfoPanel: could not find stylesheet at '{assetPath}'. Panel will render unstyled.");
+                Debug.LogWarning($"InfoPanel: could not find stylesheet at '{path}'. Panel will render unstyled.");
         }
     }
 }

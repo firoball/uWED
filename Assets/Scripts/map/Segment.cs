@@ -19,9 +19,7 @@ public class Segment : IndexedData
     private Vector2 m_offset;
 
     //additional properties
-    [SerializeReference]
     private Contour m_cLeft;
-    [SerializeReference]
     private Contour m_cRight;
 
     public Segment(Vertex v1, Vertex v2) : this(v1, v2, null, null, Vector2.zero, null) { }

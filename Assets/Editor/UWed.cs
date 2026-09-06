@@ -22,8 +22,6 @@ public class UWed : EditorWindow
     private StyleSheet m_StyleSheet = default;
 
     [SerializeField]
-    private VisualTreeAsset m_helpUxml = default;
-    [SerializeField]
     private VisualTreeAsset m_manipulatorUxml = default;
 
     private EditorView m_editorView;
@@ -32,7 +30,9 @@ public class UWed : EditorWindow
     private EditorHelp m_editorHelp;
     private VisualElement m_ui;
     private IPrefsProvider m_prefsProvider;
-    
+
+    private const string c_defaultAsset = "assets/DefaultMapAsset.asset";
+
     [MenuItem("Window/uWED/Map Editor")]
     public static void OpenWindow()
     {
@@ -43,11 +43,11 @@ public class UWed : EditorWindow
     public static void OpenMap(string assetName)
     {
         EditorEventBus.Instance.LoadMap.Raise(new MapAssetLoader(), assetName);
+        EditorEventBus.Instance.FitViewToWindow.Raise();
     }
 
     public void CreateGUI()
     {
-        Debug.Log("UWed.CreateGUI");
         m_ui = m_uxml.Instantiate();
         m_ui.name = "editorContainer";
         rootVisualElement.Add(m_ui);
@@ -74,7 +74,7 @@ public class UWed : EditorWindow
         // all Elements interacting with EditorView events must be created earlier for event registration
         m_infoPanel = new InfoPanel();
         m_meshPreviewPanel = new MeshPreviewPanel();
-        m_editorHelp = new EditorHelp(m_ui, m_helpUxml);
+        m_editorHelp = new EditorHelp();
         StatisticsPanel statisticsPanel = new StatisticsPanel();
 
         // now create the EditorView
@@ -91,13 +91,14 @@ public class UWed : EditorWindow
         // glue things together
         MenuBinder menuBinder = new MenuBinder(m_editorView, m_editorHelp, menu, this); 
         InspectorBinder inspectorBinder = new InspectorBinder(m_ui, m_infoPanel, m_meshPreviewPanel, statisticsPanel);
-        ManipulatorBinder manipulatorBinder = new ManipulatorBinder(m_editorView, m_manipulatorUxml, dialogContainer, settings);
+        ManipulatorBinder manipulatorBinder = new ManipulatorBinder(m_manipulatorUxml, dialogContainer, settings);
         KeyBinder keyBinder = new KeyBinder(m_ui);
         
         LoadPrefs();
         m_ui.Focus();
 
-        AssemblyReloadEvents.beforeAssemblyReload += SavePrefs;//m_editorView.SavePrefs;
+        OpenMap(c_defaultAsset);
+        AssemblyReloadEvents.beforeAssemblyReload += SavePrefs;
     }
 
     public void OnEnable()
