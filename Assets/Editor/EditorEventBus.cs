@@ -89,7 +89,12 @@ public sealed class ReplayEvent<T>
 /// </summary>
 public sealed class EditorEventBus
 {
-    public static EditorEventBus Instance { get; } = new EditorEventBus();
+    public static EditorEventBus Instance { get; private set; } = new EditorEventBus();
+
+    public static void Clear()
+    {
+        Instance = new EditorEventBus();
+    }
 
     private EditorEventBus() { }
 

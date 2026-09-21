@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.Ui
+namespace Editor.UI
 {
     public class KeyBinder
     {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.Ui.Help
+namespace Editor.UI.Help
 {
     public class EditorHelp : VisualElement
     {

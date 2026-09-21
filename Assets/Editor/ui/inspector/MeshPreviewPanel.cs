@@ -1,31 +1,30 @@
 using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UWED.Runtime.Core;
 
 namespace Editor.UI.Inspector
 {
     /// <summary>
-    /// Renders a rotatable preview of a Mesh. Hold CTRL and drag to orbit.
-    /// Camera distance is refit to the mesh's AABB corners at the current
-    /// orientation on every render, so it stays tightly framed while
-    /// orbiting rather than sized for the worst-case rotation. The default
-    /// fallback material (used when no material is supplied) is forced
-    /// single-sided; materials passed to Set() are used as-is.
+    /// Renders a rotatable preview of a Mesh in its own IsolatedScene.
+    /// Hold CTRL and drag to orbit; camera distance is refit to the mesh's
+    /// AABB corners at the current orientation on every render, so it
+    /// stays tightly framed. The default fallback material (used when no
+    /// material is supplied) is forced single-sided; materials passed to
+    /// Set() are used as-is.
     ///
-    /// Standalone element, positioned via USS (position: absolute), no
-    /// shared container with InfoPanel required. Fixed square size and
-    /// styling matched to InfoPanel.uss - see --panel-height there.
+    /// Fixed square size, positioned via USS (position: absolute) - no
+    /// shared container with InfoPanel needed. Styling matched to
+    /// InfoPanel.uss, see --panel-height there.
     ///
-    /// Orbit input is driven externally via BeginOrbit/UpdateOrbit/EndOrbit,
-    /// not local mouse events, so CTRL+drag works anywhere in the window -
-    /// see README.md for wiring.
+    /// Orbit input is driven externally via BeginOrbit/UpdateOrbit/EndOrbit
+    /// so CTRL+drag works anywhere in the window - see README.md for
+    /// wiring.
     ///
-    /// Create once (like InfoPanel). Set() shows the panel (with the given
-    /// mesh); Clear() hides it and drops the mesh - starts hidden until the
-    /// first Set(). This class still needs Dispose() once on shutdown
-    /// (unlike InfoPanel) because it owns a PreviewRenderUtility (native
-    /// preview camera + render texture).
+    /// Create once. Set() shows the panel with a mesh; Clear() hides it
+    /// and drops the mesh - starts hidden until the first Set(). Dispose()
+    /// must be called once on shutdown (owns an IsolatedScene, camera and
+    /// render texture).
     /// </summary>
     public class MeshPreviewPanel : VisualElement, IDisposable
     {
@@ -36,11 +35,15 @@ namespace Editor.UI.Inspector
         private const float OrbitSensitivity = 0.4f; // degrees per pixel
         private const float MinPitch = -85f;
         private const float MaxPitch = 85f;
+        private const float FieldOfView = 30f;
         private static readonly Color CameraBackgroundColor = new Color(40f / 255f, 40f / 255f, 40f / 255f, 1f);
 
         private readonly Image m_PreviewImage;
 
-        private PreviewRenderUtility m_PreviewUtility;
+        private IsolatedScene m_IsolatedScene;
+        private Camera m_Camera;
+        private RenderTexture m_RenderTexture;
+
         private Mesh m_Mesh;
         private Material[] m_Materials;
         private Material[] m_ProvidedMaterials; // as passed to Set(), before default-material substitution
@@ -66,8 +69,8 @@ namespace Editor.UI.Inspector
             if (styleSheet != null)
                 styleSheets.Add(styleSheet);
             else
-                Debug.LogWarning($"MeshPreviewPanel: could not load stylesheet at '{path}'. " +
-                                  "Make sure MeshPreviewPanel.uss sits next to MeshPreviewPanel.cs.");
+                Debug.LogWarning($"MeshPreviewPanel: could not load stylesheet at Resources/'{path}'. " +
+                                  "Make sure MeshPreviewPanel.uss sits in a Resources folder.");
 
             m_PreviewImage = new Image { image = null };
             m_PreviewImage.AddToClassList(PreviewImageUssClassName);
@@ -77,16 +80,6 @@ namespace Editor.UI.Inspector
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
             RegisterCallback<DetachFromPanelEvent>(_ => Dispose());
-
-            // PreviewRenderUtility's native camera/render texture and our
-            // runtime-created default material are destroyed on domain
-            // reload, but this instance itself commonly survives (UI
-            // Toolkit preserves EditorWindow visual trees across reloads).
-            // Without this, m_PreviewUtility/m_DefaultMaterial stay
-            // non-null but stale, so EnsurePreviewUtility() never
-            // recreates them and nothing renders - silently, no exception.
-            AssemblyReloadEvents.beforeAssemblyReload += ReleaseNativeResources;
-            AssemblyReloadEvents.afterAssemblyReload += ReloadAfterAssemblyReload;
         }
 
         // =========================================================================
@@ -118,7 +111,7 @@ namespace Editor.UI.Inspector
             m_Yaw = 35f;
             m_Pitch = 0f;
 
-            EnsurePreviewUtility();
+            EnsurePreviewResources();
             RenderPreview();
         }
 
@@ -202,13 +195,10 @@ namespace Editor.UI.Inspector
                              ?? Shader.Find("Standard")
                              ?? Shader.Find("Diffuse")
                              ?? Shader.Find("Hidden/InternalErrorShader");
-            m_DefaultMaterial = new Material(shader);
+            m_DefaultMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
 
-            // Materials created via code skip the shader's editor GUI
-            // validation, which is normally what translates a "Render
-            // Face"-style setting into the _Cull property - without it,
-            // _Cull can be left at 0 (Off / double-sided) instead of the
-            // shader's intended default. Force single-sided explicitly.
+            // Force single-sided; runtime-created materials default to
+            // double-sided (_Cull Off) without this.
             if (m_DefaultMaterial.HasProperty("_Cull"))
                 m_DefaultMaterial.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Back);
 
@@ -219,27 +209,62 @@ namespace Editor.UI.Inspector
         // Preview rendering
         // =========================================================================
 
-        private void EnsurePreviewUtility()
+        // Rebuilds if the scene/camera were destroyed externally (relies on
+        // Unity's fake-null comparison on destroyed objects).
+        private void EnsurePreviewResources()
         {
-            if (m_PreviewUtility != null)
+            if (m_IsolatedScene != null && m_IsolatedScene.IsValid && m_Camera != null)
                 return;
 
-            m_PreviewUtility = new PreviewRenderUtility();
-            m_PreviewUtility.cameraFieldOfView = 30f;
-            m_PreviewUtility.camera.nearClipPlane = 0.01f;
-            m_PreviewUtility.camera.farClipPlane = 1000f;
+            m_IsolatedScene = new IsolatedScene();
 
-            // Explicit opaque clear - PreviewRenderUtility defaults to a
-            // transparent clear, which can make non-opaque-alpha shaders
-            // (or the empty background) show through as see-through
-            // instead of a solid preview area.
-            m_PreviewUtility.camera.clearFlags = CameraClearFlags.SolidColor;
-            m_PreviewUtility.camera.backgroundColor = CameraBackgroundColor;
+            m_Camera = m_IsolatedScene.CreateHidden<Camera>("PreviewCamera");
+            m_Camera.enabled = false; // rendered manually via Render()
+            m_Camera.clearFlags = CameraClearFlags.SolidColor;
+            m_Camera.backgroundColor = CameraBackgroundColor;
+            m_Camera.fieldOfView = FieldOfView;
+            m_Camera.nearClipPlane = 0.01f;
+            m_Camera.farClipPlane = 1000f;
+            m_Camera.cullingMask = IsolatedScene.CullingMask;
 
-            m_PreviewUtility.lights[0].intensity = 1.1f;
-            m_PreviewUtility.lights[0].transform.rotation = Quaternion.Euler(40f, 40f, 0f);
-            m_PreviewUtility.lights[1].intensity = 0.4f;
-            m_PreviewUtility.ambientColor = new Color(0.15f, 0.15f, 0.15f, 1f);
+            Light keyLight = m_IsolatedScene.CreateHidden<Light>("KeyLight");
+            keyLight.type = LightType.Directional;
+            keyLight.cullingMask = IsolatedScene.CullingMask;
+            keyLight.intensity = 1.1f;
+            keyLight.transform.rotation = Quaternion.Euler(40f, 40f, 0f);
+
+            Light fillLight = m_IsolatedScene.CreateHidden<Light>("FillLight");
+            fillLight.type = LightType.Directional;
+            fillLight.cullingMask = IsolatedScene.CullingMask;
+            fillLight.intensity = 0.4f;
+            fillLight.transform.rotation = Quaternion.Euler(-20f, -160f, 0f);
+        }
+
+        private void EnsureRenderTexture(int pixelWidth, int pixelHeight)
+        {
+            if (m_RenderTexture != null && m_RenderTexture.width == pixelWidth && m_RenderTexture.height == pixelHeight)
+                return;
+
+            ReleaseRenderTexture();
+
+            m_RenderTexture = new RenderTexture(pixelWidth, pixelHeight, 16, RenderTextureFormat.ARGB32)
+            {
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            m_Camera.targetTexture = m_RenderTexture;
+        }
+
+        private void ReleaseRenderTexture()
+        {
+            if (m_RenderTexture == null)
+                return;
+
+            if (m_Camera != null)
+                m_Camera.targetTexture = null;
+
+            m_RenderTexture.Release();
+            UnityEngine.Object.Destroy(m_RenderTexture);
+            m_RenderTexture = null;
         }
 
         private static Vector3[] BuildCornerOffsets(Vector3 extents)
@@ -253,12 +278,11 @@ namespace Editor.UI.Inspector
             return corners;
         }
 
-        // Distance chosen so all 8 AABB corners fit both the horizontal and
-        // vertical FOV at the given orientation - tighter than a bounding-
-        // sphere fit, recomputed per render since it depends on orientation.
+        // Fits all 8 AABB corners within the FOV at the given orientation;
+        // recomputed per render since it depends on orientation.
         private float ComputeFitDistance(Quaternion orbitRotation, float pixelWidth, float pixelHeight)
         {
-            float halfFovY = m_PreviewUtility.cameraFieldOfView * 0.5f * Mathf.Deg2Rad;
+            float halfFovY = FieldOfView * 0.5f * Mathf.Deg2Rad;
             float aspect = pixelWidth / pixelHeight;
             float halfFovX = Mathf.Atan(Mathf.Tan(halfFovY) * aspect);
 
@@ -280,46 +304,36 @@ namespace Editor.UI.Inspector
 
         private void RenderPreview()
         {
-            if (m_Mesh == null || m_PreviewUtility == null)
+            if (m_Mesh == null)
                 return;
 
-            float pixelWidth = resolvedStyle.width * EditorGUIUtility.pixelsPerPoint;
-            float pixelHeight = resolvedStyle.height * EditorGUIUtility.pixelsPerPoint;
-            if (pixelWidth < 4f || pixelHeight < 4f)
+            EnsurePreviewResources();
+
+            float scale = panel?.scaledPixelsPerPoint ?? 1f;
+            int pixelWidth = Mathf.RoundToInt(resolvedStyle.width * scale);
+            int pixelHeight = Mathf.RoundToInt(resolvedStyle.height * scale);
+            if (pixelWidth < 4 || pixelHeight < 4)
                 return;
 
-            var rect = new Rect(0, 0, pixelWidth, pixelHeight);
-            m_PreviewUtility.BeginPreview(rect, GUIStyle.none);
+            EnsureRenderTexture(pixelWidth, pixelHeight);
 
             Vector3 center = m_MeshBounds.center;
             Quaternion orbitRotation = Quaternion.Euler(m_Pitch, m_Yaw, 0f);
 
             m_CameraDistance = ComputeFitDistance(orbitRotation, pixelWidth, pixelHeight);
-            m_PreviewUtility.camera.farClipPlane = m_CameraDistance * 2f + m_MeshBoundsRadius * 2f + 1f;
+            m_Camera.farClipPlane = m_CameraDistance * 2f + m_MeshBoundsRadius * 2f + 1f;
 
             Vector3 cameraPos = center + orbitRotation * (Vector3.back * m_CameraDistance);
-
-            m_PreviewUtility.camera.transform.position = cameraPos;
-            m_PreviewUtility.camera.transform.LookAt(center, Vector3.up);
+            m_Camera.transform.position = cameraPos;
+            m_Camera.transform.LookAt(center, Vector3.up);
 
             for (int i = 0; i < m_Materials.Length; i++)
             {
-                try
-                {
-                    m_PreviewUtility.DrawMesh(m_Mesh, Matrix4x4.identity, m_Materials[i], i);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"MeshPreviewPanel: DrawMesh failed for submesh {i} " +
-                                    $"(subMeshCount={m_Mesh.subMeshCount}, materials={m_Materials.Length}): {e}");
-                    m_PreviewUtility.EndPreview();
-                    return;
-                }
+                Graphics.DrawMesh(m_Mesh, Matrix4x4.identity, m_Materials[i], IsolatedScene.LayerIndex, m_Camera, i);
             }
 
-            m_PreviewUtility.Render();
-            Texture resultTexture = m_PreviewUtility.EndPreview();
-            m_PreviewImage.image = resultTexture;
+            m_Camera.Render();
+            m_PreviewImage.image = m_RenderTexture;
         }
 
         // =========================================================================
@@ -328,33 +342,20 @@ namespace Editor.UI.Inspector
 
         public void Dispose()
         {
-            AssemblyReloadEvents.beforeAssemblyReload -= ReleaseNativeResources;
-            AssemblyReloadEvents.afterAssemblyReload -= ReloadAfterAssemblyReload;
-            ReleaseNativeResources();
-        }
+            ReleaseRenderTexture();
 
-        // Drops native/runtime-created resources without touching m_Mesh or
-        // m_ProvidedMaterials, so ReloadAfterAssemblyReload can rebuild from
-        // them. Also used by Dispose() for the same underlying cleanup.
-        private void ReleaseNativeResources()
-        {
-            if (m_PreviewUtility != null)
+            if (m_IsolatedScene != null)
             {
-                m_PreviewUtility.Cleanup();
-                m_PreviewUtility = null;
+                m_IsolatedScene.Dispose();
+                m_IsolatedScene = null;
             }
+            m_Camera = null; // destroyed along with the isolated scene
 
             if (m_DefaultMaterial != null)
             {
-                UnityEngine.Object.DestroyImmediate(m_DefaultMaterial);
+                UnityEngine.Object.Destroy(m_DefaultMaterial);
                 m_DefaultMaterial = null;
             }
-        }
-
-        private void ReloadAfterAssemblyReload()
-        {
-            if (m_Mesh != null)
-                Set(m_Mesh, m_ProvidedMaterials);
         }
     }
 }

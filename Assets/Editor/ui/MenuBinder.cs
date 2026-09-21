@@ -1,36 +1,37 @@
+using System;
 using System.Globalization;
-using Editor.Ui.Help;
+using Editor.UI.Help;
 using Editor.UI.View2D;
-using UnityEditor.UIElements;
+using UI.Controls;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UWED.Platform;
 
 public class MenuBinder
 {
     private Label m_gridSizeValue;
     private Label m_angleSizeValue;
 
-    public MenuBinder(EditorView ev, EditorHelp eh, VisualElement menuParent, UWed wnd)
+    public MenuBinder(EditorView ev, EditorHelp eh, VisualElement menuParent, Action onEditorClose)
     {
-        BindFileMenu(ev, menuParent, wnd);
+        BindFileMenu(menuParent, onEditorClose);
         BindEditorMode(ev, eh, menuParent);
         BindSnapControl(ev, menuParent);
         BindHelpButton(eh, menuParent);
 
     }
 
-    private void BindFileMenu(EditorView ev, VisualElement parent, UWed wnd)
+    private void BindFileMenu(VisualElement parent, Action onEditorClose)
     {
-        ToolbarMenu toolbarMenu = parent.Q("fileMenu") as ToolbarMenu;
-        if (toolbarMenu != null && ev != null)
+        IFileDialog fileDialog = ServiceLocator.Get<IFileDialog>();
+        if (parent.Q("fileMenu") is MenuButton fileMenu && fileDialog != null)
         {
-            FileDialog fileDialog = new FileDialog();
-            toolbarMenu.menu.AppendAction("New", null);
-            toolbarMenu.menu.AppendAction("Load", fileDialog.Load);
-            toolbarMenu.menu.AppendAction("Save", fileDialog.Save);
-            toolbarMenu.menu.AppendAction("Save as...", fileDialog.SaveAs);
-            toolbarMenu.menu.AppendSeparator();
-            toolbarMenu.menu.AppendAction("Exit", (x) => wnd?.Close());
+            fileMenu.menu.AppendAction("New", null);
+            fileMenu.menu.AppendAction("Load", fileDialog.Load);
+            fileMenu.menu.AppendAction("Save", fileDialog.Save);
+            fileMenu.menu.AppendAction("Save as...", fileDialog.SaveAs);
+            fileMenu.menu.AppendSeparator();
+            fileMenu.menu.AppendAction("Exit", (x) => onEditorClose());
         }
         else
             Debug.LogError("Element 'fileMenu' not found.");
@@ -38,8 +39,7 @@ public class MenuBinder
 
     private void BindEditorMode(EditorView ev, EditorHelp eh, VisualElement parent)
     {
-        DropdownField editorModes = parent.Q("editorModes") as DropdownField;
-        if (editorModes != null)
+        if (parent.Q("editorModes") is DropdownField editorModes)
         {
             EditorEventBus.Instance.ModeChanged.Subscribe(v => editorModes.index = (int)v);
             editorModes.RegisterCallback<ChangeEvent<string>>(ev.Interface.OnSetMode);

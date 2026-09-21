@@ -6,12 +6,9 @@
 // https://unity3d.com/legal/licenses/Unity_Reference_Only_License
 
 using System;
-//PATCH - start
-using System.Reflection;
-using UnityEditor;
-//PATCH - end
 using UnityEngine;
 using UnityEngine.UIElements;
+using UWED.Platform;
 
 namespace Editor.UI.View2D
 {
@@ -41,9 +38,7 @@ namespace Editor.UI.View2D
         private VisualElement m_container;
         private bool m_enableDraw;
 
-        //PATCH - start
-        private readonly MethodInfo m_handleUtility;
-        //PATCH - end
+        private readonly Material m_wireMaterial = ServiceLocator.Get<IDefaultsProvider>().GetWireMaterial(); 
 
         public float Spacing
         {
@@ -64,13 +59,6 @@ namespace Editor.UI.View2D
             this.StretchToParentSize();
 
             RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
-            //PATCH - start
-            m_handleUtility = typeof(HandleUtility).GetMethod("ApplyWireMaterial",
-                BindingFlags.NonPublic | BindingFlags.Static, Type.DefaultBinder, Type.EmptyTypes, null);
-            if (m_handleUtility == null)
-                Debug.LogError(
-                    "Unable to bind 'HandleUtility.ApplyWireMaterial' - review whether Unity internals have changed");
-            //PATCH - end
             m_enableDraw = true;
         }
 
@@ -119,10 +107,7 @@ namespace Editor.UI.View2D
             }
 
             // background
-//PATCH - start
-            //HandleUtility.ApplyWireMaterial();
-            m_handleUtility?.Invoke(null, null);
-//PATCH - end
+            m_wireMaterial.SetPass(0);
 
             m_container = gridView.contentViewContainer;
             Rect clientRect = gridView.layout;

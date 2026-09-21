@@ -1,4 +1,5 @@
 using Editor.Assets;
+using Editor.Bootstrap;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
@@ -49,8 +50,8 @@ namespace Editor.Inspector
                 var map = AssetDatabase.GetAssetPath(entityId);
 
                 Selection.activeObject = target;
-                UWed.OpenWindow();
-                UWed.OpenMap(map);
+                EditorEntryPoint.OpenWindow();
+                EditorEntryPoint.OpenMap(map);
                 return true;
             }
             else

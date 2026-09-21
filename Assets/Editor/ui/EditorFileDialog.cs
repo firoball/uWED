@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine.UIElements;
 
-public class FileDialog
+public class EditorFileDialog : IFileDialog
 {
     private static string s_directory = "."; //temp
     private static string s_currentFile = string.Empty;

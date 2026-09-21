@@ -5,6 +5,7 @@ using System.Linq;
 using Editor.UI.View2D;
 using Triangulator;
 using UnityEngine;
+using UWED.Platform;
 using Debug = UnityEngine.Debug;
 
 namespace Editor.Drawers
@@ -20,9 +21,10 @@ namespace Editor.Drawers
 
         private List<Contour> m_contours;
         private List<ContourRenderInfo> m_renderInfos;
-        private Material m_editorMaterial;
-        private Material m_polygonMaterial;
         private Mesh m_polygonMesh;
+
+        private readonly Material m_wireMaterial = ServiceLocator.Get<IDefaultsProvider>().GetWireMaterial(); 
+        private readonly Material m_polyMaterial = ServiceLocator.Get<IDefaultsProvider>().GetPolyMaterial(); 
 
         private new class Colors : BaseEditorDrawer.Colors
         {
@@ -39,20 +41,7 @@ namespace Editor.Drawers
             m_contours = new List<Contour>();
             m_renderInfos = new List<ContourRenderInfo>();
             FindContours();
-
-            m_polygonMaterial = Resources.Load<Material>("testmaterial"); //TEMP
-            /*PropertyInfo matProperty =
-                typeof(HandleUtility).GetProperty("handleWireMaterial", BindingFlags.NonPublic | BindingFlags.Static);
-            m_editorMaterial = (Material)matProperty.GetValue(null);*/
-            var shader = Shader.Find("Hidden/Internal-Colored");
-            m_editorMaterial = new Material(shader);
-            m_editorMaterial.hideFlags = HideFlags.HideAndDontSave;
-            m_editorMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            m_editorMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            m_editorMaterial.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
-            m_editorMaterial.SetInt("_ZWrite", 0);
-            //m_editorMaterial=(Material) EditorGUIUtility.LoadRequired("SceneView/2DHandleLines.mat");
-
+            
             m_polygonMesh = new Mesh();
 
             base.Initialize();
@@ -128,7 +117,7 @@ namespace Editor.Drawers
         {
             if (m_cursorInfo.HoverContour != null && m_cursorInfo.HoverRegion != null)
             {
-                m_polygonMaterial.SetPass(0);
+                m_polyMaterial.SetPass(0);
                 ContourRenderInfo cri = m_renderInfos[m_contours.IndexOf(m_cursorInfo.HoverContour)];
                 m_polygonMesh.Clear();
                 m_polygonMesh.vertices = cri.Vertices.Select(v => (Vector3)v.WorldPosition).ToArray();
@@ -136,7 +125,7 @@ namespace Editor.Drawers
                 m_polygonMesh.SetIndices(cri.Triangles, MeshTopology.Triangles, 0);
                 Graphics.DrawMeshNow(m_polygonMesh, view.WorldToScreenMatrix());
 
-                m_editorMaterial.SetPass(0);
+                m_wireMaterial.SetPass(0);
 
                 List<(int, int)> diagonals =
                     PolygonTriangulator.FindSplitDiagonals(m_cursorInfo.HoverContour, out List<Vertex> dvertices);

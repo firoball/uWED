@@ -13,6 +13,8 @@ namespace UWED.Editor
             ServiceLocator.Clear();
 
             ServiceLocator.Register<IPrefsProvider>(new EditorPrefsProvider());
+            ServiceLocator.Register<IFileDialog>(new EditorFileDialog());
+            ServiceLocator.Register<IDefaultsProvider>(new EditorDefaultsProvider());
         }
     }
 }
