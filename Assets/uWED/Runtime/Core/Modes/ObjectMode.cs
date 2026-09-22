@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Editor.Drawers;
-using Editor.UI.View2D;
 using UnityEngine;
+using uWED.Runtime.Core.Drawers;
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.Core.Model;
+using uWED.Runtime.UI.EventBus;
+using uWED.Runtime.UI.View2D;
 
-namespace Editor.Modes
+namespace uWED.Runtime.Core.Modes
 {
     public class ObjectMode : BaseEditorMode
     {

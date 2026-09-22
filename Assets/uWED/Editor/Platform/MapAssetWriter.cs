@@ -1,6 +1,8 @@
 using UnityEditor;
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.Core.Map.IO;
 
-namespace Editor.Assets
+namespace uWED.Editor.Platform
 {
     public class MapAssetWriter : IMapWriter
     {

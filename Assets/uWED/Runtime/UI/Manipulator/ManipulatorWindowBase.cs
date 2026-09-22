@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using uWED.Runtime.Core.Map.Model;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// Shared scaffold: header, settings bar, TabView (one Tab by default),

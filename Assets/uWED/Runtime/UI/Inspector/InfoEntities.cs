@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Editor.UI.Inspector
+namespace uWED.Runtime.UI.Inspector
 {
     /// <summary>
     /// Shared contract for anything the info panel can display. Every entity has

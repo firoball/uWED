@@ -1,10 +1,10 @@
-using Editor.Assets;
-using Runtime.Bootstrap;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using uWED.Editor.Platform;
+using uWED.Runtime.Bootstrap;
 
-namespace Editor.Bootstrap
+namespace uWED.Editor.Bootstrap
 {
     // EditorWindow shell. Holds only what genuinely requires UnityEditor;
     // all UI construction/wiring lives in UwedBootstrap (Runtime, engine-only).

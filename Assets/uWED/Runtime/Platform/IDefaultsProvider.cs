@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public interface IDefaultsProvider
+namespace uWED.Runtime.Platform
 {
-    public Material GetWireMaterial();
-    public Material GetPolyMaterial();
+    public interface IDefaultsProvider
+    {
+        public Material GetWireMaterial();
+        public Material GetPolyMaterial();
+    }
 }

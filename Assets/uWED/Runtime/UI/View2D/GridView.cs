@@ -9,7 +9,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.UI.View2D
+namespace uWED.Runtime.UI.View2D
 {
 
     public abstract class GridView : VisualElement

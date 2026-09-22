@@ -1,7 +1,7 @@
 using UnityEditor;
-using Runtime.Platform;
+using uWED.Runtime.Platform;
 
-namespace Editor.Platform
+namespace uWED.Editor.Platform
 {
     /// <summary>
     /// EditorPrefs-backed IPrefsProvider. This is the one deliberate

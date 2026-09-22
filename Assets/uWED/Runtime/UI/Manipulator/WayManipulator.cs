@@ -1,8 +1,9 @@
 using System.Collections.Generic;
-using UnityEngine.UIElements;
 using UI.Controls;
+using UnityEngine.UIElements;
+using uWED.Runtime.Core.Map.Model;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// Way tab. Name is a plain rename field (ComboBoxField, string-typed, via

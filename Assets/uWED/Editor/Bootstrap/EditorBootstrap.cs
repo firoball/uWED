@@ -1,9 +1,8 @@
-using Editor.Platform;
-using Runtime.Platform;
 using UnityEditor;
-using UWED.Platform;
+using uWED.Editor.Platform;
+using uWED.Runtime.Platform;
 
-namespace UWED.Editor
+namespace uWED.Editor.Bootstrap
 {
     [InitializeOnLoad]
     internal static class EditorBootstrap

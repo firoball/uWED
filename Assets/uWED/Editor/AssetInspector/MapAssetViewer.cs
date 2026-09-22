@@ -1,9 +1,11 @@
 using System.Linq;
-using Editor.Assets;
-using UnityEngine.UIElements;
 using UnityEngine;
+using UnityEngine.UIElements;
+using uWED.Editor.Platform;
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.Core.Map.Support;
 
-namespace Editor.Inspector
+namespace uWED.Editor.AssetInspector
 {
 
     public class MapAssetViewer : ImmediateModeElement

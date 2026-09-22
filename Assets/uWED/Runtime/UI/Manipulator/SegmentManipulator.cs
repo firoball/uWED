@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using UI.Controls;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UI.Controls;
+using uWED.Runtime.Core.Map.Model;
+using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// Segment tab. Vertex1/Vertex2/Left Region/Right Region/Length read-only.

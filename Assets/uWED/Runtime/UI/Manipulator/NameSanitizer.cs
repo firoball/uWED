@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// Sanitizes freshly-typed names (not existing list entries, which stay

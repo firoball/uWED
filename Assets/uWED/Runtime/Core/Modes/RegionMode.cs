@@ -1,14 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Editor.Drawers;
-using Editor.UI.View2D;
 using Triangulator;
 using UnityEngine;
+using uWED.Runtime.Core.Drawers;
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.Core.Map.Support;
+using uWED.Runtime.Core.Model;
+using uWED.Runtime.UI.EventBus;
+using uWED.Runtime.UI.View2D;
 
-namespace Editor.Modes
+namespace uWED.Runtime.Core.Modes
 {
 
     public class RegionMode : BaseEditorMode

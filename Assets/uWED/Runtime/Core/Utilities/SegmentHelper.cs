@@ -1,81 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using uWED.Runtime.Core.Map.Model;
 
-public static class SegmentHelper
+namespace uWED.Runtime.Core.Utilities
 {
-
-    public static Tuple<Segment, bool> FindNearestSegment(IReadOnlyList<Segment> segments, Vector2 worldPos)
+    public static class SegmentHelper
     {
-        if (segments == null) return null;
 
-        Segment segment = null;
-        float minDist = float.MaxValue;
-        for (int i = 0; i < segments.Count; i++)
+        public static Tuple<Segment, bool> FindNearestSegment(IReadOnlyList<Segment> segments, Vector2 worldPos)
         {
-            Vector2 v1 = segments[i].Vertex1;
-            Vector2 v2 = segments[i].Vertex2;
+            if (segments == null) return null;
 
-            float sqrDist = Geom2D.PointToLineSqrDist(worldPos, v1, v2);
-            if (sqrDist < minDist)
+            Segment segment = null;
+            float minDist = float.MaxValue;
+            for (int i = 0; i < segments.Count; i++)
             {
-                minDist = sqrDist;
-                segment = segments[i];
-            }
-            else if (sqrDist == minDist) //find best candidate of multiple segments with same distance
-            {
-                //the steeper the angle (--> 0) the less reliable the result is - always take bigger angle (smaller dot product)
-                Vector2 connection;
-                Vector2 current;
-                Vector2 next;
-                if (segment.Vertex2 == segments[i].Vertex1)
+                Vector2 v1 = segments[i].Vertex1;
+                Vector2 v2 = segments[i].Vertex2;
+
+                float sqrDist = Geom2D.PointToLineSqrDist(worldPos, v1, v2);
+                if (sqrDist < minDist)
                 {
-                    connection = segment.Vertex2;
-                    current = segment.Vertex1;
-                    next = segments[i].Vertex2;
+                    minDist = sqrDist;
+                    segment = segments[i];
                 }
-                else if (segment.Vertex1 == segments[i].Vertex1)
+                else if (sqrDist == minDist) //find best candidate of multiple segments with same distance
                 {
-                    connection = segment.Vertex1;
-                    current = segment.Vertex2;
-                    next = segments[i].Vertex2;
-                }
-                else if (segment.Vertex2 == segments[i].Vertex2)
-                {
-                    connection = segment.Vertex2;
-                    current = segment.Vertex1;
-                    next = segments[i].Vertex1;
+                    //the steeper the angle (--> 0) the less reliable the result is - always take bigger angle (smaller dot product)
+                    Vector2 connection;
+                    Vector2 current;
+                    Vector2 next;
+                    if (segment.Vertex2 == segments[i].Vertex1)
+                    {
+                        connection = segment.Vertex2;
+                        current = segment.Vertex1;
+                        next = segments[i].Vertex2;
+                    }
+                    else if (segment.Vertex1 == segments[i].Vertex1)
+                    {
+                        connection = segment.Vertex1;
+                        current = segment.Vertex2;
+                        next = segments[i].Vertex2;
+                    }
+                    else if (segment.Vertex2 == segments[i].Vertex2)
+                    {
+                        connection = segment.Vertex2;
+                        current = segment.Vertex1;
+                        next = segments[i].Vertex1;
+                    }
+                    else
+                    {
+                        connection = segment.Vertex1;
+                        current = segment.Vertex2;
+                        next = segments[i].Vertex1;
+                    }
+
+                    Vector2 lhs = (connection - worldPos).normalized;
+                    Vector2 rhscurrent = (current - connection).normalized;
+                    Vector2 rhsnext = (next - connection).normalized;
+
+                    float dotcurrent = Vector2.Dot(lhs, rhscurrent);
+                    float dotnext = Vector2.Dot(lhs, rhsnext);
+
+                    if (dotnext < dotcurrent)
+                        segment = segments[i];
                 }
                 else
                 {
-                    connection = segment.Vertex1;
-                    current = segment.Vertex2;
-                    next = segments[i].Vertex1;
+                    //nop
                 }
-
-                Vector2 lhs = (connection - worldPos).normalized;
-                Vector2 rhscurrent = (current - connection).normalized;
-                Vector2 rhsnext = (next - connection).normalized;
-
-                float dotcurrent = Vector2.Dot(lhs, rhscurrent);
-                float dotnext = Vector2.Dot(lhs, rhsnext);
-
-                if (dotnext < dotcurrent)
-                    segment = segments[i];
             }
-            else
+            Tuple<Segment, bool> nearest = null;
+            if (segment != null)
             {
-                //nop
+                bool left = Geom2D.IsCcw(segment.Vertex1, segment.Vertex2, worldPos);
+                nearest = new Tuple<Segment, bool>(segment, left);
             }
-        }
-        Tuple<Segment, bool> nearest = null;
-        if (segment != null)
-        {
-            bool left = Geom2D.IsCcw(segment.Vertex1, segment.Vertex2, worldPos);
-            nearest = new Tuple<Segment, bool>(segment, left);
-        }
 
-        return nearest;
-    }
+            return nearest;
+        }
  
+    }
 }

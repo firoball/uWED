@@ -1,10 +1,12 @@
 using System.Collections.Generic;
-using Editor.UI.Manipulator;
-using Editor.UI.View2D;
 using UnityEngine.UIElements;
+using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.UI.EventBus;
+using uWED.Runtime.UI.Manipulator;
+using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
 
-//namespace Editor.ui
-//{
+namespace uWED.Runtime.UI.Binder
+{
     public class ManipulatorBinder
     {
         private readonly ITextureProvider segmentTextures = new SimpleTextureProvider();
@@ -16,7 +18,7 @@ using UnityEngine.UIElements;
         private readonly SegmentManipulator m_segmentManipulator;
         private readonly RegionManipulator m_regionManipulator;
         private readonly WayManipulator m_wayManipulator;
-        
+    
         public ManipulatorBinder(VisualTreeAsset uxml, VisualElement parent, IManipulatorSettings settings)
         {
             m_mapObjectManipulator = new MapObjectManipulator(uxml, settings);
@@ -24,7 +26,7 @@ using UnityEngine.UIElements;
             m_segmentManipulator = new SegmentManipulator(uxml, settings);
             m_regionManipulator = new RegionManipulator(uxml, settings);
             m_wayManipulator = new WayManipulator(uxml, settings);
-            
+        
             parent.Add(m_mapObjectManipulator);
             parent.Add(m_vertexManipulator);
             parent.Add(m_segmentManipulator);
@@ -37,19 +39,19 @@ using UnityEngine.UIElements;
             EditorEventBus.Instance.EditRegion.Subscribe(OnEditRegion);
             EditorEventBus.Instance.EditWay.Subscribe(OnEditWay);
         }
-        
+    
         private void OnEditObject(MapObject mapObject, List<string> names)
         {
             SimpleGenericNameProvider objectNames = new SimpleGenericNameProvider(names);
             m_mapObjectManipulator.SetProviders(objectNames, objectTextures);
             m_mapObjectManipulator.Open(mapObject);
         }
-            
+        
         private void OnEditVertex(Vertex vertex)
         {
             m_vertexManipulator.Open(vertex);
         }
-        
+    
         private void OnEditSegment(Segment segment, List<string> names)
         {
             SimpleGenericNameProvider segmentNames = new SimpleGenericNameProvider(names);
@@ -71,4 +73,4 @@ using UnityEngine.UIElements;
             m_wayManipulator.Open(way);
         }
     }
-//}
+}

@@ -1,11 +1,17 @@
-public class MapWmpWriter : IMapWriter
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.Core.Map.IO;
+
+namespace uWED.Formats.Wmp
 {
-    public bool Write(string name)
+    public class MapWmpWriter : IMapWriter
     {
-        //TODO: implement
-        return false;
+        public bool Write(string name)
+        {
+            //TODO: implement
+            return false;
+        }
+    
+        public MapDataSet Data { get; set; }
+    
     }
-    
-    public MapDataSet Data { get; set; }
-    
 }

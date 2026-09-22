@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UWED.Runtime.Core
+namespace uWED.Runtime.UI.Inspector
 {
     /// <summary>
     /// A dedicated rendering layer plus a set of hidden GameObjects

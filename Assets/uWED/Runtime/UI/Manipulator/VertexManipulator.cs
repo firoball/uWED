@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// Vertex tab: only Z is editable in 3D (matches the existing vertical-only

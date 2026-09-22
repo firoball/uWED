@@ -1,7 +1,7 @@
-using Editor.Assets;
 using UnityEngine.UIElements;
+using uWED.Editor.Platform;
 
-namespace Editor.Inspector
+namespace uWED.Editor.AssetInspector
 {
 
     public class MapAssetStatistics : Foldout

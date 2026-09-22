@@ -1,12 +1,12 @@
-using Editor.Assets;
-using Editor.Bootstrap;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using uWED.Editor.Bootstrap;
+using uWED.Editor.Platform;
 
-namespace Editor.Inspector
+namespace uWED.Editor.AssetInspector
 {
 
     [CustomEditor(typeof(MapAsset))]

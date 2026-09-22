@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// Read/write access to the shared step values shown in the settings bar.

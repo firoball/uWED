@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using UI.Controls;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UI.Controls;
+using uWED.Runtime.Core.Map.Model;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// MapObject tab. Position is a Vertex (X/Y readonly, double), shown

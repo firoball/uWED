@@ -1,31 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class EditorStatus
+namespace uWED.Runtime.Core.Model
 {
-    public enum Mode
+    public class EditorStatus
     {
-        Objects = 0,
-        Segments = 1,
-        Regions = 2,
-        Ways = 3,
-        Count = 4,
-    }
-    public enum Construct
-    {
-        Idle = 0,
-        Constructing = 1,
-        Dragging = 2,
-        Selecting = 3,
-        Moving = 4,
-        Count = 5,
-    }
+        public enum Mode
+        {
+            Objects = 0,
+            Segments = 1,
+            Regions = 2,
+            Ways = 3,
+            Count = 4,
+        }
+        public enum Construct
+        {
+            Idle = 0,
+            Constructing = 1,
+            Dragging = 2,
+            Selecting = 3,
+            Moving = 4,
+            Count = 5,
+        }
 
-    public enum View
-    {
-        Construct = 0,
-        Design = 1,
-        Count = 2,
+        public enum View
+        {
+            Construct = 0,
+            Design = 1,
+            Count = 2,
+        }
     }
 }

@@ -1,7 +1,8 @@
 using UnityEditor;
 using UnityEngine;
+using uWED.Runtime.Core.Map.Container;
 
-namespace Editor.Assets
+namespace uWED.Editor.Platform
 {
     public class MapAsset : ScriptableObject
     {

@@ -8,9 +8,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UWED.Platform;
+using uWED.Runtime.Platform;
 
-namespace Editor.UI.View2D
+namespace uWED.Runtime.UI.View2D
 {
     public class GridBackground : ImmediateModeElement
     {

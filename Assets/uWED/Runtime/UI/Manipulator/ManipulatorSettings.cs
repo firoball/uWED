@@ -1,7 +1,8 @@
-using Runtime.Platform;
 using UnityEngine;
+using uWED.Runtime.Platform;
+using uWED.Runtime.UI.EventBus;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// IManipulatorSettings backed by cached fields, persisted through an

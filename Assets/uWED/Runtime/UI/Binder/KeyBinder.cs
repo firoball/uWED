@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using uWED.Runtime.Core.Model;
+using uWED.Runtime.UI.EventBus;
 
-namespace Editor.UI
+namespace uWED.Runtime.UI.Binder
 {
     public class KeyBinder
     {

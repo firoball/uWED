@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
+using uWED.Runtime.Core.Map.Model;
+using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
 
-namespace Editor.UI.Inspector
+namespace uWED.Runtime.UI.Inspector
 {
     /// <summary>
     /// Bottom-left docked info panel. Every possible view (one per entity

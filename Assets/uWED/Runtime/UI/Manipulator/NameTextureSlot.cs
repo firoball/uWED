@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// Texture Offset + Texture "slot": Texture Offset stepper, then a Texture

@@ -1,4 +1,4 @@
-namespace Editor.UI.Inspector
+namespace uWED.Runtime.UI.Inspector
 {
     /// <summary>
     /// Scene-wide totals, always shown regardless of hover/selection state.

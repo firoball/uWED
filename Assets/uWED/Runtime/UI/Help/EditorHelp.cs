@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using uWED.Runtime.Core.Model;
 
-namespace Editor.UI.Help
+namespace uWED.Runtime.UI.Help
 {
     public class EditorHelp : VisualElement
     {

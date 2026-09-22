@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace Editor.UI.Manipulator
+namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
     /// A number field with dedicated [-][+] buttons. Snapping is always on (no

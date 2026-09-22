@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Editor.UI.Inspector
+namespace uWED.Runtime.UI.Inspector
 {
     /// <summary>
     /// The always-on stats row (objects/vertices/segments/regions/ways,

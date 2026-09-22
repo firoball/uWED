@@ -1,10 +1,14 @@
 using System.Collections.Generic;
-using Editor.Modes;
-using Runtime.Platform;
 using UnityEngine;
 using UnityEngine.UIElements;
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.Core.Map.IO;
+using uWED.Runtime.Core.Model;
+using uWED.Runtime.Core.Modes;
+using uWED.Runtime.Platform;
+using uWED.Runtime.UI.EventBus;
 
-namespace Editor.UI.View2D
+namespace uWED.Runtime.UI.View2D
 {
     public class EditorManipulator : MouseManipulator
     {

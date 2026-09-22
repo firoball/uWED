@@ -1,8 +1,11 @@
 using System.Collections.Generic;
-using Editor.UI.View2D;
 using UnityEngine;
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.Core.Utilities;
+using uWED.Runtime.UI.View2D;
 
-namespace Editor.Drawers
+namespace uWED.Runtime.Core.Drawers
 {
     public class WayDrawer : BaseEditorDrawer
     {

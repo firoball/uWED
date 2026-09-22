@@ -1,9 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UWED.Runtime.Core;
 
-namespace Editor.UI.Inspector
+namespace uWED.Runtime.UI.Inspector
 {
     /// <summary>
     /// Renders a rotatable preview of a Mesh in its own IsolatedScene.

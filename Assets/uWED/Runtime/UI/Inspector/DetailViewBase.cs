@@ -1,7 +1,8 @@
 using System.Globalization;
 using UnityEngine.UIElements;
+using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
 
-namespace Editor.UI.Inspector
+namespace uWED.Runtime.UI.Inspector
 {
     /// <summary>
     /// A texture row's live reference, so Bind(...) can update just the name

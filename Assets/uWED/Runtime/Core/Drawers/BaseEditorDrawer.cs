@@ -1,9 +1,16 @@
 using System;
-using Editor.UI.View2D;
 using UnityEngine;
 using UnityEngine.UIElements;
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.Core.Map.Support;
+using uWED.Runtime.Core.Model;
+using uWED.Runtime.Core.Utilities;
+using uWED.Runtime.UI.EventBus;
+using uWED.Runtime.UI.View2D;
+using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
 
-namespace Editor.Drawers
+namespace uWED.Runtime.Core.Drawers
 {
     public abstract class BaseEditorDrawer : ImmediateModeElement
     {

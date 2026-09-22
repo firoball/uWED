@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UWED.Platform
+namespace uWED.Runtime.Platform
 {
     public static class ServiceLocator
     {

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine.UIElements;
+using uWED.Runtime.Core.Map.Model;
+using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
 
-namespace Editor.UI.Inspector
+namespace uWED.Runtime.UI.Inspector
 {
     // Vertex, Segment, Region, MapObject and Way are the project's own
     // domain types (global namespace) - bound to directly, no DTO layer.

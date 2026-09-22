@@ -8,8 +8,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
+using uWED.Runtime.UI.EventBus;
 
-namespace Editor.UI.View2D
+namespace uWED.Runtime.UI.View2D
 {
     public class ContentZoomer : UnityEngine.UIElements.Manipulator
     {

@@ -1,4 +1,4 @@
-namespace Runtime.Platform
+namespace uWED.Runtime.Platform
 {
     /// <summary>
     /// Abstraction over a simple persistent key/value store (EditorPrefs on the

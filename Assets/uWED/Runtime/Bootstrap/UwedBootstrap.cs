@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Editor.UI;
-using Editor.UI.Help;
-using Editor.UI.Inspector;
-using Editor.UI.Manipulator;
-using Editor.UI.View2D;
-using Runtime.Platform;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UWED.Platform;
+using uWED.Runtime.Core.Map.IO;
+using uWED.Runtime.Platform;
+using uWED.Runtime.UI.Binder;
+using uWED.Runtime.UI.EventBus;
+using uWED.Runtime.UI.Help;
+using uWED.Runtime.UI.Inspector;
+using uWED.Runtime.UI.Manipulator;
+using uWED.Runtime.UI.View2D;
 
-namespace Runtime.Bootstrap
+namespace uWED.Runtime.Bootstrap
 {
     // Builds the uWED UI tree and wires panels/binders together. No UnityEditor dependency;
     // called by EditorEntryPoint today, by a future StandaloneEntryPoint later.

@@ -1,9 +1,9 @@
-using Editor.Drawers;
-using Editor.UI.View2D;
 using UnityEngine;
-using UnityEngine.UIElements;
+using uWED.Runtime.Core.Drawers;
+using uWED.Runtime.Core.Map.Container;
+using uWED.Runtime.UI.View2D;
 
-namespace Editor.Modes
+namespace uWED.Runtime.Core.Modes
 {
 
     public abstract class BaseEditorMode
