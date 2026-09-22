@@ -263,7 +263,7 @@ namespace Editor.UI.Inspector
                 m_Camera.targetTexture = null;
 
             m_RenderTexture.Release();
-            UnityEngine.Object.Destroy(m_RenderTexture);
+            IsolatedScene.DestroyObject(m_RenderTexture);
             m_RenderTexture = null;
         }
 
@@ -353,7 +353,7 @@ namespace Editor.UI.Inspector
 
             if (m_DefaultMaterial != null)
             {
-                UnityEngine.Object.Destroy(m_DefaultMaterial);
+                IsolatedScene.DestroyObject(m_DefaultMaterial);
                 m_DefaultMaterial = null;
             }
         }

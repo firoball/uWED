@@ -72,12 +72,23 @@ namespace UWED.Runtime.Core
         public void Dispose()
         {
             foreach (GameObject go in m_Objects)
-            {
-                if (go != null)
-                    UnityEngine.Object.Destroy(go);
-            }
+                DestroyObject(go);
             m_Objects.Clear();
             m_Disposed = true;
+        }
+
+        /// <summary>Object.Destroy is not allowed in edit mode (only
+        /// during Play); Object.DestroyImmediate is required there
+        /// instead. Both are plain UnityEngine APIs.</summary>
+        public static void DestroyObject(UnityEngine.Object obj)
+        {
+            if (obj == null)
+                return;
+
+            if (Application.isPlaying)
+                UnityEngine.Object.Destroy(obj);
+            else
+                UnityEngine.Object.DestroyImmediate(obj);
         }
     }
 }

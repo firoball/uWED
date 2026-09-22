@@ -276,7 +276,7 @@ namespace Editor.UI.View2D
                 return;
             }
 
-            m_mapData?.Write(new MapAssetWriter(), c_defaultAsset);
+            //m_mapData?.Write(new MapAssetWriter(), c_defaultAsset);
             prefsProvider.SetFloat("uWED::EditorManipulator::mode", (int)m_mode);
         }
 
@@ -289,7 +289,7 @@ namespace Editor.UI.View2D
                 return;
             }
 
-            m_mapData?.Load(new MapAssetLoader(), c_defaultAsset);
+            //m_mapData?.Load(new MapAssetLoader(), c_defaultAsset);
             EditorStatus.Mode mode = (EditorStatus.Mode)prefsProvider.GetFloat("uWED::EditorManipulator::mode", (float)m_mode);
             SetMode(mode);
 
