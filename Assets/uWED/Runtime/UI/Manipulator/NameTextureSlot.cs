@@ -24,12 +24,18 @@ namespace uWED.Runtime.UI.Manipulator
     /// </summary>
     public class NameTextureSlot : VisualElement
     {
+        /// <summary>The Texture Offset X/Y stepper.</summary>
         public Vector2StepperField OffsetStepper { get; }
 
+        /// <summary>Square preview image area - background image is set via SetTexture().</summary>
         public VisualElement TexturePreview { get; }
+        /// <summary>Overlay label distinguishing this slot among several visible ones.</summary>
         public Label TextureHintValue { get; }
+        /// <summary>Read-only label showing the texture's Name.</summary>
         public Label TextureNameValue { get; }
+        /// <summary>Placeholder button for a future texture-asset picker; not wired up yet.</summary>
         public Button TextureSelectButton { get; }
+        /// <summary>Label showing Scale X/Y; not written to by SetTexture().</summary>
         public Label ScaleValue { get; }
 
         readonly Label m_offsetTitle;

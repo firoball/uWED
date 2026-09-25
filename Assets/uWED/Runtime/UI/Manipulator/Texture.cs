@@ -11,9 +11,13 @@ namespace uWED.Runtime.UI.Manipulator
     [Serializable]
     public class Texture
     {
+        /// <summary>Display/lookup name.</summary>
         public string Name;
+        /// <summary>Texture height in pixels.</summary>
         public int Height;
+        /// <summary>Texture width in pixels.</summary>
         public int Width;
+        /// <summary>The actual image data - Texture2D/RenderTexture/etc., or null if none assigned.</summary>
         public UnityEngine.Texture Value;
     }
 }
