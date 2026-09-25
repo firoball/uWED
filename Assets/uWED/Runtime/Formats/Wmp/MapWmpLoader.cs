@@ -9,7 +9,7 @@ using Region = uWED.Runtime.Core.Map.Model.Region;
 using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
 using Way = uWED.Runtime.Core.Map.Model.Way;
 
-namespace uWED.Formats.Wmp
+namespace uWED.Runtime.Formats.Wmp
 {
     public class MapWmpLoader : IMapLoader
     {

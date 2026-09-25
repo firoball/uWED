@@ -17,10 +17,14 @@ namespace uWED.Runtime.UI.Manipulator
             input = input.Trim().ToLowerInvariant();
 
             var sb = new StringBuilder(input.Length);
+            bool first = true;
             foreach (char c in input)
             {
-                if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_')
+                if ((c >= 'a' && c <= 'z') || (!first && c >= '0' && c <= '9') || c == '_')
+                {
                     sb.Append(c);
+                    first = false;
+                }
             }
 
             return sb.ToString();

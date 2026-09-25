@@ -1,7 +1,7 @@
 using uWED.Runtime.Core.Map.Container;
 using uWED.Runtime.Core.Map.IO;
 
-namespace uWED.Formats.Wmp
+namespace uWED.Runtime.Formats.Wmp
 {
     public class MapWmpWriter : IMapWriter
     {

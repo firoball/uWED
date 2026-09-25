@@ -1,28 +1,26 @@
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
-    /// Texture Offset + Texture "slot": Texture Offset stepper, then a Texture
-    /// card (square preview with Hint overlaid top-left, read-only Texture Name
-    /// label below the preview - not a dropdown, matching InfoPanel - Scale
-    /// X/Y below that, and a placeholder "..." button for a future real
-    /// texture-asset picker).
+    /// Texture-display slot: an Offset stepper, then a Texture card (square
+    /// preview with a Hint label overlaid top-left, read-only Name label
+    /// below, Scale X/Y below that, and a placeholder "..." button for a
+    /// future texture-asset picker). Purely display-only - Name/variant
+    /// selection lives in its own field elsewhere (GenericComboBoxField),
+    /// not in this slot.
     ///
-    /// Every Name/variant picker across all manipulators is now a standalone
-    /// field built directly by the manipulator (see IGenericNameProvider&lt;T&gt;
-    /// / ComboBoxField / GenericComboBoxField&lt;T&gt;) - this slot no longer
-    /// hosts its own Name section, so it is uniformly texture-display-only
-    /// wherever it's used (MapObject, Region x2, Segment).
+    /// A container hosts one or more side by side ("manip-slots-row" +
+    /// "manip-slot"); a single visible slot fills the row via flex-grow.
     ///
-    /// A container hosts one or more of these side by side ("manip-slots-row" +
-    /// "manip-slot") - a single visible slot naturally fills the row via
-    /// flex-grow, no extra layout logic needed when a second is hidden.
+    /// Hint is a free-standing Label (no backing property) for telling
+    /// multiple visible textures apart - not user-editable.
     ///
-    /// The texture Hint is a plain, non-focusable Label (not backed by a
-    /// provider/registry) sized to its own text, like InfoPanel - it's just a
-    /// free display label for telling multiple textures apart when more than
-    /// one is visible. Not editable yet (no backing property to write to).
+    /// Holds no texture data of its own. The caller (e.g. a uWED.Acknex
+    /// Manipulator reading its Template's Texture reference) calls
+    /// SetTexture() after LoadValues(). Scale X/Y and the "..." select
+    /// button aren't wired by SetTexture() - both remain placeholders.
     /// </summary>
     public class NameTextureSlot : VisualElement
     {
@@ -35,6 +33,7 @@ namespace uWED.Runtime.UI.Manipulator
         public Label ScaleValue { get; }
 
         readonly Label m_offsetTitle;
+        readonly Label m_previewPlaceholderLabel;
 
         public NameTextureSlot()
         {
@@ -58,9 +57,10 @@ namespace uWED.Runtime.UI.Manipulator
 
             TexturePreview = new VisualElement();
             TexturePreview.AddToClassList("manip-texture-preview");
-            var previewLabel = new Label("No preview\n(placeholder)");
-            previewLabel.AddToClassList("manip-texture-preview-label");
-            TexturePreview.Add(previewLabel);
+
+            m_previewPlaceholderLabel = new Label("No preview\n(placeholder)");
+            m_previewPlaceholderLabel.AddToClassList("manip-texture-preview-label");
+            TexturePreview.Add(m_previewPlaceholderLabel);
 
             TextureHintValue = new Label("Hint");
             TextureHintValue.AddToClassList("manip-texture-hint-overlay");
@@ -97,6 +97,27 @@ namespace uWED.Runtime.UI.Manipulator
             var display = visible ? DisplayStyle.Flex : DisplayStyle.None;
             m_offsetTitle.style.display = display;
             OffsetStepper.style.display = display;
+        }
+
+        /// <summary>
+        /// Displays the texture's preview image and Name, or resets to the
+        /// placeholder state if <paramref name="texture"/> or its Value is
+        /// null. Doesn't touch ScaleValue or TextureSelectButton.
+        /// </summary>
+        public void SetTexture(Texture texture)
+        {
+            Background? background = texture?.Value switch
+            {
+                Texture2D tex2D => Background.FromTexture2D(tex2D),
+                RenderTexture renderTex => Background.FromRenderTexture(renderTex),
+                _ => null, // no Value, or a type UI Toolkit can't show as a flat preview (e.g. Cubemap/Texture3D)
+            };
+
+            bool hasPreview = background.HasValue;
+            TexturePreview.style.backgroundImage = hasPreview ? new StyleBackground(background.Value) : null;
+            m_previewPlaceholderLabel.style.display = hasPreview ? DisplayStyle.None : DisplayStyle.Flex;
+
+            TextureNameValue.text = texture != null ? texture.Name : "-";
         }
     }
 }
