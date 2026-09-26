@@ -1,0 +1,22 @@
+{
+    "name": "uWED.Acknex.Editor",
+    "rootNamespace": "",
+    "references": [
+        "uWED.Acknex.Runtime",
+        "uWED.Runtime",
+        "uWED.Editor",
+        "uWED.Formats",
+        "ext"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
