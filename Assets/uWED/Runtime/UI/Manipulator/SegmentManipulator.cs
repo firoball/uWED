@@ -47,7 +47,7 @@ namespace uWED.Runtime.UI.Manipulator
         /// <summary>Call once providers are ready. nameProvider backs the Name combo box
         /// (null falls back to the default in-memory provider); textureProvider backs the
         /// texture slot's "..." select (placeholder).</summary>
-        public void SetProviders(IGenericNameProvider<string> nameProvider, ITextureProvider textureProvider)
+        public virtual void SetProviders(IGenericNameProvider<string> nameProvider, ITextureProvider textureProvider)
         {
             m_nameProvider = nameProvider ?? new SimpleGenericNameProvider(new List<string>());
             m_textureProvider = textureProvider;

@@ -1,0 +1,19 @@
+.acknex-picker-detail-row {
+    flex-direction: row;
+    align-items: center;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255, 255, 255, 0.15);
+    padding-bottom: 4px;
+    padding-top: 4px;
+}
+
+.acknex-picker-detail-info {
+    margin-left: 6px;
+    flex-grow: 1;
+}
+
+.acknex-picker-action-icon {
+    color: rgb(255, 204, 26);
+    margin-left: 6px;
+    font-size: 20px;
+}

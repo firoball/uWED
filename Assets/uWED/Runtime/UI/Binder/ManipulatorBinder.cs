@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.Platform;
 using uWED.Runtime.UI.EventBus;
 using uWED.Runtime.UI.Manipulator;
 using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
@@ -18,15 +19,20 @@ namespace uWED.Runtime.UI.Binder
         private readonly SegmentManipulator m_segmentManipulator;
         private readonly RegionManipulator m_regionManipulator;
         private readonly WayManipulator m_wayManipulator;
-    
+
         public ManipulatorBinder(VisualTreeAsset uxml, VisualElement parent, IManipulatorSettings settings)
         {
             m_mapObjectManipulator = new MapObjectManipulator(uxml, settings);
             m_vertexManipulator = new VertexManipulator(uxml, settings);
-            m_segmentManipulator = new SegmentManipulator(uxml, settings);
+            // ISegmentManipulatorProvider lets an extension (e.g. uWED.Acknex) supply its own
+            // SegmentManipulator subclass without this class needing to know it exists - falls back to
+            // the plain base class whenever no extension has registered one.
+            m_segmentManipulator = ServiceLocator.TryGet<ISegmentManipulatorProvider>(out var segmentManipulatorProvider)
+                ? segmentManipulatorProvider.Create(uxml, settings)
+                : new SegmentManipulator(uxml, settings);
             m_regionManipulator = new RegionManipulator(uxml, settings);
             m_wayManipulator = new WayManipulator(uxml, settings);
-        
+
             parent.Add(m_mapObjectManipulator);
             parent.Add(m_vertexManipulator);
             parent.Add(m_segmentManipulator);
@@ -39,19 +45,19 @@ namespace uWED.Runtime.UI.Binder
             EditorEventBus.Instance.EditRegion.Subscribe(OnEditRegion);
             EditorEventBus.Instance.EditWay.Subscribe(OnEditWay);
         }
-    
+
         private void OnEditObject(MapObject mapObject, List<string> names)
         {
             SimpleGenericNameProvider objectNames = new SimpleGenericNameProvider(names);
             m_mapObjectManipulator.SetProviders(objectNames, objectTextures);
             m_mapObjectManipulator.Open(mapObject);
         }
-        
+
         private void OnEditVertex(Vertex vertex)
         {
             m_vertexManipulator.Open(vertex);
         }
-    
+
         private void OnEditSegment(Segment segment, List<string> names)
         {
             SimpleGenericNameProvider segmentNames = new SimpleGenericNameProvider(names);

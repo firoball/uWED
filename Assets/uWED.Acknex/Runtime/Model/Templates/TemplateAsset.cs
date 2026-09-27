@@ -21,5 +21,10 @@ namespace uWED.Acknex.Runtime.Model.Templates
             get => m_name;
             set => m_name = value;
         }
+
+        /// <summary>Returns Name - every GenericComboBoxField&lt;T&gt; search/match/display and
+        /// TemplateRegistry lookup keys off ToString(), not a direct field access, so every Template
+        /// type needs this override to appear as its Name rather than its class name.</summary>
+        public override string ToString() => Name;
     }
 }

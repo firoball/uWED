@@ -15,7 +15,7 @@ using uWED.Runtime.UI.View2D;
 namespace uWED.Runtime.Bootstrap
 {
     // Builds the uWED UI tree and wires panels/binders together. No UnityEditor dependency;
-    // called by EditorEntryPoint today, by a future StandaloneEntryPoint later.
+    // called by individual entry point, e.g. EditorEntryPoint or StandaloneEntryPoint
     public class UwedBootstrap
     {
         public EditorView EditorView { get; }
@@ -80,12 +80,7 @@ namespace uWED.Runtime.Bootstrap
             Root.Focus();
         }
 
-        public static void OpenMap(IMapLoader loader, string assetName)
-        {
-            EditorEventBus.Instance.LoadMap.Raise(loader, assetName);
-            EditorEventBus.Instance.FitViewToWindow.Raise();
-        }
-
+        
         public void LoadPrefs() => EditorEventBus.Instance.LoadPrefs.Raise(m_prefsProvider);
         public void SavePrefs() => EditorEventBus.Instance.SavePrefs.Raise(m_prefsProvider);
 

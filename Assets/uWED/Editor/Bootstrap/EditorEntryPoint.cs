@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -42,7 +43,15 @@ namespace uWED.Editor.Bootstrap
 
         public void OnDestroy()
         {
-            AssemblyReloadEvents.beforeAssemblyReload -= m_bootstrap.SavePrefs;
+            try
+            {
+                AssemblyReloadEvents.beforeAssemblyReload -= m_bootstrap.SavePrefs;
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
             m_bootstrap?.SavePrefs();
             m_bootstrap?.Dispose();
         }

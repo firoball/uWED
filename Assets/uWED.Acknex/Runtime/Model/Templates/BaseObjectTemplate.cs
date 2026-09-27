@@ -43,6 +43,12 @@ namespace uWED.Acknex.Runtime.Model.Templates
         /// <summary>WDL function/label name invoked once per engine tick.</summary>
         public string Each_tick { get => m_eachTick; set => m_eachTick = value; }
 
+        /// <summary>True if any WDL function/label callback (If_near/If_far/If_hit/If_arrived/Each_cycle/
+        /// Each_tick) is set - drives the action-indicator icon on a Template picker's detail row.</summary>
+        public bool HasActionProperties =>
+            !string.IsNullOrEmpty(If_near) || !string.IsNullOrEmpty(If_far) || !string.IsNullOrEmpty(If_hit) ||
+            !string.IsNullOrEmpty(If_arrived) || !string.IsNullOrEmpty(Each_cycle) || !string.IsNullOrEmpty(Each_tick);
+
         /// <summary>Far flag.</summary>
         public bool Far { get => m_flags.IsSet(AcknexFlag.Far); set => m_flags = value ? m_flags.Set(AcknexFlag.Far) : m_flags.Reset(AcknexFlag.Far); }
         /// <summary>Master flag.</summary>

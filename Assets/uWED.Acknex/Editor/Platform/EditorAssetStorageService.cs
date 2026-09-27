@@ -18,16 +18,38 @@ namespace uWED.Acknex.Editor.Platform
     /// per-type-per-call rather than just once at construction, by replacing
     /// FolderFor&lt;T&gt;() with an injected resolver. No such need yet.
     /// </summary>
-    public class EditorAssetStorageService : IAssetStorageService
+    public class EditorAssetStorageService : IAssetStorageService, IBatchableAssetStorage
     {
-        const string DefaultTemplatesRoot = "Assets/uWED.Acknex/Templates";
+        const string DefaultTemplatesRoot = "Assets/Map/Templates";
 
         readonly string m_templatesRoot;
+        readonly HashSet<string> m_knownFolders = new();
+        int m_batchDepth;
 
         /// <summary>Storage rooted at templatesRoot (defaults to DefaultTemplatesRoot).</summary>
         public EditorAssetStorageService(string templatesRoot = DefaultTemplatesRoot)
         {
             m_templatesRoot = templatesRoot;
+        }
+
+        /// <summary>Starts deferring SaveAssets (this call and every Create/Rename/Clone until the matching
+        /// EndBatch save once, together, instead of once each) and suppresses AssetDatabase's automatic
+        /// import/refresh between operations. Nesting-safe.</summary>
+        public void BeginBatch()
+        {
+            if (m_batchDepth++ == 0)
+                AssetDatabase.StartAssetEditing();
+        }
+
+        /// <summary>Ends a batch started by BeginBatch, resuming normal import/refresh and flushing the
+        /// deferred save.</summary>
+        public void EndBatch()
+        {
+            if (--m_batchDepth == 0)
+            {
+                AssetDatabase.StopAssetEditing();
+                AssetDatabase.SaveAssets();
+            }
         }
 
         /// <summary>Creates a new T asset named name in its type's subfolder under templatesRoot.</summary>
@@ -41,7 +63,7 @@ namespace uWED.Acknex.Editor.Platform
 
             string path = AssetDatabase.GenerateUniqueAssetPath($"{folder}/{name}.asset");
             AssetDatabase.CreateAsset(asset, path);
-            AssetDatabase.SaveAssets();
+            SaveAssetsUnlessBatching();
             return asset;
         }
 
@@ -73,7 +95,7 @@ namespace uWED.Acknex.Editor.Platform
             if (!string.IsNullOrEmpty(error))
                 Debug.LogWarning($"EditorAssetStorageService.Rename: {error}");
 
-            AssetDatabase.SaveAssets();
+            SaveAssetsUnlessBatching();
         }
 
         /// <summary>Copies source's backing .asset to a new file named newName and returns the copy.</summary>
@@ -92,7 +114,7 @@ namespace uWED.Acknex.Editor.Platform
             var clone = AssetDatabase.LoadAssetAtPath<T>(destPath);
             clone.Name = newName;
             EditorUtility.SetDirty(clone);
-            AssetDatabase.SaveAssets();
+            SaveAssetsUnlessBatching();
             return clone;
         }
 
@@ -100,22 +122,42 @@ namespace uWED.Acknex.Editor.Platform
         public void Delete<T>(T asset) where T : TemplateAsset
             => AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(asset));
 
+        /// <summary>Defers to the batch's own final SaveAssets (see EndBatch) while one is in progress.</summary>
+        void SaveAssetsUnlessBatching()
+        {
+            if (m_batchDepth == 0)
+                AssetDatabase.SaveAssets();
+        }
+
         /// <summary>The subfolder T's assets live in, under templatesRoot.</summary>
         string FolderFor<T>() => $"{m_templatesRoot}/{typeof(T).Name}";
 
-        /// <summary>AssetDatabase has no recursive "mkdir -p" - builds the path one folder at a time.</summary>
-        static void EnsureFolder(string folder)
+        /// <summary>AssetDatabase has no recursive "mkdir -p" - builds the path one folder at a time,
+        /// tracking created folders in m_knownFolders rather than trusting AssetDatabase.IsValidFolder
+        /// alone. During a batch (see BeginBatch), AssetDatabase.StartAssetEditing defers the import that
+        /// would normally make a just-created folder visible again, so IsValidFolder still says "no" for a
+        /// folder this same batch already created - relying on it alone meant every subsequent Create for
+        /// that type called CreateFolder again, and Unity's own collision-avoidance produced "Templates 1",
+        /// "Templates 2", ... instead of reusing the one already made.</summary>
+        void EnsureFolder(string folder)
         {
-            if (AssetDatabase.IsValidFolder(folder))
+            if (m_knownFolders.Contains(folder))
                 return;
+
+            if (AssetDatabase.IsValidFolder(folder))
+            {
+                m_knownFolders.Add(folder);
+                return;
+            }
 
             string[] parts = folder.Split('/');
             string current = parts[0]; // "Assets"
             for (int i = 1; i < parts.Length; i++)
             {
                 string next = $"{current}/{parts[i]}";
-                if (!AssetDatabase.IsValidFolder(next))
+                if (!m_knownFolders.Contains(next) && !AssetDatabase.IsValidFolder(next))
                     AssetDatabase.CreateFolder(current, parts[i]);
+                m_knownFolders.Add(next);
                 current = next;
             }
         }
