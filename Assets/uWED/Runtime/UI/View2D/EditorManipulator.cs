@@ -17,8 +17,6 @@ namespace uWED.Runtime.UI.View2D
         private EditorStatus.Mode m_mode;
         private List<BaseEditorMode> m_editorModes;
 
-        private const string c_defaultAsset = "assets/DefaultMapAsset.asset";
-
         public EditorManipulator()
         {
             m_mapData = new MapData();
@@ -279,7 +277,7 @@ namespace uWED.Runtime.UI.View2D
                 return;
             }
 
-            //m_mapData?.Write(new MapAssetWriter(), c_defaultAsset);
+            m_mapData?.Write(prefsProvider.GetMapWriter(), prefsProvider.GetDefaultMapName());
             prefsProvider.SetFloat("uWED::EditorManipulator::mode", (int)m_mode);
         }
 
@@ -292,7 +290,7 @@ namespace uWED.Runtime.UI.View2D
                 return;
             }
 
-            //m_mapData?.Load(new MapAssetLoader(), c_defaultAsset);
+            m_mapData?.Load(prefsProvider.GetMapLoader(), prefsProvider.GetDefaultMapName());
             EditorStatus.Mode mode = (EditorStatus.Mode)prefsProvider.GetFloat("uWED::EditorManipulator::mode", (float)m_mode);
             SetMode(mode);
 

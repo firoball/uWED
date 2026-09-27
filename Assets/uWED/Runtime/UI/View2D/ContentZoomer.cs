@@ -159,15 +159,15 @@ namespace uWED.Runtime.UI.View2D
             m_mousePosition = evt.localMousePosition;
         }
 
-        private void OnZoomChanged(bool zoomedIn)
+        private void OnZoomChanged(bool? zoomedIn)
         {
-            PrepareZoom(zoomedIn? 1.0f : -1.0f);
+            if (zoomedIn != null)
+                PrepareZoom(zoomedIn == true? 1.0f : -1.0f);
         }
         
         private void PrepareZoom(float delta)
         {
-            var gridView = target as GridView;
-            if (gridView == null)
+            if (target is not GridView gridView)
                 return;
 
             Vector3 position = gridView.contentViewContainer.resolvedStyle.translate;
@@ -254,7 +254,7 @@ namespace uWED.Runtime.UI.View2D
         {
             if (target is not GridView gridView)
             {
-                throw new InvalidOperationException("Manipulator can only be added to a GraphView");
+                throw new InvalidOperationException("Manipulator can only be added to a GridView");
             }
 
             float appliedZoom = zoom ?? gridView.contentViewContainer.resolvedStyle.scale.value.x;
@@ -271,6 +271,8 @@ namespace uWED.Runtime.UI.View2D
             Vector3 scale = new Vector3(appliedZoom, appliedZoom, 1);
 
             gridView.UpdateViewTransform(position, scale);
+            if (zoom != null)
+                EditorEventBus.Instance.ZoomChanged.Raise(null);
         }
 
         /// <summary>
@@ -288,7 +290,7 @@ namespace uWED.Runtime.UI.View2D
         {
             if (target is not GridView gridView)
             {
-                throw new InvalidOperationException("Manipulator can only be added to a GraphView");
+                throw new InvalidOperationException("Manipulator can only be added to a GridView");
             }
 
             float zoom = CalculateZoomToFit(min, max, gridView.layout.size, MinScale, MaxScale, padding);

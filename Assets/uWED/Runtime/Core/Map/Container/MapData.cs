@@ -9,6 +9,7 @@ namespace uWED.Runtime.Core.Map.Container
     public class MapData
     {
         private MapDataSet m_data;
+        private string m_mapName;
 
 
         public MapData() : this(null) { }
@@ -33,14 +34,17 @@ namespace uWED.Runtime.Core.Map.Container
         public IReadOnlyList<Segment> Segments => m_data.Segments;
         public IReadOnlyList<Region> Regions => m_data.Regions;
 
-        public MapDataSet Data { get => m_data; }
+        public MapDataSet Data => m_data; 
+        public string MapName => m_mapName;
 
         public void Load(IMapLoader loader, string name)
         {
             if ((loader != null) && loader.Load(name))
             {
                 m_data = loader.Data;
+                m_mapName = name;
                 Rebuild();
+                Debug.Log($"Map loaded: {name}");
             }
         }
 
@@ -49,7 +53,9 @@ namespace uWED.Runtime.Core.Map.Container
             if (writer != null)
             {
                 writer.Data = m_data;
+                m_mapName = name;
                 writer.Write(name);
+                Debug.Log($"Map saved: {name}");
             }
         }
 

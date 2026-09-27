@@ -1,3 +1,5 @@
+using uWED.Runtime.Core.Map.IO;
+
 namespace uWED.Runtime.Platform
 {
     /// <summary>
@@ -17,5 +19,9 @@ namespace uWED.Runtime.Platform
 
         bool GetBool(string key, bool defaultValue = false);
         void SetBool(string key, bool value);
+     
+        public string GetDefaultMapName();
+        public IMapWriter GetMapWriter();
+        public IMapLoader GetMapLoader();
     }
 }

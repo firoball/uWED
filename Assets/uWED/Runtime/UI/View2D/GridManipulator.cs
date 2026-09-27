@@ -84,7 +84,7 @@ namespace uWED.Runtime.UI.View2D
             UpdateBackground();
         }
 
-        private void OnZoomChanged(bool zoomedIn)
+        private void OnZoomChanged(bool? zoomedIn)
         {
             UpdateBackground();
         }
@@ -99,7 +99,7 @@ namespace uWED.Runtime.UI.View2D
             m_grid.EnableDraw = true;
         }
 
-        private void UpdateBackground()
+        public void UpdateBackground()
         {
             if (m_gridEnabled)
             {

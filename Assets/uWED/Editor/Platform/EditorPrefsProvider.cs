@@ -1,4 +1,5 @@
 using UnityEditor;
+using uWED.Runtime.Core.Map.IO;
 using uWED.Runtime.Platform;
 
 namespace uWED.Editor.Platform
@@ -24,5 +25,9 @@ namespace uWED.Editor.Platform
 
         public void SetBool(string key, bool value) =>
             EditorPrefs.SetBool(key, value);
+        
+        public string GetDefaultMapName() => "Assets/DefaultMapAsset.asset";
+        public IMapWriter GetMapWriter() => new MapAssetWriter();
+        public IMapLoader GetMapLoader() => new MapAssetLoader();
     }
 }

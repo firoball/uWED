@@ -126,7 +126,7 @@ namespace uWED.Runtime.UI.EventBus
         public readonly BusEvent<Way, List<string>> EditWay = new BusEvent<Way, List<string>>();
         public readonly BusEvent FitViewToWindow = new BusEvent();
         public readonly BusEvent CenterView = new BusEvent();
-        public readonly BusEvent<bool> ZoomChanged = new BusEvent<bool>();
+        public readonly BusEvent<bool?> ZoomChanged = new BusEvent<bool?>();
         public readonly BusEvent<IMapLoader, string> LoadMap = new BusEvent<IMapLoader, string>();
         public readonly BusEvent<IMapWriter, string> WriteMap = new BusEvent<IMapWriter, string>();
         public readonly BusEvent<IPrefsProvider> LoadPrefs = new BusEvent<IPrefsProvider>();

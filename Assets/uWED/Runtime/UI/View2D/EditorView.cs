@@ -216,7 +216,6 @@ namespace uWED.Runtime.UI.View2D
             float lockAngle = prefsProvider.GetFloat("uWED::EditorView::lockAngle", m_lockAngle);
             LockAngle(lockAngle);
 
-            //TODO: load pos and scale only if map has not changed --> check for map change after load prefs and fit to view
             Vector3 pos = contentViewContainer.resolvedStyle.translate;
             pos.x = prefsProvider.GetFloat("uWED::EditorView::transform.position.x", pos.x);
             pos.y = prefsProvider.GetFloat("uWED::EditorView::transform.position.y", pos.y);
@@ -226,6 +225,9 @@ namespace uWED.Runtime.UI.View2D
             scale.x = prefsProvider.GetFloat("uWED::EditorView::transform.scale.x", scale.x);
             scale.y = prefsProvider.GetFloat("uWED::EditorView::transform.scale.y", scale.y);
             contentViewContainer.style.scale = scale;
+            
+            // EditorView is loaded after all children - force grid update after contentViewContainer value update
+            m_gridManipulator.UpdateBackground();
         }
 
         private Matrix4x4 GetViewContainerMatrix()

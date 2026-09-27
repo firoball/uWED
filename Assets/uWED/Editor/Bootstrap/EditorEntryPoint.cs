@@ -3,6 +3,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using uWED.Editor.Platform;
 using uWED.Runtime.Bootstrap;
+using uWED.Runtime.UI.EventBus;
 
 namespace uWED.Editor.Bootstrap
 {
@@ -24,13 +25,13 @@ namespace uWED.Editor.Bootstrap
         // Editor-only: relies on the Unity asset database (MapAssetLoader), no standalone equivalent.
         public static void OpenMap(string assetName)
         {
-            UwedBootstrap.OpenMap(new MapAssetLoader(), assetName);
+            EditorEventBus.Instance.LoadMap.Raise(new MapAssetLoader(), assetName);
+            EditorEventBus.Instance.FitViewToWindow.Raise();
         }
 
         public void CreateGUI()
         {
             m_bootstrap = new UwedBootstrap(rootVisualElement, Close);
-            OpenMap(c_defaultAsset);
             AssemblyReloadEvents.beforeAssemblyReload += m_bootstrap.SavePrefs;
         }
 
