@@ -123,6 +123,12 @@ namespace uWED.Runtime.UI.Manipulator
             m_manipRoot.Focus();
         }
 
+        public void ApplyNow()
+        {
+            if (m_originalTarget != null)
+                WriteBack(m_originalTarget, m_editedCopy);
+        }
+        
         void Cancel()
         {
             m_manipRoot.style.display = DisplayStyle.None;

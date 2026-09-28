@@ -3,8 +3,8 @@
     align-items: center;
     border-bottom-width: 1px;
     border-bottom-color: rgba(255, 255, 255, 0.15);
-    padding-bottom: 4px;
-    padding-top: 4px;
+    padding-bottom: 1px;
+    padding-top: 1px;
 }
 
 .acknex-picker-detail-info {
@@ -12,8 +12,18 @@
     flex-grow: 1;
 }
 
+.acknex-picker-template-name {
+    color: rgb(220, 220, 220);
+    -unity-font-style: bold;
+}
+
+.acknex-picker-texture-info {
+    color: rgb(150, 150, 150);
+    font-size: 11px;
+}
+
 .acknex-picker-action-icon {
     color: rgb(255, 204, 26);
     margin-left: 6px;
-    font-size: 20px;
+    font-size: 16px;
 }

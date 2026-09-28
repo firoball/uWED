@@ -5,12 +5,14 @@ using uWED.Acknex.Runtime.Model.Instances;
 namespace uWED.Acknex.Runtime.UI.Manipulator
 {
     /// <summary>
-    /// Texture thumbnail/Name/Size/Scale rendering shared by every GenericComboBoxField&lt;TextureInstance&gt;
-    /// Texture-reference property picker and every Template picker's DetailViewBuilder (WallManipulator
-    /// etc.) that shows a Template's Texture. Pure UnityEngine.UIElements, no UnityEditor dependency -
-    /// usable from both the Manipulator popup and a Unity Inspector CreateInspectorGUI(). Reuses uWED
-    /// core's existing "manip-texture-preview"/"manip-texture-preview-label" USS classes (see
-    /// NameTextureSlot) rather than duplicating them.
+    /// Texture thumbnail/compact-info rendering shared by every Template picker's DetailViewBuilder
+    /// (WallManipulator, and ThingManipulator/ActorManipulator/RegionManipulator's floor/ceiling Texture
+    /// once built) that shows a Template's Texture next to the Template's own Name. Pure
+    /// UnityEngine.UIElements, no UnityEditor dependency - usable from both the Manipulator popup and a
+    /// Unity Inspector CreateInspectorGUI(). Reuses uWED core's existing "manip-texture-preview"/
+    /// "manip-texture-preview-label" USS classes (see NameTextureSlot) rather than duplicating them. Not
+    /// used by a standalone Texture-reference property picker (e.g. editing a Texture field directly) -
+    /// that's deferred to the future Texture Manager and would get its own view if its layout needs differ.
     /// </summary>
     public static class TextureReferenceDetailView
     {
@@ -47,38 +49,26 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             return thumb;
         }
 
-        /// <summary>Scale X/Y label, reading "-" for a null texture or one with no Template assigned.</summary>
-        public static VisualElement BuildScaleLabel(TextureInstance texture)
+        /// <summary>Texture Name + Size + Scale on one line ("name · WxH · Scale x/y"), reading "-" for a
+        /// null texture. Kept to one line and meant to carry a visually distinct (muted) style wherever it
+        /// sits next to another Name of its own - e.g. a WallTemplate's Name above it in a Template
+        /// picker's detail row - so the two Names read as a Wall's Name and its Texture's info, not two
+        /// same-weight Names easily mistaken for each other.</summary>
+        public static Label BuildCompactInfoLabel(TextureInstance texture)
         {
-            return texture?.Template == null
-                ? new Label("Scale X/Y: -")
-                : new Label($"Scale X/Y: {texture.Template.Scale_x:0.###} / {texture.Template.Scale_y:0.###}");
-        }
+            string size2 = "64x64";
+            string scale2 = "16.0/16.0";
 
-        /// <summary>Pixel-dimensions label, reading "-" for a null texture or one with no Value assigned.
-        /// Reads UnityEngine.Texture.width/height directly, so it applies to Texture2D and RenderTexture
-        /// alike - distinct from Scale, which is the WDL Scale_x/Scale_y render scale, not pixel size.</summary>
-        public static VisualElement BuildSizeLabel(TextureInstance texture)
-        {
-            return texture?.Value == null
-                ? new Label("Size: -")
-                : new Label($"Size: {texture.Value.width} x {texture.Value.height}");
-        }
+            return new Label($"defaulttexture  ·  {size2}  ·  Scale {scale2}");
+            if (texture == null)
+                return new Label("-");
 
-        /// <summary>Full thumbnail + Name + Size + Scale row, for the Texture-reference property picker
-        /// (e.g. Wall.Texture).</summary>
-        public static VisualElement Build(TextureInstance texture)
-        {
-            var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
-            row.Add(BuildThumbnail(texture));
+            string size = texture.Value != null ? $"{texture.Value.width}x{texture.Value.height}" : "-";
+            string scale = texture.Template != null
+                ? $"{texture.Template.Scale_x:0.###}/{texture.Template.Scale_y:0.###}"
+                : "-";
 
-            var info = new VisualElement { style = { marginLeft = 6 } };
-            info.Add(new Label(texture?.Name ?? "-"));
-            info.Add(BuildSizeLabel(texture));
-            info.Add(BuildScaleLabel(texture));
-            row.Add(info);
-
-            return row;
+            return new Label($"{texture.Name ?? "-"}  ·  {size}  ·  Scale {scale}");
         }
     }
 }

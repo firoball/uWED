@@ -39,6 +39,7 @@ namespace uWED.Acknex.Runtime.Registry
         public static readonly string DefaultName = NameSanitizer.Sanitize("__default" + StripTemplateSuffix(typeof(T).Name).ToLowerInvariant());
 
         readonly TemplateRegistry<T> m_registry;
+        bool m_loggedEmptyNameFallback;
 
         /// <summary>Resolves against this one registry for the lifetime of this resolver.</summary>
         public TemplateResolver(TemplateRegistry<T> registry)
@@ -52,14 +53,20 @@ namespace uWED.Acknex.Runtime.Registry
         /// sanitized form every registered Name is stored under (via Create/Clone), or a not-yet-sanitized
         /// name (e.g. straight off a Segment the map editor never enforced WDL syntax on) would never
         /// match an existing entry and this would call Create over and over, one duplicate per call. Logs
-        /// an info message both when name was empty (falling back to DefaultName) and when no match exists
-        /// yet (a new T is about to be created), so either case is visible in the console rather than
-        /// silent.</summary>
+        /// an info message the first time this resolver falls back to DefaultName (once per resolver
+        /// instance, not once per empty-named Instance - a map can carry many, and repeating the same line
+        /// for each one is noise, not information) and every time no match exists yet (a new T is about to
+        /// be created - this one already only fires once per distinct name, since Get succeeds on every
+        /// call after the first).</summary>
         public T Resolve(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
-                Debug.Log($"TemplateResolver<{typeof(T).Name}>: empty name resolved to the default Template '{DefaultName}'.");
+                if (!m_loggedEmptyNameFallback)
+                {
+                    Debug.Log($"TemplateResolver<{typeof(T).Name}>: empty name resolved to the default Template '{DefaultName}'.");
+                    m_loggedEmptyNameFallback = true;
+                }
                 name = DefaultName;
             }
             else

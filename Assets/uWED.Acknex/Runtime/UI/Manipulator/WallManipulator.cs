@@ -1,4 +1,5 @@
 using UI.Controls;
+using UnityEngine;
 using UnityEngine.UIElements;
 using uWED.Acknex.Runtime.Model.Templates;
 using uWED.Acknex.Runtime.Registry;
@@ -60,9 +61,10 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
                 Sanitizer = m_templateRegistry.Sanitizer,
                 AllowDetailMode = true,
                 DetailViewBuilder = BuildDetailView,
-                // Keeps the open popup short - the picker is for quick switching between a handful of
-                // Templates, not browsing the full list at a glance.
-                VisibleRowCount = 3,
+                VisibleRowCount = 6,
+                // Detail rows are taller than brief-mode rows (thumbnail + info column), so a smaller cap
+                // keeps the open popup a similar height to brief mode instead of growing tall.
+                DetailVisibleRowCount = 3,
                 // A WallTemplate can be shared by many Segments (resolved by Name), and deletion needs a
                 // deliberate design for that - not implemented, so the picker's own remove action stays off.
                 AllowDelete = false,
@@ -79,21 +81,37 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             content.Insert(1, section);
         }
 
-        /// <summary>Thumbnail first (Name alone reads as messy without it), then Name/Size/Scale, then the
-        /// lightning-bolt action-indicator when any WDL callback is set. Styling (the row's bottom-border
-        /// separator, the info column, the icon) comes from AcknexManipulatorStyles' USS classes.</summary>
+        /// <summary>Template Name on its own top row (with the action icon vertically centered beside it,
+        /// right-aligned via the Name label's flex-grow), then a second row with the thumbnail beside a
+        /// single compact texture-info line. This is the shared layout language for every Template
+        /// picker's detail view (Thing/Actor/Region will reuse the same shape) - Name on its own row rather
+        /// than beside the thumbnail is what lets Region's floor+ceiling variant put two thumbnails on the
+        /// content row without the Name needing to sit beside either one specifically. The Way picker is
+        /// the one exception - Way has no Texture, so its detail view (once built) will be Name-only, no
+        /// content row.</summary>
         static VisualElement BuildDetailView(WallTemplate template)
         {
-            var row = new VisualElement();
+            // Outer row is horizontal so the action icon sits beside the whole Name+content stack and can
+            // be centered against its full height - centering it inside the (much shorter) Name row alone
+            // left it looking pinned near the top instead of centered on the row as a whole.
+            var row = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center } };
             row.AddToClassList(AcknexManipulatorStyles.PickerDetailRow);
-            row.Add(TextureReferenceDetailView.BuildThumbnail(template.Texture));
 
-            var info = new VisualElement();
-            info.AddToClassList(AcknexManipulatorStyles.PickerDetailInfo);
-            info.Add(new Label(template.Name));
-            info.Add(TextureReferenceDetailView.BuildSizeLabel(template.Texture));
-            info.Add(TextureReferenceDetailView.BuildScaleLabel(template.Texture));
-            row.Add(info);
+            var stack = new VisualElement { style = { flexDirection = FlexDirection.Column, flexGrow = 1 } };
+
+            var nameLabel = new Label(template.Name) { style = { unityTextAlign = TextAnchor.MiddleLeft } };
+            nameLabel.AddToClassList(AcknexManipulatorStyles.PickerTemplateName);
+            stack.Add(nameLabel);
+
+            var contentRow = new VisualElement { style = { flexDirection = FlexDirection.Row, alignItems = Align.Center, marginTop = 2 } };
+            contentRow.Add(TextureReferenceDetailView.BuildThumbnail(template.Texture, size: 40));
+            var textureInfoLabel = TextureReferenceDetailView.BuildCompactInfoLabel(template.Texture);
+            textureInfoLabel.AddToClassList(AcknexManipulatorStyles.PickerTextureInfo);
+            textureInfoLabel.style.marginLeft = 6;
+            contentRow.Add(textureInfoLabel);
+            stack.Add(contentRow);
+
+            row.Add(stack);
 
             if (template.HasActionProperties)
                 row.Add(BuildActionIcon());
@@ -101,11 +119,13 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             return row;
         }
 
-        /// <summary>Lightning-bolt indicator shown when a Template has at least one WDL callback set
-        /// (see BaseObjectTemplate.HasActionProperties).</summary>
+        /// <summary>Lightning-bolt indicator shown when a Template has at least one WDL callback set (see
+        /// BaseObjectTemplate.HasActionProperties). Explicit alignSelf/unityTextAlign, rather than relying
+        /// on the parent row's own alignItems, keeps the glyph centered on its own regardless of how tall
+        /// its container ends up next to the Name label's shorter line height.</summary>
         static VisualElement BuildActionIcon()
         {
-            var icon = new Label("⚡");
+            var icon = new Label("⚡") { style = { alignSelf = Align.Center, unityTextAlign = TextAnchor.MiddleCenter } };
             icon.AddToClassList(AcknexManipulatorStyles.PickerActionIcon);
             icon.tooltip = "Has one or more WDL action callbacks set";
             return icon;
@@ -134,6 +154,8 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
 
         protected override void LoadValues(Segment copy)
         {
+            bool wasUnnamed = string.IsNullOrEmpty(copy.Name);
+
             // Resolved before base.LoadValues(copy), which calls LoadTextureInfo internally and needs
             // m_currentTemplate already set.
             m_currentTemplate = m_templateResolver.Resolve(copy.Name);
@@ -142,6 +164,12 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
 
             m_templateCombo.Refresh();
             m_templateCombo.SetValueWithoutNotify(m_currentTemplate);
+
+            // An unnamed Segment has no meaningful state on its own - it only makes sense tied to a
+            // Template - so the resolved default is committed immediately rather than left pending until
+            // the user happens to press OK.
+            if (wasUnnamed)
+                ApplyNow();
         }
 
         protected override void WriteBack(Segment target, Segment editedCopy)

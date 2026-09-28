@@ -36,5 +36,9 @@ namespace uWED.Acknex.Runtime.Model.Templates
 
         /// <summary>Carefully flag.</summary>
         public bool Carefully { get => m_flags.IsSet(AcknexFlag.Carefully); set => m_flags = value ? m_flags.Set(AcknexFlag.Carefully) : m_flags.Reset(AcknexFlag.Carefully); }
+
+        /// <summary>Also considers If_arrived, unlike the base implementation - Actor's movement-target
+        /// arrival is the one case where If_arrived is actually meaningful, not just parseable.</summary>
+        public override bool HasActionProperties => base.HasActionProperties || !string.IsNullOrEmpty(If_arrived);
     }
 }

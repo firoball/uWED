@@ -16,8 +16,14 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
 
         /// <summary>A Template picker's detail-mode row (thumbnail + info + action icon).</summary>
         public const string PickerDetailRow = "acknex-picker-detail-row";
-        /// <summary>The info column (Name/Size/Scale labels) next to a detail row's thumbnail.</summary>
+        /// <summary>The info column (Template Name + Texture-info line) next to a detail row's thumbnail.</summary>
         public const string PickerDetailInfo = "acknex-picker-detail-info";
+        /// <summary>The Template's own Name label within a detail row's info column - full-weight, to stand
+        /// apart from the muted Texture-info line below it (see PickerTextureInfo).</summary>
+        public const string PickerTemplateName = "acknex-picker-template-name";
+        /// <summary>The compact Texture Name/Size/Scale line within a detail row's info column - muted, so
+        /// it doesn't compete with the Template's own Name above it (see PickerTemplateName).</summary>
+        public const string PickerTextureInfo = "acknex-picker-texture-info";
         /// <summary>The action-indicator icon shown when a Template has a WDL callback set.</summary>
         public const string PickerActionIcon = "acknex-picker-action-icon";
 
