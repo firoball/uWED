@@ -32,6 +32,7 @@
 /* ---------------- Header ---------------- */
 
 .manip-header {
+    /* Fixed-size, never shrinks - only manip-scroll should absorb overflow. */
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -39,6 +40,8 @@
     border-bottom-width: 1px;
     border-bottom-color: rgb(70, 70, 70);
     padding-bottom: 6px;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .manip-type-label {
@@ -65,12 +68,15 @@
 /* ---------------- Settings bar ---------------- */
 
 .manip-settings-bar {
+    /* Fixed-size, never shrinks - only manip-scroll should absorb overflow. */
     flex-direction: row;
     align-items: center;
     background-color: rgb(38, 38, 38);
     border-radius: 4px;
     padding: 6px 8px;
     margin-bottom: 8px;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .manip-settings-label {
@@ -319,12 +325,15 @@
 /* ---------------- Footer ---------------- */
 
 .manip-footer {
+    /* Fixed-size, never shrinks - only manip-scroll should absorb overflow. */
     flex-direction: row;
     justify-content: center;
     margin-top: 10px;
     padding-top: 8px;
     border-top-width: 1px;
     border-top-color: rgb(70, 70, 70);
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .manip-footer-button {
