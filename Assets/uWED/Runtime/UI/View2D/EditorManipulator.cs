@@ -233,9 +233,9 @@ namespace uWED.Runtime.UI.View2D
             EditorEventBus.Instance.ConstructionModeChanged.Raise(m_constructMode);
         }
 
-        public void SetMode(EditorStatus.Mode mode)
+        public void SetMode(EditorStatus.Mode mode, bool force = false)
         {
-            if (mode != m_mode)
+            if (mode != m_mode || force)
             {
                 m_editorModes[(int)m_mode].Drawer.SetEnabled(false);
                 m_mode = mode;
@@ -292,7 +292,7 @@ namespace uWED.Runtime.UI.View2D
 
             m_mapData?.Load(prefsProvider.GetMapLoader(), prefsProvider.GetDefaultMapName());
             EditorStatus.Mode mode = (EditorStatus.Mode)prefsProvider.GetFloat("uWED::EditorManipulator::mode", (float)m_mode);
-            SetMode(mode);
+            SetMode(mode, true);
 
         }
 
