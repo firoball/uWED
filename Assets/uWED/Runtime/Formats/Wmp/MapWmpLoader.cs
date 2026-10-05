@@ -17,6 +17,9 @@ namespace uWED.Runtime.Formats.Wmp
         private float m_scale;
 
         private const float c_defaultScale = 8f; //scale must be some 2^x value for grid alignment
+        private const int c_thing = 0;
+        private const int c_actor = 1;
+        private const int c_player = 2;
 
         public MapDataSet Data { get => m_data; }
         public float Scale { get => m_scale; set => m_scale = value; }
@@ -88,6 +91,7 @@ namespace uWED.Runtime.Formats.Wmp
                             "player"
                         )
                     );
+                    objects[^1].TypeId = c_player;
                     cntP++;
                 }
                 else if (idxT < idxP && idxT < idxA)
@@ -98,9 +102,10 @@ namespace uWED.Runtime.Formats.Wmp
                             new Vector2(t.X, t.Y) * m_scale,
                             (t.Angle - 90f) * Mathf.PI / 180f,
                             m_data.Regions[t.Region.Index],
-                            t.Name
+                            t.Name 
                         )
                     );
+                    objects[^1].TypeId = c_thing;
                     cntT++;
                 }
                 else
@@ -114,6 +119,7 @@ namespace uWED.Runtime.Formats.Wmp
                             a.Name
                         )
                     );
+                    objects[^1].TypeId = c_actor;
                     cntA++;
                 }
             }
