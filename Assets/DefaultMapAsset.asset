@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultMapAsset
   m_EditorClassIdentifier: 
   m_data:
-    rid: 8548430353019701141
+    rid: 8548430353019701147
   references:
     version: 2
     RefIds:
@@ -22048,7 +22048,7 @@ MonoBehaviour:
           rid: -2
         m_name: defaultwall
         m_offset: {x: 0, y: 0}
-    - rid: 8548430353019701141
+    - rid: 8548430353019701147
       type: {class: MapDataSet, ns: uWED.Runtime.Core.Map.Container, asm: uWED.Runtime}
       data:
         m_objects:

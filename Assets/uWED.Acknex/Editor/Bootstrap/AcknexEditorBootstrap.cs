@@ -44,6 +44,10 @@ namespace uWED.Acknex.Editor.Bootstrap
                     existingWallTemplates.Reload();
                 if (ServiceLocator.TryGet<TemplateRegistry<RegionTemplate>>(out var existingRegionTemplates))
                     existingRegionTemplates.Reload();
+                if (ServiceLocator.TryGet<TemplateRegistry<ThingTemplate>>(out var existingThingTemplates))
+                    existingThingTemplates.Reload();
+                if (ServiceLocator.TryGet<TemplateRegistry<ActorTemplate>>(out var existingActorTemplates))
+                    existingActorTemplates.Reload();
                 return;
             }
 
@@ -61,6 +65,19 @@ namespace uWED.Acknex.Editor.Bootstrap
             ServiceLocator.Register<TemplateRegistry<RegionTemplate>>(regionTemplates);
             ServiceLocator.Register<TemplateResolver<RegionTemplate>>(regionResolver);
             ServiceLocator.Register<IRegionManipulatorProvider>(new AcknexRegionManipulatorProvider(regionTemplates, regionResolver));
+
+            var thingTemplates = new TemplateRegistry<ThingTemplate>(storage);
+            var thingResolver = new TemplateResolver<ThingTemplate>(thingTemplates);
+            ServiceLocator.Register<TemplateRegistry<ThingTemplate>>(thingTemplates);
+            ServiceLocator.Register<TemplateResolver<ThingTemplate>>(thingResolver);
+
+            var actorTemplates = new TemplateRegistry<ActorTemplate>(storage);
+            var actorResolver = new TemplateResolver<ActorTemplate>(actorTemplates);
+            ServiceLocator.Register<TemplateRegistry<ActorTemplate>>(actorTemplates);
+            ServiceLocator.Register<TemplateResolver<ActorTemplate>>(actorResolver);
+
+            ServiceLocator.Register<IMapObjectManipulatorProvider>(new AcknexMapObjectManipulatorProvider(thingTemplates, thingResolver, actorTemplates, actorResolver));
+            ServiceLocator.Register<IManipulatorTypeProvider>(new AcknexManipulatorTypeProvider());
         }
     }
 }
