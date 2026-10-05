@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.Platform;
 
 namespace uWED.Runtime.UI.Manipulator
 {
@@ -8,10 +11,13 @@ namespace uWED.Runtime.UI.Manipulator
     /// Shared scaffold: header, settings bar, TabView (one Tab by default),
     /// footer. Local-copy editing - Open() clones, fields edit the copy,
     /// Cancel discards it, OK writes back via WriteBack().
+    /// Optionally shows a type selector above the content, editing IndexedData.TypeId. The entries come
+    /// from a registered IManipulatorTypeProvider; without one (or without entries for T) no selector is shown.
     /// </summary>
     /// <typeparam name="T">Data class being edited - must derive from IndexedData.</typeparam>
     public abstract class ManipulatorWindowBase<T> : VisualElement where T : IndexedData
     {
+        /// <summary>Settings shared by all Manipulators (step sizes).</summary>
         protected readonly IManipulatorSettings Settings;
 
         VisualElement m_manipRoot;
@@ -24,6 +30,9 @@ namespace uWED.Runtime.UI.Manipulator
         Button m_okButton;
         TabView m_tabView;
 
+        DropdownField m_typeSelector;
+        readonly List<ManipulatorTypeOption> m_typeOptions = new List<ManipulatorTypeOption>();
+
         T m_editedCopy;
         T m_originalTarget;
 
@@ -34,19 +43,42 @@ namespace uWED.Runtime.UI.Manipulator
         /// <summary>TabView itself, for subclasses adding extra tabs.</summary>
         protected TabView TabView => m_tabView;
 
+        /// <summary>TypeId of the edit copy: the value currently shown in the type selector. Equals the
+        /// target's TypeId right after Open() until the user picks another type.</summary>
+        protected int EditedTypeId => m_editedCopy != null ? m_editedCopy.TypeId : 0;
+
+        /// <summary>Header text naming the edited object type (the object's Index is appended on Open()).</summary>
         protected abstract string TypeLabel { get; }
+
+        /// <summary>False disables the linear step field (with tooltip) for objects without linear values.</summary>
         protected virtual bool UsesLinearStep => true;
+
+        /// <summary>False disables the angle step field (with tooltip) for objects without an angle.</summary>
         protected virtual bool UsesAngleStep => true;
 
+        /// <summary>False shows the type selector disabled (with tooltip) instead of editable. Evaluated on every Open().</summary>
+        protected virtual bool AllowsTypeChange => true;
+
+        /// <summary>Builds the Manipulator specific fields into the content container, once, at construction.</summary>
         protected abstract void PopulateContent(VisualElement container);
+
+        /// <summary>Returns an editable copy of source. TypeId is copied by the base class afterwards.</summary>
         protected abstract T Clone(T source);
+
+        /// <summary>Fills the fields from the edit copy. Called on every Open().</summary>
         protected abstract void LoadValues(T copy);
+
+        /// <summary>Writes the edit copy's values into target. TypeId is written by the base class before this call.</summary>
         protected abstract void WriteBack(T target, T editedCopy);
 
+        /// <summary>Called after the user picked another entry in the type selector. EditedTypeId already holds
+        /// newTypeId. Not called for the initial selection on Open().</summary>
+        protected virtual void OnTypeChanged(int newTypeId) { }
+
+        /// <summary>Builds the shared scaffold from baseUxml and lets the subclass populate its content.</summary>
         protected ManipulatorWindowBase(VisualTreeAsset baseUxml, IManipulatorSettings settings)
         {
             Settings = settings;
-
             this.StretchToParentSize();
             this.pickingMode = PickingMode.Ignore;
 
@@ -105,30 +137,38 @@ namespace uWED.Runtime.UI.Manipulator
                 evt.originPanel?.visualTree.UnregisterCallback<FocusInEvent>(OnPanelFocusIn, TrickleDown.TrickleDown));
 
             PopulateContent(m_contentContainer);
-
             Add(instance);
         }
 
+        /// <summary>Opens the Manipulator on target: edits a clone (TypeId included), shows the window and loads the fields.</summary>
         public void Open(T target)
         {
             m_originalTarget = target;
             m_editedCopy = Clone(target);
+            m_editedCopy.TypeId = target.TypeId;
             m_typeLabel.text = $"{TypeLabel} #{target.Index}";
 
-            // display:Flex before LoadValues(): populating a DropdownField's
+            // display:Flex before RefreshTypeSelector()/LoadValues(): populating a DropdownField's
             // choices while still display:none corrupts its popup measurement.
             m_manipRoot.style.display = DisplayStyle.Flex;
+            RefreshTypeSelector();
             LoadValues(m_editedCopy);
-
             m_manipRoot.Focus();
         }
 
+        /// <summary>Writes the current edit copy into the original target without closing the window.</summary>
         public void ApplyNow()
         {
-            if (m_originalTarget != null)
-                WriteBack(m_originalTarget, m_editedCopy);
+            Commit();
         }
-        
+
+        void Commit()
+        {
+            if (m_originalTarget == null) return;
+            m_originalTarget.TypeId = m_editedCopy.TypeId;
+            WriteBack(m_originalTarget, m_editedCopy);
+        }
+
         void Cancel()
         {
             m_manipRoot.style.display = DisplayStyle.None;
@@ -138,11 +178,72 @@ namespace uWED.Runtime.UI.Manipulator
 
         void Apply()
         {
-            if (m_originalTarget != null)
-                WriteBack(m_originalTarget, m_editedCopy);
+            Commit();
             m_manipRoot.style.display = DisplayStyle.None;
             m_editedCopy = default;
             m_originalTarget = default;
+        }
+
+        /// <summary>
+        /// Queries the IManipulatorTypeProvider for T and (re)fills the type selector. The selector is built
+        /// lazily the first time options exist and is inserted at the top of the content container; it is
+        /// hidden whenever there are no options.
+        /// </summary>
+        void RefreshTypeSelector()
+        {
+            m_typeOptions.Clear();
+            if (ServiceLocator.TryGet<IManipulatorTypeProvider>(out var provider))
+            {
+                IReadOnlyList<ManipulatorTypeOption> options = provider.GetOptions(typeof(T));
+                if (options != null) m_typeOptions.AddRange(options);
+            }
+
+            if (m_typeOptions.Count == 0)
+            {
+                if (m_typeSelector != null) m_typeSelector.style.display = DisplayStyle.None;
+                return;
+            }
+
+            if (m_typeSelector == null)
+            {
+                m_typeSelector = new DropdownField("Type");
+                m_typeSelector.AddToClassList("manip-picker-dropdown");
+                m_typeSelector.RegisterValueChangedCallback(OnTypeSelectorChanged);
+                m_contentContainer.Insert(0, m_typeSelector);
+            }
+
+            int currentId = m_editedCopy.TypeId;
+            int selectedIndex = m_typeOptions.FindIndex(o => o.Id == currentId);
+
+            // A TypeId the provider doesn't list stays visible (and unchanged) as its own entry.
+            if (selectedIndex < 0)
+            {
+                m_typeOptions.Add(new ManipulatorTypeOption(currentId, "(unknown)"));
+                selectedIndex = m_typeOptions.Count - 1;
+            }
+
+            var choices = new List<string>(m_typeOptions.Count);
+            foreach (var option in m_typeOptions) choices.Add($"{option.Id} - {option.Label}");
+
+            m_typeSelector.style.display = DisplayStyle.Flex;
+            m_typeSelector.choices = choices;
+            m_typeSelector.SetValueWithoutNotify(choices[selectedIndex]);
+
+            bool allowed = AllowsTypeChange;
+            m_typeSelector.SetEnabled(allowed);
+            m_typeSelector.tooltip = allowed ? string.Empty : "Type can't be changed for this object";
+        }
+
+        void OnTypeSelectorChanged(ChangeEvent<string> evt)
+        {
+            int index = m_typeSelector.index;
+            if (index < 0 || index >= m_typeOptions.Count || m_editedCopy == null) return;
+
+            int newId = m_typeOptions[index].Id;
+            if (newId == m_editedCopy.TypeId) return;
+
+            m_editedCopy.TypeId = newId;
+            OnTypeChanged(newId);
         }
 
         void OnPanelFocusIn(FocusInEvent evt)
@@ -152,7 +253,10 @@ namespace uWED.Runtime.UI.Manipulator
                 m_manipRoot.Focus();
         }
 
+        /// <summary>Linear step size currently set in the settings bar.</summary>
         protected float CurrentLinearStep => Settings.LinearStep;
+
+        /// <summary>Angle step size currently set in the settings bar.</summary>
         protected float CurrentAngleStep => Settings.AngleStep;
     }
 }

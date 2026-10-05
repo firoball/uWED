@@ -13,7 +13,7 @@ namespace uWED.Runtime.UI.Manipulator
     /// the constructor, and it's restored from OriginalTarget after cloning.
     /// Angle is editable via a NumberStepperField snapped to the shared Angle
     /// Step. Region is read-only ("{Name} #{Index}"). Name is a plain rename
-    /// field (ComboBoxField, string-typed, via IGenericNameProvider&lt;string&gt;) -
+    /// field (ComboBoxField, string-typed, via IGenericNameProvider<string>) -
     /// same shape as Region/Way/Segment's Name fields. One NameTextureSlot for
     /// texture display only (Offset section hidden - no confirmed per-object
     /// offset property).
@@ -33,10 +33,8 @@ namespace uWED.Runtime.UI.Manipulator
         NumberStepperField m_zStepper;
         Label m_regionValue;
         NumberStepperField m_angleStepper;
-
         VisualElement m_nameFieldContainer;
         ComboBoxField m_nameCombo;
-
         NameTextureSlot m_slot;
 
         MapObject m_current;
@@ -49,7 +47,7 @@ namespace uWED.Runtime.UI.Manipulator
         /// <summary>Call once providers are ready. nameProvider backs the Name combo box
         /// (null falls back to the default in-memory provider); textureProvider backs the
         /// texture slot's "..." select (placeholder).</summary>
-        public void SetProviders(IGenericNameProvider<string> nameProvider, ITextureProvider textureProvider)
+        public virtual void SetProviders(IGenericNameProvider<string> nameProvider, ITextureProvider textureProvider)
         {
             m_nameProvider = nameProvider ?? new SimpleGenericNameProvider(new List<string>());
             m_textureProvider = textureProvider;
@@ -84,11 +82,9 @@ namespace uWED.Runtime.UI.Manipulator
         {
             var block = new VisualElement();
             block.AddToClassList("manip-readonly-block");
-
             m_posXValue = AddReadonlyRow(block, "X");
             m_posYValue = AddReadonlyRow(block, "Y");
             m_regionValue = AddReadonlyRow(block, "Region");
-
             container.Add(block);
         }
 
@@ -96,15 +92,12 @@ namespace uWED.Runtime.UI.Manipulator
         {
             var row = new VisualElement();
             row.AddToClassList("manip-readonly-row");
-
             var label = new Label(labelText);
             label.AddToClassList("manip-readonly-label");
             row.Add(label);
-
             var value = new Label();
             value.AddToClassList("manip-readonly-value");
             row.Add(value);
-
             block.Add(row);
             return value;
         }
@@ -113,11 +106,9 @@ namespace uWED.Runtime.UI.Manipulator
         {
             var row = new VisualElement();
             row.AddToClassList("manip-field-row");
-
             var label = new Label("Z");
             label.AddToClassList("manip-field-label");
             row.Add(label);
-
             m_zStepper = new NumberStepperField { Step = CurrentLinearStep };
             m_zStepper.ValueChanged += v =>
             {
@@ -125,7 +116,6 @@ namespace uWED.Runtime.UI.Manipulator
                     m_current.Position.Z = v;
             };
             row.Add(m_zStepper);
-
             container.Add(row);
         }
 
@@ -133,11 +123,9 @@ namespace uWED.Runtime.UI.Manipulator
         {
             var row = new VisualElement();
             row.AddToClassList("manip-field-row");
-
             var label = new Label("Angle");
             label.AddToClassList("manip-field-label");
             row.Add(label);
-
             m_angleStepper = new NumberStepperField { Step = CurrentAngleStep };
             m_angleStepper.ValueChanged += v =>
             {
@@ -145,24 +133,19 @@ namespace uWED.Runtime.UI.Manipulator
                     m_current.Angle = v;
             };
             row.Add(m_angleStepper);
-
             container.Add(row);
         }
 
         void BuildNameField(VisualElement container)
         {
             m_nameFieldContainer = new VisualElement();
-
             var title = new Label("Name");
             title.AddToClassList("manip-section-title");
             m_nameFieldContainer.Add(title);
-
             m_nameCombo = new ComboBoxField();
             m_nameCombo.AddToClassList("manip-picker-dropdown");
             m_nameFieldContainer.Add(m_nameCombo);
-
             container.Add(m_nameFieldContainer);
-
             WireNameProvider(); // default provider active immediately, even before SetProviders is called
         }
 
@@ -170,11 +153,9 @@ namespace uWED.Runtime.UI.Manipulator
         {
             var row = new VisualElement();
             row.AddToClassList("manip-slots-row");
-
             m_slot = new NameTextureSlot();
             m_slot.AddToClassList("manip-slot-first");
             m_slot.SetOffsetSectionVisible(false); // no confirmed per-object offset property
-
             m_slot.TextureSelectButton.clicked += () =>
             {
                 var names = m_textureProvider != null
@@ -182,7 +163,6 @@ namespace uWED.Runtime.UI.Manipulator
                     : (IReadOnlyList<string>)new List<string>();
                 Debug.Log($"TODO: open texture selection menu. Available: {string.Join(", ", names)}");
             };
-
             row.Add(m_slot);
             container.Add(row);
         }

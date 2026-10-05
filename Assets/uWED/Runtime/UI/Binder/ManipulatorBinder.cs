@@ -22,7 +22,11 @@ namespace uWED.Runtime.UI.Binder
 
         public ManipulatorBinder(VisualTreeAsset uxml, VisualElement parent, IManipulatorSettings settings)
         {
-            m_mapObjectManipulator = new MapObjectManipulator(uxml, settings);
+            // IMapObjectManipulatorProvider mirrors the Segment/Region providers below - lets an extension
+            // supply its own MapObjectManipulator subclass without this class needing to know it exists.
+            m_mapObjectManipulator = ServiceLocator.TryGet<IMapObjectManipulatorProvider>(out var mapObjectManipulatorProvider)
+                ? mapObjectManipulatorProvider.Create(uxml, settings)
+                : new MapObjectManipulator(uxml, settings);
             m_vertexManipulator = new VertexManipulator(uxml, settings);
             // ISegmentManipulatorProvider lets an extension (e.g. uWED.Acknex) supply its own
             // SegmentManipulator subclass without this class needing to know it exists - falls back to
