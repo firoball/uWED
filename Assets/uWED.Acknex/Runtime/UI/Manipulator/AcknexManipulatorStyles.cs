@@ -26,6 +26,10 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         public const string PickerTextureInfo = "acknex-picker-texture-info";
         /// <summary>The action-indicator icon shown when a Template has a WDL callback set.</summary>
         public const string PickerActionIcon = "acknex-picker-action-icon";
+        /// <summary>The stacked-indicator icon shown when a Region Template has Below assigned.</summary>
+        public const string PickerStackedIcon = "acknex-picker-stacked-icon";
+        /// <summary>Horizontal container for a detail row's indicator icons - grows rightward as more apply.</summary>
+        public const string PickerIconRow = "acknex-picker-icon-row";
 
         static StyleSheet s_styleSheet;
 

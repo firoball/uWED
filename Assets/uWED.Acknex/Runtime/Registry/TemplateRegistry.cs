@@ -44,8 +44,26 @@ namespace uWED.Acknex.Runtime.Registry
             Reload();
         }
 
-        /// <summary>Looks up a registered T by Name, or null if none is registered under that name.</summary>
-        public T Get(string name) => m_byName.TryGetValue(name, out var template) ? template : null;
+        /// <summary>Looks up a registered T by Name, or null if none is registered under that name. If the
+        /// entry's backing asset was deleted outside this registry (e.g. via the Project window, between
+        /// this session's last Reload and now), the stored reference is a destroyed Unity Object - null in
+        /// every way that matters (Unity's own != null check already treats it as such) except that it
+        /// would otherwise keep sitting in ByName/Choices forever, showing up as a second, "missing" copy
+        /// alongside whatever a caller creates next under the same Name. Evicting it here, lazily, on the
+        /// first lookup that notices, means a caller never has to force a full Reload just to keep this
+        /// registry accurate between deletions.</summary>
+        public T Get(string name)
+        {
+            if (!m_byName.TryGetValue(name, out var template))
+                return null;
+
+            if (template != null)
+                return template;
+
+            m_byName.Remove(name);
+            m_choices.Remove(template);
+            return null;
+        }
 
         /// <summary>Starts a batch on the underlying storage if it supports IBatchableAssetStorage
         /// (e.g. many Create calls in a row - see TemplateResolver.ResolveAll), otherwise a no-op.</summary>

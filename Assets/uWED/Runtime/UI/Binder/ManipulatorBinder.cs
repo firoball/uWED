@@ -30,7 +30,11 @@ namespace uWED.Runtime.UI.Binder
             m_segmentManipulator = ServiceLocator.TryGet<ISegmentManipulatorProvider>(out var segmentManipulatorProvider)
                 ? segmentManipulatorProvider.Create(uxml, settings)
                 : new SegmentManipulator(uxml, settings);
-            m_regionManipulator = new RegionManipulator(uxml, settings);
+            // IRegionManipulatorProvider mirrors ISegmentManipulatorProvider above - lets an extension
+            // supply its own RegionManipulator subclass without this class needing to know it exists.
+            m_regionManipulator = ServiceLocator.TryGet<IRegionManipulatorProvider>(out var regionManipulatorProvider)
+                ? regionManipulatorProvider.Create(uxml, settings)
+                : new RegionManipulator(uxml, settings);
             m_wayManipulator = new WayManipulator(uxml, settings);
 
             parent.Add(m_mapObjectManipulator);

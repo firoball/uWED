@@ -9,7 +9,7 @@ namespace uWED.Runtime.UI.Manipulator
     /// <summary>
     /// Region tab. Min/Max read-only. FloorHgt/CeilHgt editable steppers. Name
     /// is a plain rename field (ComboBoxField, string-typed, via
-    /// IGenericNameProvider&lt;string&gt;) - same shape as MapObject/Way/Segment's
+    /// IGenericNameProvider<string>) - same shape as MapObject/Way/Segment's
     /// Name fields. Two NameTextureSlots (Floor/Ceiling) for texture display
     /// only (Offset section hidden on both - no confirmed per-surface offset
     /// property); both slots share one texture provider.
@@ -26,10 +26,8 @@ namespace uWED.Runtime.UI.Manipulator
         Label m_maxValue;
         NumberStepperField m_floorHgtStepper;
         NumberStepperField m_ceilHgtStepper;
-
         VisualElement m_nameFieldContainer;
         ComboBoxField m_nameCombo;
-
         NameTextureSlot m_floorSlot;
         NameTextureSlot m_ceilSlot;
 
@@ -43,7 +41,7 @@ namespace uWED.Runtime.UI.Manipulator
         /// <summary>Call once providers are ready. nameProvider backs the Name combo box
         /// (null falls back to the default in-memory provider); textureProvider backs both
         /// texture slots' "..." select (placeholder, shared between Floor and Ceiling).</summary>
-        public void SetProviders(IGenericNameProvider<string> nameProvider, ITextureProvider textureProvider)
+        public virtual void SetProviders(IGenericNameProvider<string> nameProvider, ITextureProvider textureProvider)
         {
             m_nameProvider = nameProvider ?? new SimpleGenericNameProvider(new List<string>());
             m_textureProvider = textureProvider;
@@ -118,17 +116,13 @@ namespace uWED.Runtime.UI.Manipulator
         void BuildNameField(VisualElement container)
         {
             m_nameFieldContainer = new VisualElement();
-
             var title = new Label("Name");
             title.AddToClassList("manip-section-title");
             m_nameFieldContainer.Add(title);
-
             m_nameCombo = new ComboBoxField();
             m_nameCombo.AddToClassList("manip-picker-dropdown");
             m_nameFieldContainer.Add(m_nameCombo);
-
             container.Add(m_nameFieldContainer);
-
             WireNameProvider(); // default provider active immediately, even before SetProviders is called
         }
 
@@ -176,6 +170,7 @@ namespace uWED.Runtime.UI.Manipulator
 
             m_floorHgtStepper.Step = CurrentLinearStep;
             m_floorHgtStepper.Value = copy.FloorHgt;
+
             m_ceilHgtStepper.Step = CurrentLinearStep;
             m_ceilHgtStepper.Value = copy.CeilHgt;
 

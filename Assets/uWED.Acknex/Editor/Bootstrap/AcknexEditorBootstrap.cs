@@ -42,6 +42,8 @@ namespace uWED.Acknex.Editor.Bootstrap
             {
                 if (ServiceLocator.TryGet<TemplateRegistry<WallTemplate>>(out var existingWallTemplates))
                     existingWallTemplates.Reload();
+                if (ServiceLocator.TryGet<TemplateRegistry<RegionTemplate>>(out var existingRegionTemplates))
+                    existingRegionTemplates.Reload();
                 return;
             }
 
@@ -53,6 +55,12 @@ namespace uWED.Acknex.Editor.Bootstrap
             ServiceLocator.Register<TemplateRegistry<WallTemplate>>(wallTemplates);
             ServiceLocator.Register<TemplateResolver<WallTemplate>>(wallResolver);
             ServiceLocator.Register<ISegmentManipulatorProvider>(new AcknexSegmentManipulatorProvider(wallTemplates, wallResolver));
+
+            var regionTemplates = new TemplateRegistry<RegionTemplate>(storage);
+            var regionResolver = new TemplateResolver<RegionTemplate>(regionTemplates);
+            ServiceLocator.Register<TemplateRegistry<RegionTemplate>>(regionTemplates);
+            ServiceLocator.Register<TemplateResolver<RegionTemplate>>(regionResolver);
+            ServiceLocator.Register<IRegionManipulatorProvider>(new AcknexRegionManipulatorProvider(regionTemplates, regionResolver));
         }
     }
 }

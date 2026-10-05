@@ -54,21 +54,28 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         /// sits next to another Name of its own - e.g. a WallTemplate's Name above it in a Template
         /// picker's detail row - so the two Names read as a Wall's Name and its Texture's info, not two
         /// same-weight Names easily mistaken for each other.</summary>
-        public static Label BuildCompactInfoLabel(TextureInstance texture)
-        {
-            string size2 = "64x64";
-            string scale2 = "16.0/16.0";
+        public static Label BuildCompactInfoLabel(TextureInstance texture) => BuildCompactInfoLabel(null, texture);
 
-            return new Label($"defaulttexture  ·  {size2}  ·  Scale {scale2}");
+        /// <summary>Same as BuildCompactInfoLabel(TextureInstance), with a short label ("Floor"/"Ceil")
+        /// prepended - for a Template picker's detail row that shows more than one Texture at once (e.g.
+        /// RegionManipulator's floor/ceiling pair), where the prefix is what tells the two stat lines
+        /// apart since their thumbnails sit side by side rather than each getting its own row. suffix, if
+        /// given, is appended as one more "·"-separated segment (e.g. a surface height the caller knows
+        /// about but this view doesn't).</summary>
+        public static Label BuildCompactInfoLabel(string prefix, TextureInstance texture, string suffix = null)
+        {
+            string prefixPart = string.IsNullOrEmpty(prefix) ? string.Empty : $"{prefix}: ";
+            string suffixPart = string.IsNullOrEmpty(suffix) ? string.Empty : $"  ·  {suffix}";
+
             if (texture == null)
-                return new Label("-");
+                return new Label($"{prefixPart}-{suffixPart}");
 
             string size = texture.Value != null ? $"{texture.Value.width}x{texture.Value.height}" : "-";
             string scale = texture.Template != null
                 ? $"{texture.Template.Scale_x:0.###}/{texture.Template.Scale_y:0.###}"
                 : "-";
 
-            return new Label($"{texture.Name ?? "-"}  ·  {size}  ·  Scale {scale}");
+            return new Label($"{prefixPart}{texture.Name ?? "-"}  ·  {size}  ·  Scale {scale}{suffixPart}");
         }
     }
 }

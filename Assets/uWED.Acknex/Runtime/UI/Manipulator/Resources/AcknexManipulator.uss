@@ -27,3 +27,15 @@
     margin-left: 6px;
     font-size: 16px;
 }
+
+.acknex-picker-stacked-icon {
+    color: rgb(110, 180, 255);
+    margin-left: 6px;
+    font-size: 28px;
+    -unity-font-style: bold;
+}
+
+.acknex-picker-icon-row {
+    flex-direction: row;
+    align-items: center;
+}

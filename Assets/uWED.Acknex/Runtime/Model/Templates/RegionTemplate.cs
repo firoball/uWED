@@ -86,6 +86,18 @@ namespace uWED.Acknex.Runtime.Model.Templates
         /// <summary>WDL function/label name invoked once per engine tick.</summary>
         public string Each_tick { get => m_eachTick; set => m_eachTick = value; }
 
+        /// <summary>True if Below is assigned, i.e. this Region is stacked on top of another one - drives the
+        /// stacked-indicator icon on a Template picker's detail row.</summary>
+        public bool IsStacked => Below != null;
+
+        /// <summary>True if any WDL function/label callback is set - drives the action-indicator icon on
+        /// a Template picker's detail row. Region doesn't derive from BaseObjectTemplate (see class doc
+        /// comment), so this is its own check rather than an override of BaseObjectTemplate's.</summary>
+        public bool HasActionProperties =>
+            !string.IsNullOrEmpty(If_enter) || !string.IsNullOrEmpty(If_leave) ||
+            !string.IsNullOrEmpty(If_dive) || !string.IsNullOrEmpty(If_arise) ||
+            !string.IsNullOrEmpty(Each_cycle) || !string.IsNullOrEmpty(Each_tick);
+
         /// <summary>Floor ascend flag - the same underlying bit as Floor_lifted; the two are WDL alias names for one flag, always in sync.</summary>
         public bool Floor_ascend { get => m_flags.IsSet(AcknexFlag.Floor_ascend); set => m_flags = value ? m_flags.Set(AcknexFlag.Floor_ascend) : m_flags.Reset(AcknexFlag.Floor_ascend); }
         /// <summary>Ceiling ascend flag.</summary>
