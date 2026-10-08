@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace uWED.Acknex.Runtime.Model.Templates
@@ -16,6 +17,27 @@ namespace uWED.Acknex.Runtime.Model.Templates
     public abstract class MapObjectTemplate : TemplateAsset
     {
         [SerializeField] protected uint m_flags;
+
+        /// <summary>Names of the WDL function/label callback properties (If_*, Each_*) currently set on
+        /// this Template and meaningful for its type - empty if none. Backs HasActionProperties and the
+        /// action-indicator icon's tooltip.</summary>
+        public abstract IReadOnlyList<string> PopulatedActionProperties { get; }
+
+        /// <summary>True if at least one callback property is set (see PopulatedActionProperties) - drives
+        /// the action-indicator icon on a Template picker's detail row.</summary>
+        public bool HasActionProperties => PopulatedActionProperties.Count > 0;
+
+        /// <summary>Returns the names of those entries whose value is not null/empty, in the given order.</summary>
+        protected static List<string> CollectPopulated(params (string name, string value)[] properties)
+        {
+            var populated = new List<string>();
+            foreach (var (name, value) in properties)
+            {
+                if (!string.IsNullOrEmpty(value))
+                    populated.Add(name);
+            }
+            return populated;
+        }
 
         /// <summary>Generic user-assignable flag slot 1, independent of every named flag on this type.</summary>
         public bool Flag1 { get => m_flags.IsSet(AcknexFlag.Flag1); set => m_flags = value ? m_flags.Set(AcknexFlag.Flag1) : m_flags.Reset(AcknexFlag.Flag1); }

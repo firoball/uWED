@@ -30,11 +30,18 @@ namespace uWED.Runtime.UI.Manipulator
         Button m_okButton;
         TabView m_tabView;
 
+        VisualElement m_typeSelectorRow;
         DropdownField m_typeSelector;
         readonly List<ManipulatorTypeOption> m_typeOptions = new List<ManipulatorTypeOption>();
 
         T m_editedCopy;
         T m_originalTarget;
+
+        /// <summary>USS class marking a NumberStepperField as an angle stepper. Every NumberStepperField in the
+        /// window (including the axes of a Vector2StepperField) follows the settings bar's linear step,
+        /// both while loading and while the window is open, except those carrying this class, which follow
+        /// the angle step. Add it to every stepper editing an angle.</summary>
+        protected const string AngleStepperClass = "manip-angle-stepper";
 
         /// <summary>Real object Open() was called with, not the edit copy. Use for
         /// read-only fields Clone() doesn't carry over.</summary>
@@ -105,8 +112,16 @@ namespace uWED.Runtime.UI.Manipulator
 
             m_linearStepField.SetValueWithoutNotify(Settings.LinearStep);
             m_angleStepField.SetValueWithoutNotify(Settings.AngleStep);
-            m_linearStepField.RegisterValueChangedCallback(evt => Settings.LinearStep = evt.newValue);
-            m_angleStepField.RegisterValueChangedCallback(evt => Settings.AngleStep = evt.newValue);
+            m_linearStepField.RegisterValueChangedCallback(evt =>
+            {
+                Settings.LinearStep = evt.newValue;
+                ApplyStepToSteppers(evt.newValue, angle: false);
+            });
+            m_angleStepField.RegisterValueChangedCallback(evt =>
+            {
+                Settings.AngleStep = evt.newValue;
+                ApplyStepToSteppers(evt.newValue, angle: true);
+            });
 
             m_linearStepField.SetEnabled(UsesLinearStep);
             m_angleStepField.SetEnabled(UsesAngleStep);
@@ -186,8 +201,8 @@ namespace uWED.Runtime.UI.Manipulator
 
         /// <summary>
         /// Queries the IManipulatorTypeProvider for T and (re)fills the type selector. The selector is built
-        /// lazily the first time options exist and is inserted at the top of the content container; it is
-        /// hidden whenever there are no options.
+        /// lazily the first time options exist and is inserted at the top of the content container as a
+        /// regular field row (label column + dropdown); the row is hidden whenever there are no options.
         /// </summary>
         void RefreshTypeSelector()
         {
@@ -200,16 +215,25 @@ namespace uWED.Runtime.UI.Manipulator
 
             if (m_typeOptions.Count == 0)
             {
-                if (m_typeSelector != null) m_typeSelector.style.display = DisplayStyle.None;
+                if (m_typeSelectorRow != null) m_typeSelectorRow.style.display = DisplayStyle.None;
                 return;
             }
 
             if (m_typeSelector == null)
             {
-                m_typeSelector = new DropdownField("Type");
+                m_typeSelectorRow = new VisualElement();
+                m_typeSelectorRow.AddToClassList("manip-field-row");
+
+                var label = new Label("Type");
+                label.AddToClassList("manip-field-label");
+                m_typeSelectorRow.Add(label);
+
+                m_typeSelector = new DropdownField();
                 m_typeSelector.AddToClassList("manip-picker-dropdown");
                 m_typeSelector.RegisterValueChangedCallback(OnTypeSelectorChanged);
-                m_contentContainer.Insert(0, m_typeSelector);
+                m_typeSelectorRow.Add(m_typeSelector);
+
+                m_contentContainer.Insert(0, m_typeSelectorRow);
             }
 
             int currentId = m_editedCopy.TypeId;
@@ -225,7 +249,7 @@ namespace uWED.Runtime.UI.Manipulator
             var choices = new List<string>(m_typeOptions.Count);
             foreach (var option in m_typeOptions) choices.Add($"{option.Id} - {option.Label}");
 
-            m_typeSelector.style.display = DisplayStyle.Flex;
+            m_typeSelectorRow.style.display = DisplayStyle.Flex;
             m_typeSelector.choices = choices;
             m_typeSelector.SetValueWithoutNotify(choices[selectedIndex]);
 
@@ -244,6 +268,18 @@ namespace uWED.Runtime.UI.Manipulator
 
             m_editedCopy.TypeId = newId;
             OnTypeChanged(newId);
+        }
+
+        /// <summary>Pushes a changed step size to every NumberStepperField in the window, so the new value
+        /// applies while the window stays open. Steppers carrying AngleStepperClass follow the angle step,
+        /// all others (including the axes of a Vector2StepperField) the linear step.</summary>
+        void ApplyStepToSteppers(float step, bool angle)
+        {
+            m_manipRoot.Query<NumberStepperField>().ForEach(stepper =>
+            {
+                if (stepper.ClassListContains(AngleStepperClass) == angle)
+                    stepper.Step = step;
+            });
         }
 
         void OnPanelFocusIn(FocusInEvent evt)

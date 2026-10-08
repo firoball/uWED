@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultMapAsset
   m_EditorClassIdentifier: 
   m_data:
-    rid: 8548430353019701147
+    rid: 8548430353019701151
   references:
     version: 2
     RefIds:
@@ -18958,7 +18958,7 @@ MonoBehaviour:
       data:
         m_typeId: 0
         m_name: forestrand_noclip
-        m_floorHgt: 0.2
+        m_floorHgt: 0.1
         m_ceilHgt: 25
     - rid: 8548430353019700711
       type: {class: Region, ns: uWED.Runtime.Core.Map.Model, asm: uWED.Runtime}
@@ -22048,7 +22048,7 @@ MonoBehaviour:
           rid: -2
         m_name: defaultwall
         m_offset: {x: 0, y: 0}
-    - rid: 8548430353019701147
+    - rid: 8548430353019701151
       type: {class: MapDataSet, ns: uWED.Runtime.Core.Map.Container, asm: uWED.Runtime}
       data:
         m_objects:

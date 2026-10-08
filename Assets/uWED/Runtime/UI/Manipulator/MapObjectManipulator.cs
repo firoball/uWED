@@ -127,6 +127,7 @@ namespace uWED.Runtime.UI.Manipulator
             label.AddToClassList("manip-field-label");
             row.Add(label);
             m_angleStepper = new NumberStepperField { Step = CurrentAngleStep };
+            m_angleStepper.AddToClassList(AngleStepperClass);
             m_angleStepper.ValueChanged += v =>
             {
                 if (m_current != null)

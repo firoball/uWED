@@ -126,12 +126,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             row.Add(stack);
 
             if (template.HasActionProperties)
-            {
-                var icon = new Label("⚡") { style = { alignSelf = Align.Center, unityTextAlign = TextAnchor.MiddleCenter } };
-                icon.AddToClassList(AcknexManipulatorStyles.PickerActionIcon);
-                icon.tooltip = "Has one or more WDL action callbacks set";
-                row.Add(icon);
-            }
+                row.Add(TemplateIndicatorIcons.BuildActionIcon(template));
 
             return row;
         }

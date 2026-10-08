@@ -39,3 +39,29 @@
     flex-direction: row;
     align-items: center;
 }
+
+.acknex-defaults-row {
+    flex-direction: row;
+    margin-top: 4px;
+    margin-bottom: 3px;
+}
+
+.acknex-defaults-hint {
+    color: rgb(150, 150, 150);
+    font-size: 10px;
+    padding-left: 24px;
+}
+
+.acknex-defaults-reset-button {
+    height: 18px;
+    padding: 0 8px;
+    margin: 0 0 0 8px;
+    border-radius: 3px;
+    border-width: 0;
+    background-color: rgb(65, 65, 65);
+    color: rgb(220, 220, 220);
+}
+
+.acknex-defaults-reset-button:hover {
+    background-color: rgb(85, 85, 85);
+}

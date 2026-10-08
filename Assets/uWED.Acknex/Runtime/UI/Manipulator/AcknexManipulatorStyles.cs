@@ -31,6 +31,13 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         /// <summary>Horizontal container for a detail row's indicator icons - grows rightward as more apply.</summary>
         public const string PickerIconRow = "acknex-picker-icon-row";
 
+        /// <summary>Row of per-field Template-default hints below an instance-value field.</summary>
+        public const string DefaultsRow = "acknex-defaults-row";
+        /// <summary>One Template-default hint within a DefaultsRow.</summary>
+        public const string DefaultsHint = "acknex-defaults-hint";
+        /// <summary>Button resetting instance values to the defaults their Template presets.</summary>
+        public const string DefaultsResetButton = "acknex-defaults-reset-button";
+
         static StyleSheet s_styleSheet;
 
         /// <summary>Adds this stylesheet to target's styleSheets, loading and caching it from Resources on

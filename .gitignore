@@ -107,3 +107,7 @@ InitTestScene*.unity*
 
 # Exclude Rider
 /.idea/
+
+# Project specific
+/[Aa]ssets/[Mm]ap
+/[Aa]ssets/[Mm]ap.meta

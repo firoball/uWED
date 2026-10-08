@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using uWED.Acknex.Runtime.Model.Instances;
 
@@ -43,14 +44,13 @@ namespace uWED.Acknex.Runtime.Model.Templates
         /// <summary>WDL function/label name invoked once per engine tick.</summary>
         public string Each_tick { get => m_eachTick; set => m_eachTick = value; }
 
-        /// <summary>True if any WDL function/label callback meaningful on this type is set - drives the
-        /// action-indicator icon on a Template picker's detail row. If_arrived is deliberately excluded
-        /// here: it exists on this shared base only because Wall/Thing/Actor all parse it at the WDL level
-        /// (round-trip fidelity), but it's semantically inert on Wall/Thing - only Actor's movement-target
-        /// arrival gives it meaning, so ActorTemplate overrides this to also consider it.</summary>
-        public virtual bool HasActionProperties =>
-            !string.IsNullOrEmpty(If_near) || !string.IsNullOrEmpty(If_far) || !string.IsNullOrEmpty(If_hit) ||
-            !string.IsNullOrEmpty(Each_cycle) || !string.IsNullOrEmpty(Each_tick);
+        /// <summary>The callbacks set among If_near, If_far, If_hit, Each_cycle and Each_tick. If_arrived is
+        /// deliberately not considered here: it exists on this shared base only because Wall/Thing/Actor
+        /// all parse it at the WDL level (round-trip fidelity), but it is semantically inert on Wall/Thing -
+        /// only Actor's movement-target arrival gives it meaning, so ActorTemplate adds it.</summary>
+        public override IReadOnlyList<string> PopulatedActionProperties => CollectPopulated(
+            (nameof(If_near), If_near), (nameof(If_far), If_far), (nameof(If_hit), If_hit),
+            (nameof(Each_cycle), Each_cycle), (nameof(Each_tick), Each_tick));
 
         /// <summary>Far flag.</summary>
         public bool Far { get => m_flags.IsSet(AcknexFlag.Far); set => m_flags = value ? m_flags.Set(AcknexFlag.Far) : m_flags.Reset(AcknexFlag.Far); }

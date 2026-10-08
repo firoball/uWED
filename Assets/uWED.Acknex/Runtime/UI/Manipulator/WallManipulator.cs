@@ -114,21 +114,9 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             row.Add(stack);
 
             if (template.HasActionProperties)
-                row.Add(BuildActionIcon());
+                row.Add(TemplateIndicatorIcons.BuildActionIcon(template));
 
             return row;
-        }
-
-        /// <summary>Lightning-bolt indicator shown when a Template has at least one WDL callback set (see
-        /// BaseObjectTemplate.HasActionProperties). Explicit alignSelf/unityTextAlign, rather than relying
-        /// on the parent row's own alignItems, keeps the glyph centered on its own regardless of how tall
-        /// its container ends up next to the Name label's shorter line height.</summary>
-        static VisualElement BuildActionIcon()
-        {
-            var icon = new Label("⚡") { style = { alignSelf = Align.Center, unityTextAlign = TextAnchor.MiddleCenter } };
-            icon.AddToClassList(AcknexManipulatorStyles.PickerActionIcon);
-            icon.tooltip = "Has one or more WDL action callbacks set";
-            return icon;
         }
 
         /// <summary>Distinguishes an ordinary row selection (already-registered Template) from a

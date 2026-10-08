@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using uWED.Acknex.Runtime.Model.Instances;
 
@@ -90,13 +91,10 @@ namespace uWED.Acknex.Runtime.Model.Templates
         /// stacked-indicator icon on a Template picker's detail row.</summary>
         public bool IsStacked => Below != null;
 
-        /// <summary>True if any WDL function/label callback is set - drives the action-indicator icon on
-        /// a Template picker's detail row. Region doesn't derive from BaseObjectTemplate (see class doc
-        /// comment), so this is its own check rather than an override of BaseObjectTemplate's.</summary>
-        public bool HasActionProperties =>
-            !string.IsNullOrEmpty(If_enter) || !string.IsNullOrEmpty(If_leave) ||
-            !string.IsNullOrEmpty(If_dive) || !string.IsNullOrEmpty(If_arise) ||
-            !string.IsNullOrEmpty(Each_cycle) || !string.IsNullOrEmpty(Each_tick);
+        /// <summary>The callbacks set among If_enter, If_leave, If_dive, If_arise, Each_cycle and Each_tick.</summary>
+        public override IReadOnlyList<string> PopulatedActionProperties => CollectPopulated(
+            (nameof(If_enter), If_enter), (nameof(If_leave), If_leave), (nameof(If_dive), If_dive),
+            (nameof(If_arise), If_arise), (nameof(Each_cycle), Each_cycle), (nameof(Each_tick), Each_tick));
 
         /// <summary>Floor ascend flag - the same underlying bit as Floor_lifted; the two are WDL alias names for one flag, always in sync.</summary>
         public bool Floor_ascend { get => m_flags.IsSet(AcknexFlag.Floor_ascend); set => m_flags = value ? m_flags.Set(AcknexFlag.Floor_ascend) : m_flags.Reset(AcknexFlag.Floor_ascend); }

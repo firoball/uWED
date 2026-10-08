@@ -7,7 +7,8 @@ using uWED.Runtime.Core.Map.Model;
 namespace uWED.Runtime.UI.Manipulator
 {
     /// <summary>
-    /// Region tab. Min/Max read-only. FloorHgt/CeilHgt editable steppers. Name
+    /// Region tab. Min/Max read-only. FloorHgt/CeilHgt editable as one "Heights" stepper pair (Floor/Ceil
+    /// side by side, same shape as Segment's Texture Offset). Name
     /// is a plain rename field (ComboBoxField, string-typed, via
     /// IGenericNameProvider<string>) - same shape as MapObject/Way/Segment's
     /// Name fields. Two NameTextureSlots (Floor/Ceiling) for texture display
@@ -17,6 +18,9 @@ namespace uWED.Runtime.UI.Manipulator
     public class RegionManipulator : ManipulatorWindowBase<Region>
     {
         protected override string TypeLabel => "Region";
+
+        /// <summary>The Floor (X) / Ceil (Y) height stepper, for subclasses adding content next to it.</summary>
+        protected Vector2StepperField HeightsStepper => m_heightsStepper;
         protected override bool UsesAngleStep => false;
 
         IGenericNameProvider<string> m_nameProvider = new SimpleGenericNameProvider(new List<string>());
@@ -24,8 +28,7 @@ namespace uWED.Runtime.UI.Manipulator
 
         Label m_minValue;
         Label m_maxValue;
-        NumberStepperField m_floorHgtStepper;
-        NumberStepperField m_ceilHgtStepper;
+        Vector2StepperField m_heightsStepper; // X = FloorHgt, Y = CeilHgt
         VisualElement m_nameFieldContainer;
         ComboBoxField m_nameCombo;
         NameTextureSlot m_floorSlot;
@@ -95,22 +98,18 @@ namespace uWED.Runtime.UI.Manipulator
 
         void BuildHeightFields(VisualElement container)
         {
-            m_floorHgtStepper = BuildFieldRow(container, "Floor Height", v => { if (m_current != null) m_current.FloorHgt = v; });
-            m_ceilHgtStepper = BuildFieldRow(container, "Ceiling Height", v => { if (m_current != null) m_current.CeilHgt = v; });
-        }
+            var title = new Label("Heights");
+            title.AddToClassList("manip-section-title");
+            container.Add(title);
 
-        static NumberStepperField BuildFieldRow(VisualElement container, string labelText, System.Action<float> onChanged)
-        {
-            var row = new VisualElement();
-            row.AddToClassList("manip-field-row");
-            var label = new Label(labelText);
-            label.AddToClassList("manip-field-label");
-            row.Add(label);
-            var stepper = new NumberStepperField();
-            stepper.ValueChanged += onChanged;
-            row.Add(stepper);
-            container.Add(row);
-            return stepper;
+            m_heightsStepper = new Vector2StepperField("Floor", "Ceil");
+            m_heightsStepper.ValueChanged += v =>
+            {
+                if (m_current == null) return;
+                m_current.FloorHgt = v.x;
+                m_current.CeilHgt = v.y;
+            };
+            container.Add(m_heightsStepper);
         }
 
         void BuildNameField(VisualElement container)
@@ -168,11 +167,8 @@ namespace uWED.Runtime.UI.Manipulator
             m_minValue.text = FormatVector(OriginalTarget.Min);
             m_maxValue.text = FormatVector(OriginalTarget.Max);
 
-            m_floorHgtStepper.Step = CurrentLinearStep;
-            m_floorHgtStepper.Value = copy.FloorHgt;
-
-            m_ceilHgtStepper.Step = CurrentLinearStep;
-            m_ceilHgtStepper.Value = copy.CeilHgt;
+            m_heightsStepper.Step = CurrentLinearStep;
+            m_heightsStepper.Value = new Vector2(copy.FloorHgt, copy.CeilHgt);
 
             m_nameCombo.Refresh();
             m_nameCombo.SetValueWithoutNotify(copy.Name);
@@ -191,8 +187,8 @@ namespace uWED.Runtime.UI.Manipulator
 
         protected override void WriteBack(Region target, Region editedCopy)
         {
-            target.FloorHgt = m_floorHgtStepper.Value;
-            target.CeilHgt = m_ceilHgtStepper.Value;
+            target.FloorHgt = m_heightsStepper.Value.x;
+            target.CeilHgt = m_heightsStepper.Value.y;
             target.Name = m_nameCombo.value;
         }
 
