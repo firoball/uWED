@@ -12,9 +12,12 @@ namespace uWED.Acknex.Runtime.Model.Templates
     /// </summary>
     public abstract class BaseObjectTemplate : MapObjectTemplate
     {
+        /// <summary>Map_color of a newly created Template.</summary>
+        public const int DefaultMapColor = 1;
+
         [SerializeReference] TextureInstance m_texture; // plain-class reference - see TextureInstance's own doc comment
         [SerializeReference] TextureInstance m_attach; // plain-class reference - see TextureInstance's own doc comment
-        [SerializeField] int m_mapColor;
+        [SerializeField] int m_mapColor = DefaultMapColor;
         [SerializeField] float m_dist;
         [SerializeField] string m_ifNear;
         [SerializeField] string m_ifFar;

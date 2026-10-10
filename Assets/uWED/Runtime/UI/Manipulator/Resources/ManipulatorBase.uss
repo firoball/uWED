@@ -9,7 +9,8 @@
     background-color: rgba(0, 0, 0, 0.55);
     align-items: center;
     justify-content: flex-start;
-    padding-top: 40px;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .manip-panel {
@@ -20,7 +21,7 @@
        what caused the popup to visibly grow the whole dialog. */
     width: 80%;
     max-width: 640px;
-    height: 85%;
+    height: 100%;
     background-color: rgb(45, 45, 45);
     border-radius: 8px;
     border-width: 1px;
@@ -172,6 +173,10 @@
 
 .stepper-btn:hover {
     background-color: rgb(85, 85, 85);
+}
+
+.stepper-btn:disabled:hover {
+    background-color: rgb(65, 65, 65);
 }
 
 .stepper-field {
@@ -360,6 +365,12 @@
 
 /* ---------------- Focus highlight ---------------- */
 
+.manip-tabview FloatField:focus,
+.manip-tabview TextField:focus,
+.manip-tabview DropdownField:focus,
+.manip-tabview EnumField:focus,
+.manip-tabview Toggle:focus,
+.manip-tabview Button:focus,
 .manip-content-container FloatField:focus,
 .manip-content-container TextField:focus,
 .manip-content-container DropdownField:focus,
@@ -369,5 +380,19 @@
 .manip-footer Button:focus,
 .manip-header Button:focus {
     border-width: 1px;
+    border-color: rgb(90, 150, 220);
+}
+
+.manip-settings-bar FloatField {
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.manip-tabview .unity-tab__header {
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.manip-tabview .unity-tab__header:focus {
     border-color: rgb(90, 150, 220);
 }

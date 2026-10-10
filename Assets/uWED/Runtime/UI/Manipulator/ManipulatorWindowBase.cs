@@ -29,6 +29,7 @@ namespace uWED.Runtime.UI.Manipulator
         Button m_cancelButton;
         Button m_okButton;
         TabView m_tabView;
+        bool m_tabbingBackwards;
 
         VisualElement m_typeSelectorRow;
         DropdownField m_typeSelector;
@@ -43,6 +44,10 @@ namespace uWED.Runtime.UI.Manipulator
         /// the angle step. Add it to every stepper editing an angle.</summary>
         protected const string AngleStepperClass = "manip-angle-stepper";
 
+        /// <summary>Class marking a NumberStepperField that keeps the step it was created with and ignores
+        /// both settings-bar steps - for values that only make sense in fixed increments (e.g. an integer).</summary>
+        protected const string FixedStepStepperClass = "manip-fixed-step-stepper";
+
         /// <summary>Real object Open() was called with, not the edit copy. Use for
         /// read-only fields Clone() doesn't carry over.</summary>
         protected T OriginalTarget => m_originalTarget;
@@ -53,6 +58,9 @@ namespace uWED.Runtime.UI.Manipulator
         /// <summary>TypeId of the edit copy: the value currently shown in the type selector. Equals the
         /// target's TypeId right after Open() until the user picks another type.</summary>
         protected int EditedTypeId => m_editedCopy != null ? m_editedCopy.TypeId : 0;
+
+        /// <summary>Label of the window's first (default) tab. Defaults to TypeLabel.</summary>
+        protected virtual string MainTabLabel => TypeLabel;
 
         /// <summary>Header text naming the edited object type (the object's Index is appended on Open()).</summary>
         protected abstract string TypeLabel { get; }
@@ -110,6 +118,10 @@ namespace uWED.Runtime.UI.Manipulator
 
             m_typeLabel.text = TypeLabel;
 
+            var mainTab = m_tabView.Q<Tab>();
+            if (mainTab != null)
+                mainTab.label = MainTabLabel;
+
             m_linearStepField.SetValueWithoutNotify(Settings.LinearStep);
             m_angleStepField.SetValueWithoutNotify(Settings.AngleStep);
             m_linearStepField.RegisterValueChangedCallback(evt =>
@@ -141,9 +153,16 @@ namespace uWED.Runtime.UI.Manipulator
                 else if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter) { Apply(); evt.StopPropagation(); }
             });
 
+            m_manipRoot.RegisterCallback<KeyDownEvent>(evt =>
+            {
+                if (evt.keyCode == KeyCode.Tab)
+                    m_tabbingBackwards = evt.shiftKey;
+            }, TrickleDown.TrickleDown);
+
             // Focus trap: default Tab navigation runs untouched (so in-window
             // tabbing behaves normally); if it ever lands outside m_manipRoot
-            // (only possible at the very first/last field), snap back in.
+            // (only possible at the very first/last field), wrap around to the
+            // first control (Tab) or the last one (Shift+Tab).
             // Registered on the panel root, not m_manipRoot, since the escaping
             // element is by definition not a descendant of m_manipRoot anymore.
             RegisterCallback<AttachToPanelEvent>(evt =>
@@ -152,6 +171,7 @@ namespace uWED.Runtime.UI.Manipulator
                 evt.originPanel?.visualTree.UnregisterCallback<FocusInEvent>(OnPanelFocusIn, TrickleDown.TrickleDown));
 
             PopulateContent(m_contentContainer);
+            instance.Query<ScrollView>().ForEach(RemoveScrollbarsFromFocusOrder);
             Add(instance);
         }
 
@@ -166,9 +186,16 @@ namespace uWED.Runtime.UI.Manipulator
             // display:Flex before RefreshTypeSelector()/LoadValues(): populating a DropdownField's
             // choices while still display:none corrupts its popup measurement.
             m_manipRoot.style.display = DisplayStyle.Flex;
+            SelectFirstTab();
             RefreshTypeSelector();
             LoadValues(m_editedCopy);
             m_manipRoot.Focus();
+        }
+
+        /// <summary>Makes the first tab the active one, so every Open starts on it.</summary>
+        void SelectFirstTab()
+        {
+            m_tabView.selectedTabIndex = 0;
         }
 
         /// <summary>Writes the current edit copy into the original target without closing the window.</summary>
@@ -272,11 +299,15 @@ namespace uWED.Runtime.UI.Manipulator
 
         /// <summary>Pushes a changed step size to every NumberStepperField in the window, so the new value
         /// applies while the window stays open. Steppers carrying AngleStepperClass follow the angle step,
-        /// all others (including the axes of a Vector2StepperField) the linear step.</summary>
+        /// all others (including the axes of a Vector2StepperField) the linear step. Steppers carrying
+        /// FixedStepStepperClass are left alone.</summary>
         void ApplyStepToSteppers(float step, bool angle)
         {
             m_manipRoot.Query<NumberStepperField>().ForEach(stepper =>
             {
+                if (stepper.ClassListContains(FixedStepStepperClass))
+                    return;
+
                 if (stepper.ClassListContains(AngleStepperClass) == angle)
                     stepper.Step = step;
             });
@@ -286,7 +317,33 @@ namespace uWED.Runtime.UI.Manipulator
         {
             if (m_manipRoot.style.display != DisplayStyle.Flex) return;
             if (evt.target is VisualElement target && target != m_manipRoot && !m_manipRoot.Contains(target))
-                m_manipRoot.Focus();
+                FocusEdgeControl(m_tabbingBackwards);
+        }
+
+        /// <summary>Takes a ScrollView and its scrollbars (sliders and buttons) out of the Tab order. The
+        /// controls placed inside the ScrollView stay Tab stops.</summary>
+        static void RemoveScrollbarsFromFocusOrder(ScrollView scroll)
+        {
+            scroll.focusable = false;
+            scroll.Query<Scroller>().ForEach(scroller =>
+            {
+                scroller.focusable = false;
+                scroller.Query<VisualElement>().ForEach(element => element.focusable = false);
+            });
+        }
+
+        /// <summary>Focuses the first (or, if last is set, the last) control of the window that can take
+        /// focus through the Tab key. Falls back to the window root if there is none.</summary>
+        void FocusEdgeControl(bool last)
+        {
+            VisualElement edge = null;
+            m_manipRoot.Query<VisualElement>().ForEach(element =>
+            {
+                if (element != m_manipRoot && element.tabIndex >= 0 && element.canGrabFocus && (last || edge == null))
+                    edge = element;
+            });
+
+            (edge ?? m_manipRoot).Focus();
         }
 
         /// <summary>Linear step size currently set in the settings bar.</summary>

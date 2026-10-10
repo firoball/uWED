@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using uWED.Acknex.Runtime.Model.Assets;
 using uWED.Acknex.Runtime.Model.Instances;
-using Font = uWED.Acknex.Runtime.Model.Assets.Font;
 
 namespace uWED.Acknex.Runtime.Model.Templates
 {
@@ -15,8 +14,17 @@ namespace uWED.Acknex.Runtime.Model.Templates
     /// </summary>
     public class TextureTemplate : TemplateAsset
     {
-        [SerializeField] int m_sides;
-        [SerializeField] int m_cycles;
+        /// <summary>Sides of a newly created Template.</summary>
+        public const int DefaultSides = 1;
+        /// <summary>Cycles of a newly created Template.</summary>
+        public const int DefaultCycles = 1;
+        /// <summary>Scale_x and Scale_y of a newly created Template (16 pixels per step).</summary>
+        public const float DefaultScale = 16f;
+        /// <summary>Svol of a newly created Template.</summary>
+        public const float DefaultSvol = 0.5f;
+
+        [SerializeField] int m_sides = DefaultSides;
+        [SerializeField] int m_cycles = DefaultCycles;
         [SerializeField] int m_frame;
         [SerializeField] List<Bmap> m_bmaps = new();
         [SerializeField] Flic m_flic;
@@ -27,13 +35,13 @@ namespace uWED.Acknex.Runtime.Model.Templates
         [SerializeField] List<float> m_offsetX = new();
         [SerializeField] List<float> m_offsetY = new();
         [SerializeField] float m_random;
-        [SerializeField] float m_scaleX;
-        [SerializeField] float m_scaleY;
+        [SerializeField] float m_scaleX = DefaultScale;
+        [SerializeField] float m_scaleY = DefaultScale;
         [SerializeField] float m_ambient;
         [SerializeField] float m_albedo;
         [SerializeField] float m_radiance;
         [SerializeField] Sound m_sound;
-        [SerializeField] float m_svol;
+        [SerializeField] float m_svol = DefaultSvol;
         [SerializeField] float m_sdist;
         [SerializeField] float m_svdist;
         [SerializeField] List<float> m_scycles = new();
@@ -42,7 +50,7 @@ namespace uWED.Acknex.Runtime.Model.Templates
         [SerializeField] float m_posX;
         [SerializeField] float m_posY;
         [SerializeField] string m_touch;
-        [SerializeField] Font m_font;
+        [SerializeField] Assets.Font m_font;
         [SerializeField] string m_ifTouch;
         [SerializeField] string m_ifRelease;
         [SerializeField] string m_ifKlick;
@@ -103,7 +111,7 @@ namespace uWED.Acknex.Runtime.Model.Templates
         /// <summary>Touch interaction label.</summary>
         public string Touch { get => m_touch; set => m_touch = value; }
         /// <summary>Font this Texture renders with, if any.</summary>
-        public Font Font { get => m_font; set => m_font = value; }
+        public Assets.Font Font { get => m_font; set => m_font = value; }
         /// <summary>WDL function/label name invoked on touch.</summary>
         public string If_touch { get => m_ifTouch; set => m_ifTouch = value; }
         /// <summary>WDL function/label name invoked on release.</summary>

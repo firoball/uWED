@@ -13,6 +13,9 @@ namespace uWED.Acknex.Runtime.Model.Templates
     /// </summary>
     public class RegionTemplate : MapObjectTemplate
     {
+        /// <summary>Clip_dist of a newly created Template.</summary>
+        public const float DefaultClipDist = 1000f;
+
         [SerializeField] RegionTemplate m_below;
         [SerializeReference] TextureInstance m_floorTex;
         [SerializeReference] TextureInstance m_ceilTex;
@@ -30,7 +33,7 @@ namespace uWED.Acknex.Runtime.Model.Templates
         [SerializeField] float m_ceilOffsX;
         [SerializeField] float m_ceilOffsY;
         [SerializeField] float m_ambient;
-        [SerializeField] float m_clipDist;
+        [SerializeField] float m_clipDist = DefaultClipDist;
         [SerializeField] string m_ifEnter;
         [SerializeField] string m_ifLeave;
         [SerializeField] string m_ifDive;

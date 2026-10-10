@@ -118,6 +118,13 @@ namespace uWED.Acknex.Editor.Platform
             return clone;
         }
 
+        /// <summary>Flags asset as modified and saves it unless a batch is in progress.</summary>
+        public void MarkDirty<T>(T asset) where T : TemplateAsset
+        {
+            EditorUtility.SetDirty(asset);
+            SaveAssetsUnlessBatching();
+        }
+
         /// <summary>Deletes an asset's backing .asset file.</summary>
         public void Delete<T>(T asset) where T : TemplateAsset
             => AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(asset));

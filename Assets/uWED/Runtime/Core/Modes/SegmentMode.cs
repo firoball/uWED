@@ -167,8 +167,7 @@ namespace uWED.Runtime.Core.Modes
             // handle Segment
             if (m_drawer.CursorInfo.HoverSegment != null)
             {
-                List<string> names = m_mapData.GetSegmentNames();
-                EditorEventBus.Instance.EditSegment.Raise(m_drawer.CursorInfo.HoverSegment, names);
+                EditorEventBus.Instance.EditSegment.Raise(m_drawer.CursorInfo.HoverSegment, m_mapData.GetSegmentNames());
             }
         }
 

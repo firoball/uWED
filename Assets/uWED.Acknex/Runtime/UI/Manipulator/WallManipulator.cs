@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UI.Controls;
 using UnityEngine;
 using UnityEngine.UIElements;
 using uWED.Acknex.Runtime.Model.Templates;
 using uWED.Acknex.Runtime.Registry;
+using uWED.Acknex.Runtime.UI.TemplateEditor;
 using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.Platform;
 using uWED.Runtime.UI.Manipulator;
 
 namespace uWED.Acknex.Runtime.UI.Manipulator
@@ -23,10 +26,18 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         readonly TemplateResolver<WallTemplate> m_templateResolver;
         GenericComboBoxField<WallTemplate> m_templateCombo;
 
+        const string UsageNoun = "wall";
+
+        TemplateTab[] m_templateTabs;
+        TemplateEditSession m_session;
+
         // Resolved once per Open() in LoadValues, valid until the next LoadValues/WriteBack - avoids a
         // second by-name lookup in WriteBack and lets LoadTextureInfo (called from inside
         // base.LoadValues, before this override's own code runs) see it already resolved.
         WallTemplate m_currentTemplate;
+
+        // Instance name -> number of Segments carrying it, as last handed to SetCountByName.
+        IReadOnlyDictionary<string, int> m_countByName;
 
         /// <summary>Builds the window against the given collaborators - Choices and Clone (the picker's
         /// "+") read from templateRegistry directly; Segment→Template resolution (including the
@@ -40,6 +51,77 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             AcknexManipulatorStyles.ApplyTo(this);
             SetNameFieldVisible(false);
             BuildTemplatePicker();
+            BuildTemplateTabs();
+        }
+
+        /// <summary>The first tab holds the Segment's own values and the Template picker.</summary>
+        protected override string MainTabLabel => "Wall";
+
+        /// <summary>Adds one tab per group of WallTemplateLayout. All tabs are bound to one
+        /// TemplateEditSession per selected Template (see BindTemplateTabs).</summary>
+        void BuildTemplateTabs()
+        {
+            m_templateTabs = new TemplateTab[WallTemplateLayout.Groups.Count];
+            for (int i = 0; i < m_templateTabs.Length; i++)
+                m_templateTabs[i] = new TemplateTab(typeof(WallTemplate), WallTemplateLayout.Groups[i]);
+
+            foreach (var tab in m_templateTabs)
+            {
+                tab.CloneRequested += CloneCurrentTemplate;
+
+                foreach (var stepper in tab.IntegerSteppers)
+                    stepper.AddToClassList(FixedStepStepperClass);
+
+                TabView.Add(tab);
+            }
+        }
+
+        /// <summary>Starts a fresh edit session on the selected Template (discarding any pending edits of
+        /// the previous one) and binds the Template tabs to it. While a session is editing the picker is
+        /// disabled, so the edited Template can't change underneath it.</summary>
+        void BindTemplateTabs()
+        {
+            m_session?.Discard();
+
+            m_session = m_currentTemplate != null ? new TemplateEditSession(m_currentTemplate, template => m_templateRegistry.MarkDirty((WallTemplate)template)) : null;
+            if (m_session != null)
+            {
+                m_session.StateChanged += () => m_templateCombo.SetEnabled(!m_session.IsEditing);
+                m_session.Applied += () => m_templateCombo.Refresh();
+            }
+
+            m_templateCombo.SetEnabled(true);
+
+            string usageText = BuildUsageText();
+            foreach (var tab in m_templateTabs)
+            {
+                tab.SetStep(CurrentLinearStep);
+                tab.Bind(m_session, usageText);
+            }
+        }
+
+        /// <summary>"used by N walls": the Segments in the map resolving to the selected Template. The open
+        /// Segment is counted too, even if it only gets this Template when its window is confirmed. Without
+        /// a count table only a general sharing note can be shown.</summary>
+        string BuildUsageText()
+        {
+            if (m_currentTemplate == null)
+                return string.Empty;
+
+            if (m_countByName == null)
+                return $"shared by every {UsageNoun} using this Template";
+
+            int count = m_templateResolver.CountUsers(m_countByName, m_currentTemplate);
+            if (!m_templateResolver.Matches(OriginalTarget.Name, m_currentTemplate))
+                count++;
+
+            return count == 1 ? $"used by 1 {UsageNoun}" : $"used by {count} {UsageNoun}s";
+        }
+
+        /// <summary>Stores the Segment name usage table for the usage text shown on the Template tabs.</summary>
+        public override void SetCountByName(IReadOnlyDictionary<string, int> countByName)
+        {
+            m_countByName = countByName;
         }
 
         void BuildTemplatePicker()
@@ -129,15 +211,32 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             if (newValue == null || m_templateRegistry.ByName.ContainsKey(newValue.Name))
             {
                 m_currentTemplate = newValue;
+                BindTemplateTabs();
                 return;
             }
 
             m_templateRegistry.Choices.Remove(newValue);
-            var persisted = m_templateRegistry.Clone(m_currentTemplate, newValue.Name);
+            SelectTemplate(m_templateRegistry.Clone(m_currentTemplate, newValue.Name));
+        }
 
-            m_currentTemplate = persisted;
-            m_templateCombo.SetValueWithoutNotify(persisted);
+        /// <summary>Makes template the selected one: shows it in the picker and rebinds the Template tabs to it.</summary>
+        void SelectTemplate(WallTemplate template)
+        {
+            m_currentTemplate = template;
+            m_templateCombo.SetValueWithoutNotify(template);
             m_templateCombo.Refresh();
+            BindTemplateTabs();
+        }
+
+        /// <summary>Copies the selected Template under a generated unique name (see TemplateRegistry.Clone),
+        /// selects the copy and starts editing it.</summary>
+        void CloneCurrentTemplate()
+        {
+            if (m_currentTemplate == null)
+                return;
+
+            SelectTemplate(m_templateRegistry.Clone(m_currentTemplate, null));
+            m_session?.BeginEdit();
         }
 
         protected override void LoadValues(Segment copy)
@@ -152,6 +251,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
 
             m_templateCombo.Refresh();
             m_templateCombo.SetValueWithoutNotify(m_currentTemplate);
+            BindTemplateTabs();
 
             // An unnamed Segment has no meaningful state on its own - it only makes sense tied to a
             // Template - so the resolved default is committed immediately rather than left pending until
@@ -166,6 +266,8 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
 
             if (m_templateCombo.value != null)
                 target.Name = m_templateCombo.value.Name; // Name is derived from the selected Template, overriding whatever base just set
+
+            m_session?.Apply(); // confirming the window also applies pending Template edits
         }
 
         /// <summary>Shows the resolved Template's Texture (if any) in the base texture slot, in place of

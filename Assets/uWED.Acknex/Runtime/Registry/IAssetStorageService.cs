@@ -22,6 +22,10 @@ namespace uWED.Acknex.Runtime.Registry
         /// <summary>Duplicates source as a new persisted asset named newName, returning the copy.</summary>
         T Clone<T>(T source, string newName) where T : TemplateAsset;
 
+        /// <summary>Marks an asset whose values were changed in memory as modified and persists the change
+        /// (immediately, or at the end of the current batch).</summary>
+        void MarkDirty<T>(T asset) where T : TemplateAsset;
+
         /// <summary>Permanently removes an asset from storage.</summary>
         void Delete<T>(T asset) where T : TemplateAsset;
     }

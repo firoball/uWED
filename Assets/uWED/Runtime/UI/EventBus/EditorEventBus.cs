@@ -119,11 +119,11 @@ namespace uWED.Runtime.UI.EventBus
         public readonly BusEvent<Vector2> MouseMoved = new BusEvent<Vector2>();
         public readonly BusEvent<CursorInfo> CursorInfoChanged = new BusEvent<CursorInfo>();
         public readonly BusEvent<Mesh> RegionMeshChanged = new BusEvent<Mesh>();
-        public readonly BusEvent<MapObject, List<string>> EditObject = new BusEvent<MapObject, List<string>>();
+        public readonly BusEvent<MapObject, IReadOnlyDictionary<string,int>> EditObject = new BusEvent<MapObject, IReadOnlyDictionary<string,int>>();
         public readonly BusEvent<Vertex> EditVertex = new BusEvent<Vertex>();
-        public readonly BusEvent<Segment, List<string>> EditSegment = new BusEvent<Segment, List<string>>();
-        public readonly BusEvent<Region, List<string>> EditRegion = new BusEvent<Region, List<string>>();
-        public readonly BusEvent<Way, List<string>> EditWay = new BusEvent<Way, List<string>>();
+        public readonly BusEvent<Segment, IReadOnlyDictionary<string,int>> EditSegment = new BusEvent<Segment, IReadOnlyDictionary<string,int>>();
+        public readonly BusEvent<Region, IReadOnlyDictionary<string,int>> EditRegion = new BusEvent<Region, IReadOnlyDictionary<string,int>>();
+        public readonly BusEvent<Way, IReadOnlyDictionary<string,int>> EditWay = new BusEvent<Way, IReadOnlyDictionary<string,int>>();
         public readonly BusEvent FitViewToWindow = new BusEvent();
         public readonly BusEvent CenterView = new BusEvent();
         public readonly BusEvent<bool?> ZoomChanged = new BusEvent<bool?>();

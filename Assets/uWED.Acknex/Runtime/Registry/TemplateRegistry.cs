@@ -65,6 +65,9 @@ namespace uWED.Acknex.Runtime.Registry
             return null;
         }
 
+        /// <summary>Persists in-memory changes made to a registered template via the storage service.</summary>
+        public void MarkDirty(T template) => m_storage.MarkDirty(template);
+
         /// <summary>Starts a batch on the underlying storage if it supports IBatchableAssetStorage
         /// (e.g. many Create calls in a row - see TemplateResolver.ResolveAll), otherwise a no-op.</summary>
         public void BeginBatch() => (m_storage as IBatchableAssetStorage)?.BeginBatch();

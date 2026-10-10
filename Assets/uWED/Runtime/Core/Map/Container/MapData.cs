@@ -232,28 +232,24 @@ namespace uWED.Runtime.Core.Map.Container
             }
         }
 
-        public List<string> GetObjectNames()
+        public IReadOnlyDictionary<string, int> GetObjectNames()
         {
-            // TODO: get names from defs in WDL - WMP data does not contain unused ones - may only serve as fallback
-            return m_data.Objects.Select(x => x.Name).Distinct().ToList();
+            return m_data.Objects.GroupBy(x => x.Name).ToDictionary(g => g.Key, g => g.Count());
         }
-    
-        public List<string> GetSegmentNames()
+
+        public IReadOnlyDictionary<string, int> GetSegmentNames()
         {
-            // TODO: get names from defs in WDL - WMP data does not contain unused ones - may only serve as fallback
-            return m_data.Segments.Select(x => x.Name).Distinct().ToList();
+            return m_data.Segments.GroupBy(x => x.Name).ToDictionary(g => g.Key, g => g.Count());
         }
-    
-        public List<string> GetRegionNames()
+
+        public IReadOnlyDictionary<string, int> GetRegionNames()
         {
-            // TODO: get names from defs in WDL - WMP data does not contain unused ones - may only serve as fallback
-            return m_data.Regions.Select(x => x.Name).Distinct().ToList();
+            return m_data.Regions.GroupBy(x => x.Name).ToDictionary(g => g.Key, g => g.Count());
         }
-    
-        public List<string> GetWayNames()
+
+        public IReadOnlyDictionary<string, int> GetWayNames()
         {
-            // TODO: get names from defs in WDL - WMP data does not contain unused ones - may only serve as fallback
-            return m_data.Ways.Select(x => x.Name).Distinct().ToList();
+            return m_data.Ways.GroupBy(x => x.Name).ToDictionary(g => g.Key, g => g.Count());
         }
     
         public List<Segment> FindSegments(Vertex v)

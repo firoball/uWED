@@ -103,6 +103,27 @@ namespace uWED.Acknex.Runtime.Registry
             }
         }
 
+        /// <summary>True if an Instance with the given name resolves to template, using the same rules as
+        /// Resolve: an empty name belongs to the default Template, every other name is sanitized first.</summary>
+        public bool Matches(string instanceName, T template)
+        {
+            string resolved = string.IsNullOrEmpty(instanceName) ? DefaultName : NameSanitizer.Sanitize(instanceName);
+            return resolved == template.Name;
+        }
+
+        /// <summary>Number of Instances resolving to template, summing the counts of every name in
+        /// countByName (Instance name -&gt; number of Instances carrying it) that matches it.</summary>
+        public int CountUsers(IReadOnlyDictionary<string, int> countByName, T template)
+        {
+            int count = 0;
+            foreach (var entry in countByName)
+            {
+                if (Matches(entry.Key, template))
+                    count += entry.Value;
+            }
+            return count;
+        }
+
         static string StripTemplateSuffix(string typeName) => typeName.EndsWith(TemplateTypeNameSuffix)
             ? typeName.Substring(0, typeName.Length - TemplateTypeNameSuffix.Length)
             : typeName;

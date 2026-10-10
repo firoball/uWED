@@ -65,3 +65,50 @@
 .acknex-defaults-reset-button:hover {
     background-color: rgb(85, 85, 85);
 }
+
+.acknex-template-bar {
+    background-color: rgb(38, 38, 38);
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin-top: 6px;
+    margin-bottom: 8px;
+}
+
+.acknex-template-bar-header {
+    flex-direction: row;
+    align-items: center;
+}
+
+.acknex-template-bar-usage {
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: rgb(220, 220, 220);
+    -unity-font-style: bold;
+}
+
+.acknex-template-bar-note {
+    color: rgb(150, 150, 150);
+    font-size: 11px;
+}
+
+.acknex-template-bar-buttons {
+    flex-direction: row;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.acknex-template-bar-button {
+    height: 18px;
+    padding: 0 8px;
+    margin: 0 0 0 6px;
+    border-radius: 3px;
+    border-width: 0;
+    background-color: rgb(65, 65, 65);
+    color: rgb(220, 220, 220);
+}
+
+.acknex-template-bar-button:hover {
+    background-color: rgb(85, 85, 85);
+}

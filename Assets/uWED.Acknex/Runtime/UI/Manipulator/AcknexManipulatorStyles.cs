@@ -38,6 +38,19 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         /// <summary>Button resetting instance values to the defaults their Template presets.</summary>
         public const string DefaultsResetButton = "acknex-defaults-reset-button";
 
+        /// <summary>Header box of a Template tab (usage text, note, Edit/Apply/Discard buttons).</summary>
+        public const string TemplateBar = "acknex-template-bar";
+        /// <summary>Row of a TemplateBar holding the name/usage text and the buttons beside it.</summary>
+        public const string TemplateBarHeader = "acknex-template-bar-header";
+        /// <summary>"name · used by N ..." text of a TemplateBar.</summary>
+        public const string TemplateBarUsage = "acknex-template-bar-usage";
+        /// <summary>Muted note line of a TemplateBar.</summary>
+        public const string TemplateBarNote = "acknex-template-bar-note";
+        /// <summary>Row holding the buttons of a TemplateBar.</summary>
+        public const string TemplateBarButtons = "acknex-template-bar-buttons";
+        /// <summary>A button of a TemplateBar.</summary>
+        public const string TemplateBarButton = "acknex-template-bar-button";
+
         static StyleSheet s_styleSheet;
 
         /// <summary>Adds this stylesheet to target's styleSheets, loading and caching it from Resources on

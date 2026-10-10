@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.UIElements;
 using uWED.Runtime.Core.Map.Model;
 using uWED.Runtime.Platform;
@@ -54,10 +55,11 @@ namespace uWED.Runtime.UI.Binder
             EditorEventBus.Instance.EditWay.Subscribe(OnEditWay);
         }
 
-        private void OnEditObject(MapObject mapObject, List<string> names)
+        private void OnEditObject(MapObject mapObject, IReadOnlyDictionary<string, int> countByName)
         {
-            SimpleGenericNameProvider objectNames = new SimpleGenericNameProvider(names);
+            SimpleGenericNameProvider objectNames = new SimpleGenericNameProvider(countByName.Keys.ToList());
             m_mapObjectManipulator.SetProviders(objectNames, objectTextures);
+            m_mapObjectManipulator.SetCountByName(countByName);
             m_mapObjectManipulator.Open(mapObject);
         }
 
@@ -66,24 +68,27 @@ namespace uWED.Runtime.UI.Binder
             m_vertexManipulator.Open(vertex);
         }
 
-        private void OnEditSegment(Segment segment, List<string> names)
+        private void OnEditSegment(Segment segment, IReadOnlyDictionary<string, int> countByName)
         {
-            SimpleGenericNameProvider segmentNames = new SimpleGenericNameProvider(names);
+            SimpleGenericNameProvider segmentNames = new SimpleGenericNameProvider(countByName.Keys.ToList());
             m_segmentManipulator.SetProviders(segmentNames, segmentTextures);
+            m_segmentManipulator.SetCountByName(countByName);
             m_segmentManipulator.Open(segment);
         }
 
-        private void OnEditRegion(Region region, List<string> names)
+        private void OnEditRegion(Region region, IReadOnlyDictionary<string, int> countByName)
         {
-            SimpleGenericNameProvider regionNames = new SimpleGenericNameProvider(names);
+            SimpleGenericNameProvider regionNames = new SimpleGenericNameProvider(countByName.Keys.ToList());
             m_regionManipulator.SetProviders(regionNames, regionTextures);
+            m_regionManipulator.SetCountByName(countByName);
             m_regionManipulator.Open(region);
         }
 
-        private void OnEditWay(Way way, List<string> names)
+        private void OnEditWay(Way way, IReadOnlyDictionary<string, int> countByName)
         {
-            SimpleGenericNameProvider wayNames = new SimpleGenericNameProvider(names);
+            SimpleGenericNameProvider wayNames = new SimpleGenericNameProvider(countByName.Keys.ToList());
             m_wayManipulator.SetProviders(wayNames);
+            m_wayManipulator.SetCountByName(countByName);
             m_wayManipulator.Open(way);
         }
     }

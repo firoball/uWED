@@ -35,6 +35,13 @@ namespace uWED.Runtime.UI.Manipulator
             WireNameProvider();
         }
 
+        /// <summary>Call before Open, next to SetProviders. countByName holds, for every distinct Way
+        /// name in the map, the number of Ways carrying it. The base class ignores it; a subclass
+        /// overrides this to show usage information.</summary>
+        public virtual void SetCountByName(IReadOnlyDictionary<string, int> countByName)
+        {
+        }
+
         void WireNameProvider()
         {
             m_nameCombo.Choices = m_nameProvider.Choices;
