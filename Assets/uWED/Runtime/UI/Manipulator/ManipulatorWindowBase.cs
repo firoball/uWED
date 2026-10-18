@@ -300,9 +300,12 @@ namespace uWED.Runtime.UI.Manipulator
         /// <summary>Pushes a changed step size to every NumberStepperField in the window, so the new value
         /// applies while the window stays open. Steppers carrying AngleStepperClass follow the angle step,
         /// all others (including the axes of a Vector2StepperField) the linear step. Steppers carrying
-        /// FixedStepStepperClass are left alone.</summary>
+        /// FixedStepStepperClass are left alone. AngleDials follow the angle step.</summary>
         void ApplyStepToSteppers(float step, bool angle)
         {
+            if (angle)
+                m_manipRoot.Query<AngleDial>().ForEach(dial => dial.Step = step);
+
             m_manipRoot.Query<NumberStepperField>().ForEach(stepper =>
             {
                 if (stepper.ClassListContains(FixedStepStepperClass))

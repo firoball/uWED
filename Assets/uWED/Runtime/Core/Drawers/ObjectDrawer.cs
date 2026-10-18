@@ -94,6 +94,8 @@ namespace uWED.Runtime.Core.Drawers
                 color = Colors.HoverColor;
             else if (m_cursorInfo.SelectedObjects.Contains(m_mapData.Objects[i]))
                 color = Colors.SelectColor;
+            else if (IsHighlightEnabled(typeof(MapObject), m_mapData.Objects[i].Name))
+                color = Colors.HighlightColor;
             else
                 color = base.SetObjectColor(i);
 
@@ -160,7 +162,7 @@ namespace uWED.Runtime.Core.Drawers
                         float angle = CalcMouseAngle(m_draggedObject.Position.ScreenPosition);
                         Vector2 p1;
                         p1.x = length * Mathf.Cos(angle);
-                        p1.y = length * -Mathf.Sin(angle);
+                        p1.y = length * Mathf.Sin(angle);
                         Vector2 p2 = p1.normalized * c_bigObjectSize;
                         p1 = ev.TransformScreenPos(p1);
                         p2 = ev.TransformScreenPos(p2);
@@ -184,7 +186,7 @@ namespace uWED.Runtime.Core.Drawers
             if (ev != null)
             {
                 Vector2 v = ev.TransformScreenPos(m_mousePos - screenPosition);
-                return ev.SnapAngle(Mathf.Atan2(-v.y, v.x));
+                return ev.SnapAngle(Mathf.Atan2(v.y, v.x));
             }
 
             return 0.0f;

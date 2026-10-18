@@ -21,6 +21,15 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         /// <summary>Resolves name to a Template (null/empty = the type's default Template, created if
         /// missing) and shows it as the selection without raising a change notification.</summary>
         void Select(string name);
+
+        /// <summary>Selects a copy of the current Template under a generated unique name and notifies the host.</summary>
+        void CloneCurrent();
+
+        /// <summary>Enables or disables the picker.</summary>
+        void SetEnabled(bool enabled);
+
+        /// <summary>Reloads the picker's choices and detail rows from the registry.</summary>
+        void Refresh();
     }
 
     /// <summary>
@@ -42,6 +51,9 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
 
         /// <inheritdoc/>
         public BaseObjectTemplate Current => m_current;
+
+        /// <summary>The Template currently selected, typed.</summary>
+        public T Selected => m_current;
 
         /// <summary>Builds the picker against registry (Choices and the "+" clone) and resolver (Name to
         /// Template). selectionChanged is invoked after the user picks or adds a Template.</summary>
@@ -81,6 +93,24 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             m_combo.Refresh();
             m_combo.SetValueWithoutNotify(m_current);
         }
+
+        /// <inheritdoc/>
+        public void CloneCurrent()
+        {
+            if (m_current == null)
+                return;
+
+            m_current = m_registry.Clone(m_current, null);
+            m_combo.Refresh();
+            m_combo.SetValueWithoutNotify(m_current);
+            m_selectionChanged?.Invoke();
+        }
+
+        /// <inheritdoc/>
+        public void SetEnabled(bool enabled) => m_combo.SetEnabled(enabled);
+
+        /// <inheritdoc/>
+        public void Refresh() => m_combo.Refresh();
 
         /// <summary>Ordinary selection of a registered Template just becomes current; a confirmed "+"
         /// (a candidate not yet in the registry) is persisted as a clone of the current Template.</summary>

@@ -12,7 +12,8 @@ namespace uWED.Runtime.UI.Manipulator
     /// MapObject's ctor only takes a Vector2, so Clone() can't carry Z through
     /// the constructor, and it's restored from OriginalTarget after cloning.
     /// Angle is editable via a NumberStepperField snapped to the shared Angle
-    /// Step. Region is read-only ("{Name} #{Index}"). Name is a plain rename
+    /// Step; the field works in degrees as in the WMP file, while MapObject.Angle holds
+    /// radians (see AngleToDegrees); an AngleDial beside it edits the same value. Region is read-only ("{Name} #{Index}"). Name is a plain rename
     /// field (ComboBoxField, string-typed, via IGenericNameProvider<string>) -
     /// same shape as Region/Way/Segment's Name fields. One NameTextureSlot for
     /// texture display only (Offset section hidden - no confirmed per-object
@@ -33,6 +34,7 @@ namespace uWED.Runtime.UI.Manipulator
         NumberStepperField m_zStepper;
         Label m_regionValue;
         NumberStepperField m_angleStepper;
+        AngleDial m_angleDial;
         VisualElement m_nameFieldContainer;
         ComboBoxField m_nameCombo;
         NameTextureSlot m_slot;
@@ -137,10 +139,21 @@ namespace uWED.Runtime.UI.Manipulator
             m_angleStepper.AddToClassList(AngleStepperClass);
             m_angleStepper.ValueChanged += v =>
             {
+                m_angleDial.Value = v;
                 if (m_current != null)
-                    m_current.Angle = v;
+                    m_current.Angle = DegreesToAngle(v);
             };
             row.Add(m_angleStepper);
+
+            m_angleDial = new AngleDial { Step = CurrentAngleStep };
+            m_angleDial.style.marginLeft = 8;
+            m_angleDial.ValueChanged += v =>
+            {
+                m_angleStepper.Value = v;
+                if (m_current != null)
+                    m_current.Angle = DegreesToAngle(v);
+            };
+            row.Add(m_angleDial);
             container.Add(row);
         }
 
@@ -195,12 +208,26 @@ namespace uWED.Runtime.UI.Manipulator
             m_zStepper.Value = (float)copy.Position.Z;
 
             m_angleStepper.Step = CurrentAngleStep;
-            m_angleStepper.Value = copy.Angle;
+            m_angleStepper.Value = AngleToDegrees(copy.Angle);
+            m_angleDial.Step = CurrentAngleStep;
+            m_angleDial.Value = m_angleStepper.Value;
 
             m_nameCombo.Refresh(); // in case Choices was mutated externally since the last Open()
             m_nameCombo.SetValueWithoutNotify(copy.Name);
 
             LoadTextureInfo(m_slot, copy);
+        }
+
+        /// <summary>Converts MapObject.Angle (radians) to degrees, wrapped to 0..360. 0 points right, 90 up.</summary>
+        static float AngleToDegrees(float angle)
+        {
+            return Mathf.Repeat(angle * Mathf.Rad2Deg, 360f);
+        }
+
+        /// <summary>Converts degrees to MapObject.Angle (radians). Inverse of AngleToDegrees.</summary>
+        static float DegreesToAngle(float degrees)
+        {
+            return degrees * Mathf.Deg2Rad;
         }
 
         static string FormatRegionRef(Region region)
@@ -211,7 +238,7 @@ namespace uWED.Runtime.UI.Manipulator
         protected override void WriteBack(MapObject target, MapObject editedCopy)
         {
             target.Position.Z = editedCopy.Position.Z;
-            target.Angle = m_angleStepper.Value;
+            target.Angle = DegreesToAngle(m_angleStepper.Value);
             target.Name = m_nameCombo.value;
         }
 

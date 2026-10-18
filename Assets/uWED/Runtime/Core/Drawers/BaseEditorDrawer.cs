@@ -467,7 +467,7 @@ namespace uWED.Runtime.Core.Drawers
             for (int i = 0; i < arrow.Length; i++)
             {
                 points[startIndex + i].x = position.x + (arrow[i].x * Mathf.Cos(angle) - arrow[i].y * Mathf.Sin(angle));
-                points[startIndex + i].y = position.y - (arrow[i].x * Mathf.Sin(angle) + arrow[i].y * Mathf.Cos(angle));
+                points[startIndex + i].y = position.y - (- (arrow[i].x * Mathf.Sin(angle) + arrow[i].y * Mathf.Cos(angle)));
                 points[startIndex + i].z = 0;
             }
         }

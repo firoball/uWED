@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 using uWED.Runtime.Core.Map.Model;
 using Vertex = uWED.Runtime.Core.Map.Model.Vertex;
@@ -137,7 +138,7 @@ namespace uWED.Runtime.UI.Inspector
         {
             SetHeader("Object", o.Index);
             SetName(o.Name);
-            _angle.text = FormatFloat(o.Angle - 90f) + "°";
+            _angle.text = FormatFloat(Mathf.Repeat(o.Angle * Mathf.Rad2Deg, 360f)) + "°";
             SetVertexSubBlock(_position, o.Position);
             _texture.Set(textureName);
         }

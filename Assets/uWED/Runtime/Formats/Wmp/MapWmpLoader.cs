@@ -86,7 +86,7 @@ namespace uWED.Runtime.Formats.Wmp
                     objects.Add(
                         new MapObject(
                             new Vector2(p.X, p.Y) * m_scale,
-                            (p.Angle - 90f) * Mathf.PI / 180f,
+                            convertAngle(p.Angle),
                             m_data.Regions[p.Region.Index],
                             "player"
                         )
@@ -100,7 +100,7 @@ namespace uWED.Runtime.Formats.Wmp
                     objects.Add(
                         new MapObject(
                             new Vector2(t.X, t.Y) * m_scale,
-                            (t.Angle - 90f) * Mathf.PI / 180f,
+                            convertAngle(t.Angle),
                             m_data.Regions[t.Region.Index],
                             t.Name 
                         )
@@ -114,7 +114,7 @@ namespace uWED.Runtime.Formats.Wmp
                     objects.Add(
                         new MapObject(
                             new Vector2(a.X, a.Y) * m_scale,
-                            (a.Angle - 90f) * Mathf.PI / 180f,
+                            convertAngle(a.Angle),
                             m_data.Regions[a.Region.Index],
                             a.Name
                         )
@@ -125,6 +125,11 @@ namespace uWED.Runtime.Formats.Wmp
             }
 
             return objects;
+        }
+
+        private float convertAngle(float degrees)
+        {
+            return degrees * Mathf.Deg2Rad;
         }
     }
 }
