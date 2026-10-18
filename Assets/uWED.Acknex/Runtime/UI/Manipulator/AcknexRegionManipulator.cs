@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UI.Controls;
 using UnityEngine;
 using UnityEngine.UIElements;
 using uWED.Acknex.Runtime.Model.Templates;
 using uWED.Acknex.Runtime.Registry;
+using uWED.Acknex.Runtime.UI.TemplateEditor;
 using uWED.Runtime.Core.Map.Model;
+using uWED.Runtime.Platform;
 using uWED.Runtime.UI.Manipulator;
 
 namespace uWED.Acknex.Runtime.UI.Manipulator
@@ -25,6 +28,13 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         // Axis labels of RegionManipulator's Heights stepper, repeated by the Default row below it.
         const string HeightFloorLabel = "Floor";
         const string HeightCeilLabel = "Ceil";
+        const string UsageNoun = "region";
+
+        TemplateTab[] m_templateTabs;
+        TemplateEditSession m_session;
+
+        // Region name -> number of Regions carrying it, as last handed to SetCountByName.
+        IReadOnlyDictionary<string, int> m_countByName;
 
         Button m_resetButton;
         VisualElement m_defaultsRow;
@@ -49,6 +59,101 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             SetNameFieldVisible(false);
             BuildTemplatePicker();
             BuildHeightDefaults();
+            BuildTemplateTabs();
+        }
+
+        /// <summary>Adds one tab per group of RegionTemplateLayout. All tabs are bound to one
+        /// TemplateEditSession per selected Template (see BindTemplateTabs).</summary>
+        void BuildTemplateTabs()
+        {
+            m_templateTabs = new TemplateTab[RegionTemplateLayout.Groups.Count];
+            for (int i = 0; i < m_templateTabs.Length; i++)
+                m_templateTabs[i] = new TemplateTab(typeof(RegionTemplate), RegionTemplateLayout.Groups[i]);
+
+            foreach (var tab in m_templateTabs)
+            {
+                tab.CloneRequested += CloneCurrentTemplate;
+
+                foreach (var stepper in tab.IntegerSteppers)
+                    stepper.AddToClassList(FixedStepStepperClass);
+
+                TabView.Add(tab);
+            }
+        }
+
+        /// <summary>Starts a fresh edit session on the selected Template (discarding any pending edits of
+        /// the previous one) and binds the Template tabs to it. While a session is editing the picker is
+        /// disabled, so the edited Template can't change underneath it. Applied edits update the default
+        /// heights shown on the main tab.</summary>
+        void BindTemplateTabs()
+        {
+            m_session?.Discard();
+
+            m_session = m_currentTemplate != null ? new TemplateEditSession(m_currentTemplate, template => m_templateRegistry.MarkDirty((RegionTemplate)template)) : null;
+            if (m_session != null)
+            {
+                m_session.StateChanged += () => m_templateCombo.SetEnabled(!m_session.IsEditing);
+                m_session.Applied += () =>
+                {
+                    m_templateCombo.Refresh();
+                    RefreshHeightDefaults();
+                };
+            }
+
+            m_templateCombo.SetEnabled(true);
+
+            string usageText = BuildUsageText();
+            foreach (var tab in m_templateTabs)
+            {
+                tab.SetStep(CurrentLinearStep);
+                tab.Bind(m_session, usageText);
+            }
+        }
+
+        /// <summary>"used by N regions": the Regions in the map resolving to the selected Template. The open
+        /// Region is counted too, even if it only gets this Template when its window is confirmed. Without
+        /// a count table only a general sharing note can be shown.</summary>
+        string BuildUsageText()
+        {
+            if (m_currentTemplate == null)
+                return string.Empty;
+
+            if (m_countByName == null)
+                return $"shared by every {UsageNoun} using this Template";
+
+            int count = m_templateResolver.CountUsers(m_countByName, m_currentTemplate);
+            if (!m_templateResolver.Matches(OriginalTarget.Name, m_currentTemplate))
+                count++;
+
+            return count == 1 ? $"used by 1 {UsageNoun}" : $"used by {count} {UsageNoun}s";
+        }
+
+        /// <summary>Stores the Region name usage table for the usage text shown on the Template tabs.</summary>
+        public override void SetCountByName(IReadOnlyDictionary<string, int> countByName)
+        {
+            m_countByName = countByName;
+        }
+
+        /// <summary>Makes template the selected one: shows it in the picker, refreshes the default heights
+        /// and rebinds the Template tabs to it.</summary>
+        void SelectTemplate(RegionTemplate template)
+        {
+            m_currentTemplate = template;
+            m_templateCombo.SetValueWithoutNotify(template);
+            m_templateCombo.Refresh();
+            RefreshHeightDefaults();
+            BindTemplateTabs();
+        }
+
+        /// <summary>Copies the selected Template under a generated unique name (see TemplateRegistry.Clone),
+        /// selects the copy and starts editing it.</summary>
+        void CloneCurrentTemplate()
+        {
+            if (m_currentTemplate == null)
+                return;
+
+            SelectTemplate(m_templateRegistry.Clone(m_currentTemplate, null));
+            m_session?.BeginEdit();
         }
 
         void BuildTemplatePicker()
@@ -222,16 +327,12 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             {
                 m_currentTemplate = newValue;
                 RefreshHeightDefaults();
+                BindTemplateTabs();
                 return;
             }
 
             m_templateRegistry.Choices.Remove(newValue);
-            var persisted = m_templateRegistry.Clone(m_currentTemplate, newValue.Name);
-
-            m_currentTemplate = persisted;
-            m_templateCombo.SetValueWithoutNotify(persisted);
-            m_templateCombo.Refresh();
-            RefreshHeightDefaults();
+            SelectTemplate(m_templateRegistry.Clone(m_currentTemplate, newValue.Name));
         }
 
         protected override void LoadValues(Region copy)
@@ -247,6 +348,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             m_templateCombo.Refresh();
             m_templateCombo.SetValueWithoutNotify(m_currentTemplate);
             RefreshHeightDefaults();
+            BindTemplateTabs();
 
             // An unnamed Region has no meaningful state on its own - it only makes sense tied to a
             // Template - so the resolved default is committed immediately rather than left pending until
@@ -261,6 +363,8 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
 
             if (m_templateCombo.value != null)
                 target.Name = m_templateCombo.value.Name; // Name is derived from the selected Template, overriding whatever base just set
+
+            m_session?.Apply(); // confirming the window also applies pending Template edits
         }
 
         /// <summary>Shows the resolved Template's Floor/Ceiling Texture (matching isFloor) in the given

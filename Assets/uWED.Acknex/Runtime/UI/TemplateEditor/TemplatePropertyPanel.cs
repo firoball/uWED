@@ -31,8 +31,10 @@ namespace uWED.Acknex.Runtime.UI.TemplateEditor
         /// <summary>Builds one field for each named public read/write property of templateType, in the
         /// given order. Names that don't resolve to a supported property are logged and skipped. With
         /// columns above 1 the fields flow in that many columns. With clearAllButton a button above the
-        /// fields sets every bool property of the panel to false.</summary>
-        public TemplatePropertyPanel(Type templateType, IReadOnlyList<string> propertyNames, int columns = 1, bool clearAllButton = false)
+        /// fields sets every bool property of the panel to false. Each name in placeholders is shown as a
+        /// disabled row without a property behind it, and note as a muted text below the fields.</summary>
+        public TemplatePropertyPanel(Type templateType, IReadOnlyList<string> propertyNames, int columns = 1, bool clearAllButton = false,
+            IReadOnlyList<string> placeholders = null, string note = null)
         {
             if (columns > 1)
             {
@@ -64,6 +66,20 @@ namespace uWED.Acknex.Runtime.UI.TemplateEditor
                 if (info.PropertyType == typeof(bool))
                     m_boolProperties.Add(info);
             }
+
+            if (placeholders != null)
+            {
+                foreach (var placeholder in placeholders)
+                {
+                    var row = BuildPlaceholderRow(placeholder);
+                    if (columns > 1)
+                        row.style.width = Length.Percent(100f / columns);
+                    Add(row);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(note))
+                Add(BuildNote(note));
 
             if (clearAllButton)
                 Insert(0, BuildClearAllButton());
@@ -121,6 +137,23 @@ namespace uWED.Acknex.Runtime.UI.TemplateEditor
             return null;
         }
 
+        static VisualElement BuildPlaceholderRow(string name)
+        {
+            var field = new TextField { value = "–", tooltip = "Not editable yet" };
+            field.SetEnabled(false);
+            return BuildLabeledRow(name, field);
+        }
+
+        static Label BuildNote(string text)
+        {
+            var note = new Label(text);
+            note.AddToClassList(AcknexManipulatorStyles.TemplateBarNote);
+            note.style.width = Length.Percent(100);
+            note.style.marginTop = 4;
+            note.style.whiteSpace = WhiteSpace.Normal;
+            return note;
+        }
+
         VisualElement BuildClearAllButton()
         {
             var row = new VisualElement();
@@ -166,17 +199,17 @@ namespace uWED.Acknex.Runtime.UI.TemplateEditor
 
         VisualElement BuildRow<TValue>(PropertyInfo info, BaseField<TValue> field)
         {
-            var row = BuildLabeledRow(info, field);
+            var row = BuildLabeledRow(info.Name, field);
             Wire(info, field);
             return row;
         }
 
-        static VisualElement BuildLabeledRow(PropertyInfo info, VisualElement field)
+        static VisualElement BuildLabeledRow(string labelText, VisualElement field)
         {
             var row = new VisualElement();
             row.AddToClassList("manip-field-row");
 
-            var label = new Label(info.Name);
+            var label = new Label(labelText);
             label.AddToClassList("manip-field-label");
             row.Add(label);
 
@@ -211,7 +244,7 @@ namespace uWED.Acknex.Runtime.UI.TemplateEditor
             };
 
             m_refreshers.Add(() => stepper.Value = Convert.ToSingle(info.GetValue(m_session.Current)));
-            return BuildLabeledRow(info, stepper);
+            return BuildLabeledRow(info.Name, stepper);
         }
 
         /// <summary>Text row: input is run through NameSanitizer on every change.</summary>
@@ -236,7 +269,7 @@ namespace uWED.Acknex.Runtime.UI.TemplateEditor
             });
 
             m_refreshers.Add(() => field.SetValueWithoutNotify(ReadValue<string>(info)));
-            return BuildLabeledRow(info, field);
+            return BuildLabeledRow(info.Name, field);
         }
 
         void Wire<TValue>(PropertyInfo info, BaseField<TValue> field)

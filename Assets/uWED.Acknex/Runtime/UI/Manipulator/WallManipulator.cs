@@ -26,7 +26,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         readonly TemplateResolver<WallTemplate> m_templateResolver;
         GenericComboBoxField<WallTemplate> m_templateCombo;
 
-        const string UsageNoun = "wall";
+        const string UsageNoun = "segment";
 
         TemplateTab[] m_templateTabs;
         TemplateEditSession m_session;
@@ -55,7 +55,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         }
 
         /// <summary>The first tab holds the Segment's own values and the Template picker.</summary>
-        protected override string MainTabLabel => "Wall";
+        protected override string MainTabLabel => "Segment";
 
         /// <summary>Adds one tab per group of WallTemplateLayout. All tabs are bound to one
         /// TemplateEditSession per selected Template (see BindTemplateTabs).</summary>
@@ -100,7 +100,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             }
         }
 
-        /// <summary>"used by N walls": the Segments in the map resolving to the selected Template. The open
+        /// <summary>"used by N segments": the Segments in the map resolving to the selected Template. The open
         /// Segment is counted too, even if it only gets this Template when its window is confirmed. Without
         /// a count table only a general sharing note can be shown.</summary>
         string BuildUsageText()

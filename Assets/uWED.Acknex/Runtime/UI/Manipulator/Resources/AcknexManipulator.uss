@@ -112,3 +112,8 @@
 .acknex-template-bar-button:hover {
     background-color: rgb(85, 85, 85);
 }
+
+.acknex-template-bar-button--active,
+.acknex-template-bar-button--active:hover {
+    background-color: rgb(85, 85, 85);
+}

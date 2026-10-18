@@ -145,6 +145,8 @@ namespace uWED.Runtime.Core.Drawers
                 color = Colors.HoverColor;
             else if (m_cursorInfo.SelectedSegments.Contains(m_mapData.Segments[i]))
                 color = Colors.SelectColor;
+            else if (IsHighlightEnabled(typeof(Segment), m_mapData.Segments[i].Name))
+                color = Colors.HighlightColor;
             else
                 color = base.SetSegmentColor(i);
 

@@ -90,6 +90,8 @@ namespace uWED.Runtime.Core.Drawers
         protected override Color SetSegmentColor(int i)
         {
             Color color;
+            Region leftRegion = m_mapData.Segments[i].Left;
+            Region rightRegion = m_mapData.Segments[i].Right;
             /*if ((m_cursorInfo.HoverRegion != null) &&
                 (m_mapData.Segments[i].Left == m_cursorInfo.HoverRegion || m_mapData.Segments[i].Right == m_cursorInfo.HoverRegion)
                 )//existing region
@@ -100,17 +102,20 @@ namespace uWED.Runtime.Core.Drawers
                 color = Color.blue;
             */
             /*else*/
-            if (m_cursorInfo.SelectedRegions.Contains(m_mapData.Segments[i].Left) ||
-                m_cursorInfo.SelectedRegions.Contains(m_mapData.Segments[i].Right))
+            if (m_cursorInfo.SelectedRegions.Contains(leftRegion) ||
+                m_cursorInfo.SelectedRegions.Contains(rightRegion))
                 color = Colors.SelectColor;
             else if (m_cursorInfo.HoverContour != null && //segment is part of contour
                      (m_cursorInfo.HoverContour.Is(m_mapData.Segments[i].CLeft) ||
                       m_cursorInfo.HoverContour.Is(m_mapData.Segments[i].CRight))
                     )
                 color = Colors.ValidColor; //TODO: proper coloring
-            else if (m_mapData.Segments[i].Left != null && m_mapData.Segments[i].Right != null) //two regions assigned
+            else if ((rightRegion != null && IsHighlightEnabled(typeof(Region), rightRegion.Name)) ||
+                     (leftRegion != null && IsHighlightEnabled(typeof(Region), leftRegion.Name)))
+                color = Colors.HighlightColor;
+            else if (leftRegion != null && rightRegion != null) //two regions assigned
                 color = Colors.LineDarkColor;
-            else if (m_mapData.Segments[i].Left != null || m_mapData.Segments[i].Right != null) //one region assigned
+            else if (leftRegion != null || rightRegion != null) //one region assigned
                 color = Colors.LineColor;
             else //no region created yet
                 color = Colors.InvalidColor;

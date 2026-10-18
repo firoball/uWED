@@ -50,6 +50,8 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         public const string TemplateBarButtons = "acknex-template-bar-buttons";
         /// <summary>A button of a TemplateBar.</summary>
         public const string TemplateBarButton = "acknex-template-bar-button";
+        /// <summary>Modifier of a TemplateBarButton that marks a toggled-on state (pressed look).</summary>
+        public const string TemplateBarButtonActive = "acknex-template-bar-button--active";
 
         static StyleSheet s_styleSheet;
 

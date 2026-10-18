@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultMapAsset
   m_EditorClassIdentifier: 
   m_data:
-    rid: 8548430472074233783
+    rid: 8548430472074233802
   references:
     version: 2
     RefIds:
@@ -22048,7 +22048,7 @@ MonoBehaviour:
         m_worldPosition: {x: 2344.576, y: 1378.816}
         m_connectedSegments: 0
         m_connections: []
-    - rid: 8548430472074233783
+    - rid: 8548430472074233802
       type: {class: MapDataSet, ns: uWED.Runtime.Core.Map.Container, asm: uWED.Runtime}
       data:
         m_objects:

@@ -131,6 +131,8 @@ namespace uWED.Runtime.UI.EventBus
         public readonly BusEvent<IMapWriter, string> WriteMap = new BusEvent<IMapWriter, string>();
         public readonly BusEvent<IPrefsProvider> LoadPrefs = new BusEvent<IPrefsProvider>();
         public readonly BusEvent<IPrefsProvider> SavePrefs = new BusEvent<IPrefsProvider>();
+        public readonly BusEvent<Type, Func<string, bool>> HighlightObjects = new BusEvent<Type, Func<string, bool>>();
+        public readonly BusEvent ClearHighlights = new BusEvent();
 
         #endregion
     }

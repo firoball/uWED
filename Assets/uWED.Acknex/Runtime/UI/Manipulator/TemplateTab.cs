@@ -25,7 +25,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         {
             label = group.Title;
 
-            m_panel = new TemplatePropertyPanel(templateType, group.Properties, group.Columns, group.ClearAllButton);
+            m_panel = new TemplatePropertyPanel(templateType, group.Properties, group.Columns, group.ClearAllButton, group.Placeholders, group.Note);
             m_bar.CloneRequested += () => CloneRequested?.Invoke();
 
             var scroll = new ScrollView();

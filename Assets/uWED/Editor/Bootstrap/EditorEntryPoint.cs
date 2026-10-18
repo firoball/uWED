@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEditor.TerrainTools;
 using UnityEditor.UIElements;
 using UnityEngine;
 using uWED.Editor.Platform;
@@ -28,6 +29,17 @@ namespace uWED.Editor.Bootstrap
         {
             EditorEventBus.Instance.LoadMap.Raise(new MapAssetLoader(), assetName);
             EditorEventBus.Instance.FitViewToWindow.Raise();
+        }
+
+        public static void HighlightObjects(Type mapObjectType, Func<string, bool> matcher)
+        {
+            EditorEventBus.Instance.HighlightObjects.Raise(mapObjectType, matcher);
+            
+        }
+
+        public static void ClearHighlights()
+        {
+            EditorEventBus.Instance.ClearHighlights.Raise();
         }
 
         public void CreateGUI()

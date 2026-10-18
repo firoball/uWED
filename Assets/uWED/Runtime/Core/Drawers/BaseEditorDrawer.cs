@@ -35,6 +35,7 @@ namespace uWED.Runtime.Core.Drawers
             public static readonly Color ValidColor = new Color(0.3f, 0.8f, 0.3f, 1.0f);
             public static readonly Color InvalidColor = new Color(1.0f, 0.3f, 0.3f, 1.0f);
             public static readonly Color CenterColor = new Color(0.7f, 0.7f, 0.0f, 1.0f);
+            public static readonly Color HighlightColor = new Color(1.0f, 0.2f,1.0f, 1.0f);
         }
 
         //default sizes
@@ -73,6 +74,10 @@ namespace uWED.Runtime.Core.Drawers
 
         private Matrix4x4 m_screenMatrix;
 
+        //Mapdata Highlighting
+        private Type m_highlightType;
+        private Func<string, bool> m_highlightNameMatcher;
+        
         public CursorInfo CursorInfo => m_cursorInfo;
 
         protected BaseEditorDrawer(MapData mapData) : base()
@@ -88,6 +93,9 @@ namespace uWED.Runtime.Core.Drawers
             m_objectMgr = new MeshManager(MeshTopology.Triangles);
 
             this.StretchToParentSize();
+            
+            EditorEventBus.Instance.HighlightObjects.Subscribe(OnEnableHighlightObjects);
+            EditorEventBus.Instance.ClearHighlights.Subscribe(OnDisableHighlightObjects);
 
             Initialize();
         }
@@ -211,7 +219,16 @@ namespace uWED.Runtime.Core.Drawers
             //m_cursorInfo.Clear(); //nothing to set by default
         }
 
-
+        protected bool IsHighlightEnabled(Type type, string elementName)
+        {
+            if (type != null && m_highlightType != null && m_highlightType == type &&
+                !string.IsNullOrEmpty(elementName) && m_highlightNameMatcher != null &&
+                m_highlightNameMatcher(elementName))
+                return true;
+            
+            return false;
+        }
+        
         protected sealed override void ImmediateRepaint()
         {
             if (!enabledSelf) return;
@@ -655,5 +672,18 @@ namespace uWED.Runtime.Core.Drawers
 
         }
 
+        private void OnEnableHighlightObjects(Type type, Func<string, bool> matcher)
+        {
+            m_highlightType = type;
+            m_highlightNameMatcher = matcher;
+            MarkDirtyRepaint();
+        }
+
+        private void OnDisableHighlightObjects()
+        {
+            m_highlightType = null;
+            m_highlightNameMatcher = null;
+            MarkDirtyRepaint();
+        }
     }
 }
