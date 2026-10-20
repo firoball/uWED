@@ -84,6 +84,9 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             m_combo.RegisterValueChangedCallback(OnComboValueChanged);
             m_combo.AddToClassList("manip-picker-dropdown");
             Root.Add(m_combo);
+
+            Root.RegisterCallback<AttachToPanelEvent>(_ => m_registry.ListChanged += Refresh);
+            Root.RegisterCallback<DetachFromPanelEvent>(_ => m_registry.ListChanged -= Refresh);
         }
 
         /// <inheritdoc/>

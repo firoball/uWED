@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultMapAsset
   m_EditorClassIdentifier: 
   m_data:
-    rid: 8548430654710482819
+    rid: 8548430654710482840
   references:
     version: 2
     RefIds:
@@ -21793,7 +21793,53 @@ MonoBehaviour:
         m_worldPosition: {x: 2344.576, y: 1378.816}
         m_connectedSegments: 0
         m_connections: []
-    - rid: 8548430654710482819
+    - rid: 8548430654710482829
+      type: {class: Way, ns: uWED.Runtime.Core.Map.Model, asm: uWED.Runtime}
+      data:
+        m_typeId: 0
+        m_positions:
+        - rid: 8548430654710482830
+        - rid: 8548430654710482831
+        - rid: 8548430654710482832
+        - rid: 8548430654710482833
+        - rid: 8548430654710482834
+        m_name: neuer_weg
+    - rid: 8548430654710482830
+      type: {class: Vertex, ns: uWED.Runtime.Core.Map.Model, asm: uWED.Runtime}
+      data:
+        m_typeId: 0
+        m_worldPosition: {x: 4000, y: 1248}
+        m_connectedSegments: 0
+        m_connections: []
+    - rid: 8548430654710482831
+      type: {class: Vertex, ns: uWED.Runtime.Core.Map.Model, asm: uWED.Runtime}
+      data:
+        m_typeId: 0
+        m_worldPosition: {x: 4224, y: 1120}
+        m_connectedSegments: 0
+        m_connections: []
+    - rid: 8548430654710482832
+      type: {class: Vertex, ns: uWED.Runtime.Core.Map.Model, asm: uWED.Runtime}
+      data:
+        m_typeId: 0
+        m_worldPosition: {x: 4096, y: 864}
+        m_connectedSegments: 0
+        m_connections: []
+    - rid: 8548430654710482833
+      type: {class: Vertex, ns: uWED.Runtime.Core.Map.Model, asm: uWED.Runtime}
+      data:
+        m_typeId: 0
+        m_worldPosition: {x: 3744, y: 896}
+        m_connectedSegments: 0
+        m_connections: []
+    - rid: 8548430654710482834
+      type: {class: Vertex, ns: uWED.Runtime.Core.Map.Model, asm: uWED.Runtime}
+      data:
+        m_typeId: 0
+        m_worldPosition: {x: 3680, y: 1184}
+        m_connectedSegments: 0
+        m_connections: []
+    - rid: 8548430654710482840
       type: {class: MapDataSet, ns: uWED.Runtime.Core.Map.Container, asm: uWED.Runtime}
       data:
         m_objects:
@@ -22028,7 +22074,8 @@ MonoBehaviour:
         - rid: 8548430654710481017
         - rid: 8548430654710481018
         - rid: 8548430654710481019
-        m_ways: []
+        m_ways:
+        - rid: 8548430654710482829
         m_vertices:
         - rid: 8548430654710481020
         - rid: 8548430654710481021

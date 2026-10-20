@@ -57,7 +57,8 @@
     padding: 0 8px;
     margin: 0 0 0 8px;
     border-radius: 3px;
-    border-width: 0;
+    border-width: 1px;
+    border-color: transparent;
     background-color: rgb(65, 65, 65);
     color: rgb(220, 220, 220);
 }
@@ -104,7 +105,8 @@
     padding: 0 8px;
     margin: 0 0 0 6px;
     border-radius: 3px;
-    border-width: 0;
+    border-width: 1px;
+    border-color: transparent;
     background-color: rgb(65, 65, 65);
     color: rgb(220, 220, 220);
 }

@@ -40,7 +40,10 @@ namespace uWED.Runtime.UI.Binder
             m_regionManipulator = ServiceLocator.TryGet<IRegionManipulatorProvider>(out var regionManipulatorProvider)
                 ? regionManipulatorProvider.Create(uxml, settings)
                 : new RegionManipulator(uxml, settings);
-            m_wayManipulator = new WayManipulator(uxml, settings);
+            // IWayManipulatorProvider mirrors IRegionManipulatorProvider above.
+            m_wayManipulator = ServiceLocator.TryGet<IWayManipulatorProvider>(out var wayManipulatorProvider)
+                ? wayManipulatorProvider.Create(uxml, settings)
+                : new WayManipulator(uxml, settings);
 
             parent.Add(m_mapObjectManipulator);
             parent.Add(m_vertexManipulator);

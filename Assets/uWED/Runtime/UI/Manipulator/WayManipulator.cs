@@ -28,8 +28,9 @@ namespace uWED.Runtime.UI.Manipulator
         {
         }
 
-        /// <summary>Call once the provider is ready (null falls back to the default in-memory provider).</summary>
-        public void SetProviders(IGenericNameProvider<string> nameProvider)
+        /// <summary>Call once the provider is ready (null falls back to the default in-memory provider).
+        /// A subclass can override it to react to the provider's name list.</summary>
+        public virtual void SetProviders(IGenericNameProvider<string> nameProvider)
         {
             m_nameProvider = nameProvider ?? new SimpleGenericNameProvider(new List<string>());
             WireNameProvider();

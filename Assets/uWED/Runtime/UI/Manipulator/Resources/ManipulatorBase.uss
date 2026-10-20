@@ -383,16 +383,28 @@
     border-color: rgb(90, 150, 220);
 }
 
-.manip-settings-bar FloatField {
-    border-width: 1px;
-    border-color: rgba(0, 0, 0, 0);
-}
-
 .manip-tabview .unity-tab__header {
     border-width: 1px;
     border-color: rgba(0, 0, 0, 0);
 }
 
 .manip-tabview .unity-tab__header:focus {
+    border-width: 1px;
     border-color: rgb(90, 150, 220);
+}
+
+.manip-tabview FloatField,
+.manip-tabview TextField,
+.manip-tabview DropdownField,
+.manip-tabview EnumField,
+.manip-tabview Toggle,
+.manip-tabview Button,
+.manip-content-container FloatField,
+.manip-content-container TextField,
+.manip-content-container DropdownField,
+.manip-content-container Toggle,
+.manip-content-container Button,
+.manip-settings-bar FloatField {
+    border-width: 1px;
+    border-color: transparent;
 }

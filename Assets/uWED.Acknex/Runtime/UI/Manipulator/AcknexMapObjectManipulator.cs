@@ -100,7 +100,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         }
 
         /// <summary>Connects a tab set to its picker: "Clone &amp; Edit" selects a copy and edits it, the
-        /// picker is locked while editing, and an applied edit refreshes the picker's detail rows.</summary>
+        /// picker is locked while editing, and a change of the Template refreshes the picker's detail rows.</summary>
         void WireTabs(ITemplateTabSet tabs, IObjectTemplatePicker picker)
         {
             tabs.CloneRequested += () =>
@@ -109,7 +109,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
                 tabs.BeginEdit();
             };
             tabs.EditingChanged += editing => picker.SetEnabled(!editing);
-            tabs.Applied += picker.Refresh;
+            tabs.Changed += picker.Refresh;
 
             foreach (var tab in tabs.Tabs)
             {

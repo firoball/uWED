@@ -43,9 +43,6 @@ namespace uWED.Acknex.Runtime.UI.TemplateEditor
         /// <summary>Raised when a field changed Current.</summary>
         public event Action Edited;
 
-        /// <summary>Raised after Apply wrote the working copy's values to the original.</summary>
-        public event Action Applied;
-
         /// <summary>Creates a session on original; markDirty persists the original after Apply, or after
         /// every edit if direct is set.</summary>
         public TemplateEditSession(TemplateAsset original, Action<TemplateAsset> markDirty, bool direct = false)
@@ -116,7 +113,6 @@ namespace uWED.Acknex.Runtime.UI.TemplateEditor
 
             m_markDirty?.Invoke(Original);
             EndEdit();
-            Applied?.Invoke();
         }
 
         /// <summary>Drops the working copy and ends editing. No effect when not editing.</summary>

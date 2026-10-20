@@ -16,11 +16,17 @@ namespace uWED.Acknex.Runtime.Registry
     /// mutable list kept sorted alphabetically by Name - that control's own +/- mutate it in
     /// place, so this must be the same list instance every time, never a fresh snapshot.
     /// </summary>
-    public class TemplateRegistry<T> : IGenericNameProvider<T> where T : TemplateAsset
+    public class TemplateRegistry<T> : IGenericNameProvider<T>, ITemplateRegistry where T : TemplateAsset
     {
         readonly IAssetStorageService m_storage;
         readonly Dictionary<string, T> m_byName = new();
         readonly List<T> m_choices = new();
+
+        /// <inheritdoc/>
+        public event Action<TemplateAsset> TemplateChanged;
+
+        /// <inheritdoc/>
+        public event Action ListChanged;
 
         /// <summary>Every registered T, keyed by Name.</summary>
         public IReadOnlyDictionary<string, T> ByName => m_byName;
@@ -65,8 +71,18 @@ namespace uWED.Acknex.Runtime.Registry
             return null;
         }
 
-        /// <summary>Persists in-memory changes made to a registered template via the storage service.</summary>
-        public void MarkDirty(T template) => m_storage.MarkDirty(template);
+        /// <summary>Persists in-memory changes made to a registered template via the storage service, then
+        /// raises TemplateChanged.</summary>
+        public void MarkDirty(T template)
+        {
+            m_storage.MarkDirty(template);
+            NotifyChanged(template);
+        }
+
+        /// <summary>Raises TemplateChanged for template without saving it.</summary>
+        public void NotifyChanged(T template) => TemplateChanged?.Invoke(template);
+
+        void ITemplateRegistry.NotifyChanged(TemplateAsset template) => NotifyChanged((T)template);
 
         /// <summary>Starts a batch on the underlying storage if it supports IBatchableAssetStorage
         /// (e.g. many Create calls in a row - see TemplateResolver.ResolveAll), otherwise a no-op.</summary>
@@ -84,16 +100,76 @@ namespace uWED.Acknex.Runtime.Registry
         /// policy decision that belongs to that type's own resolver (see TemplateResolver), not to this
         /// generic registry.
         /// </summary>
-        public T Create(string name) => Register(m_storage.Create<T>(NameSanitizer.Sanitize(name)));
+        public T Create(string name)
+        {
+            var template = Register(m_storage.Create<T>(NameSanitizer.Sanitize(name)));
+            ListChanged?.Invoke();
+            return template;
+        }
 
-        /// <summary>Re-reads every T from storage, rebuilding both views from scratch.</summary>
+        /// <summary>Re-reads every T from storage, rebuilding both views from scratch and raising
+        /// ListChanged. If several stored Templates share a Name, the first one loaded is registered and
+        /// the others are skipped with a warning.</summary>
         public void Reload()
         {
             m_byName.Clear();
             m_choices.Clear();
 
             foreach (var template in m_storage.LoadAll<T>())
+            {
+                if (m_byName.ContainsKey(template.Name))
+                {
+                    Debug.LogWarning($"TemplateRegistry<{typeof(T).Name}>: more than one Template is named '{template.Name}'; '{template.name}' is ignored.", template);
+                    continue;
+                }
+
                 Register(template);
+            }
+
+            ListChanged?.Invoke();
+        }
+
+        /// <summary>Gets the Name template is registered under, or false if it is not registered. This can
+        /// differ from template.Name if the Name was changed after registration.</summary>
+        public bool TryGetRegisteredName(T template, out string name)
+        {
+            foreach (var entry in m_byName)
+            {
+                if (entry.Value == template)
+                {
+                    name = entry.Key;
+                    return true;
+                }
+            }
+
+            name = null;
+            return false;
+        }
+
+        /// <summary>Returns baseName (sanitized) if no registered T has that Name, otherwise baseName with
+        /// the first free number appended ("name2", "name3", ...).</summary>
+        public string UniqueName(string baseName)
+        {
+            string sanitized = NameSanitizer.Sanitize(baseName);
+            string candidate = sanitized;
+            int suffix = 2;
+            while (m_byName.ContainsKey(candidate))
+                candidate = NameSanitizer.Sanitize($"{sanitized}{suffix++}");
+            return candidate;
+        }
+
+        /// <summary>Gives template the (sanitized) Name newName through storage, which also renames its
+        /// backing entry, and registers it under that Name. The caller guarantees the Name is free
+        /// (see UniqueName). Raises ListChanged.</summary>
+        public void Rename(T template, string newName)
+        {
+            if (m_byName.TryGetValue(template.Name, out var registered) && registered == template)
+                m_byName.Remove(template.Name);
+            m_choices.Remove(template);
+
+            m_storage.Rename(template, NameSanitizer.Sanitize(newName));
+            Register(template);
+            ListChanged?.Invoke();
         }
 
         /// <summary>
@@ -105,13 +181,15 @@ namespace uWED.Acknex.Runtime.Registry
         public T Clone(T source, string newName)
         {
             string sanitized = string.IsNullOrEmpty(newName)
-                ? UniqueCopyName(source.Name)
+                ? UniqueName($"{source.Name}__copy")
                 : NameSanitizer.Sanitize(newName);
 
             var clone = m_storage.Clone(source, sanitized);
             clone.Name = sanitized;
 
-            return Register(clone);
+            Register(clone);
+            ListChanged?.Invoke();
+            return clone;
         }
 
         /// <summary>Adds template to ByName (keyed by its current Name) and inserts it into Choices at its
@@ -127,15 +205,6 @@ namespace uWED.Acknex.Runtime.Registry
                 m_choices.Insert(index, template);
 
             return template;
-        }
-
-        string UniqueCopyName(string baseName)
-        {
-            string candidate = NameSanitizer.Sanitize($"{baseName}__copy");
-            int suffix = 2;
-            while (m_byName.ContainsKey(candidate))
-                candidate = NameSanitizer.Sanitize($"{baseName}__copy{suffix++}");
-            return candidate;
         }
 
         static T BuildTransientCandidate(string text, T previous)

@@ -48,6 +48,8 @@ namespace uWED.Acknex.Editor.Bootstrap
                     existingThingTemplates.Reload();
                 if (ServiceLocator.TryGet<TemplateRegistry<ActorTemplate>>(out var existingActorTemplates))
                     existingActorTemplates.Reload();
+                if (ServiceLocator.TryGet<TemplateRegistry<WayTemplate>>(out var existingWayTemplates))
+                    existingWayTemplates.Reload();
                 return;
             }
 
@@ -75,6 +77,12 @@ namespace uWED.Acknex.Editor.Bootstrap
             var actorResolver = new TemplateResolver<ActorTemplate>(actorTemplates);
             ServiceLocator.Register<TemplateRegistry<ActorTemplate>>(actorTemplates);
             ServiceLocator.Register<TemplateResolver<ActorTemplate>>(actorResolver);
+
+            var wayTemplates = new TemplateRegistry<WayTemplate>(storage);
+            ServiceLocator.Register<TemplateRegistry<WayTemplate>>(wayTemplates);
+            var wayResolver = new TemplateResolver<WayTemplate>(wayTemplates);
+            ServiceLocator.Register<TemplateResolver<WayTemplate>>(wayResolver);
+            ServiceLocator.Register<IWayManipulatorProvider>(new AcknexWayManipulatorProvider(wayTemplates, wayResolver));
 
             ServiceLocator.Register<IMapObjectManipulatorProvider>(new AcknexMapObjectManipulatorProvider(thingTemplates, thingResolver, actorTemplates, actorResolver));
             ServiceLocator.Register<IManipulatorTypeProvider>(new AcknexManipulatorTypeProvider());

@@ -43,6 +43,9 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         /// <summary>Sets the step of the tab's float fields (see TemplatePropertyPanel.SetStep).</summary>
         public void SetStep(float step) => m_panel.SetStep(step);
 
+        /// <summary>Reloads the tab's fields from the bound Template.</summary>
+        public void Refresh() => m_panel.Refresh();
+
         /// <summary>Shows and edits session's Template (null unbinds); usageText is shown in the bar.</summary>
         public void Bind(TemplateEditSession session, string usageText)
         {

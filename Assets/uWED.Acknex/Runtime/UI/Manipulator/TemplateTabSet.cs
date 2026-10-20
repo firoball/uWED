@@ -22,8 +22,9 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         /// <summary>Raised with true when editing begins and false when it ends or the set is rebound.</summary>
         event Action<bool> EditingChanged;
 
-        /// <summary>Raised after Apply wrote the edited values to the Template.</summary>
-        event Action Applied;
+        /// <summary>Raised when the saved values of the bound Template changed: after Apply, or because
+        /// something else (e.g. the Inspector) edited it.</summary>
+        event Action Changed;
 
         /// <summary>Starts editing the bound Template. No effect without one.</summary>
         void BeginEdit();
@@ -39,7 +40,8 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
     /// The Template tabs of one Template type, built from a layout and bound to one edit session at a
     /// time: the one on the Template currently selected in the Manipulator's picker. Binding starts a
     /// fresh session (discarding pending edits of the previous one) and writes the usage text
-    /// ("used by N objects") into the tabs.
+    /// ("used by N objects") into the tabs. When the bound Template is changed elsewhere the tabs reload
+    /// their fields, unless they are editing it.
     /// </summary>
     /// <typeparam name="T">The Template type the tabs edit.</typeparam>
     internal class TemplateTabSet<T> : ITemplateTabSet where T : TemplateAsset
@@ -60,7 +62,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
         public event Action<bool> EditingChanged;
 
         /// <inheritdoc/>
-        public event Action Applied;
+        public event Action Changed;
 
         /// <summary>Builds one tab per group. registry persists applied edits, resolver and usageNoun
         /// produce the usage text.</summary>
@@ -73,6 +75,8 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             m_tabs = groups.Select(group => new TemplateTab(typeof(T), group)).ToArray();
             foreach (var tab in m_tabs)
                 tab.CloneRequested += () => CloneRequested?.Invoke();
+
+            registry.TemplateChanged += OnTemplateChanged;
         }
 
         /// <summary>Binds the tabs to a new session on template (null unbinds). openName is the name of the
@@ -86,7 +90,6 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             if (m_session != null)
             {
                 m_session.StateChanged += () => EditingChanged?.Invoke(m_session != null && m_session.IsEditing);
-                m_session.Applied += () => Applied?.Invoke();
             }
 
             EditingChanged?.Invoke(false);
@@ -97,6 +100,20 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
                 tab.SetStep(linearStep);
                 tab.Bind(m_session, usageText);
             }
+        }
+
+        void OnTemplateChanged(TemplateAsset changed)
+        {
+            if (m_session == null || changed != m_session.Original)
+                return;
+
+            if (!m_session.IsEditing)
+            {
+                foreach (var tab in m_tabs)
+                    tab.Refresh();
+            }
+
+            Changed?.Invoke();
         }
 
         /// <inheritdoc/>

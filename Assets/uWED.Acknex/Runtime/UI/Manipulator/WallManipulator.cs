@@ -28,8 +28,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
 
         const string UsageNoun = "segment";
 
-        TemplateTab[] m_templateTabs;
-        TemplateEditSession m_session;
+        readonly TemplateTabSet<WallTemplate> m_templateTabs;
 
         // Resolved once per Open() in LoadValues, valid until the next LoadValues/WriteBack - avoids a
         // second by-name lookup in WriteBack and lets LoadTextureInfo (called from inside
@@ -51,24 +50,25 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             AcknexManipulatorStyles.ApplyTo(this);
             SetNameFieldVisible(false);
             BuildTemplatePicker();
-            BuildTemplateTabs();
+
+            m_templateTabs = new TemplateTabSet<WallTemplate>(templateRegistry, templateResolver, WallTemplateLayout.Groups, UsageNoun);
+            WireTemplateTabs();
         }
 
         /// <summary>The first tab holds the Segment's own values and the Template picker.</summary>
         protected override string MainTabLabel => "Segment";
 
-        /// <summary>Adds one tab per group of WallTemplateLayout. All tabs are bound to one
-        /// TemplateEditSession per selected Template (see BindTemplateTabs).</summary>
-        void BuildTemplateTabs()
+        /// <summary>Adds the Template tabs to the window and connects them to the picker: "Clone &amp; Edit"
+        /// copies the selected Template, the picker is locked while editing, and a change of the Template refreshes
+        /// the picker's detail rows.</summary>
+        void WireTemplateTabs()
         {
-            m_templateTabs = new TemplateTab[WallTemplateLayout.Groups.Count];
-            for (int i = 0; i < m_templateTabs.Length; i++)
-                m_templateTabs[i] = new TemplateTab(typeof(WallTemplate), WallTemplateLayout.Groups[i]);
+            m_templateTabs.CloneRequested += CloneCurrentTemplate;
+            m_templateTabs.EditingChanged += editing => m_templateCombo.SetEnabled(!editing);
+            m_templateTabs.Changed += m_templateCombo.Refresh;
 
-            foreach (var tab in m_templateTabs)
+            foreach (var tab in m_templateTabs.Tabs)
             {
-                tab.CloneRequested += CloneCurrentTemplate;
-
                 foreach (var stepper in tab.IntegerSteppers)
                     stepper.AddToClassList(FixedStepStepperClass);
 
@@ -76,46 +76,10 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             }
         }
 
-        /// <summary>Starts a fresh edit session on the selected Template (discarding any pending edits of
-        /// the previous one) and binds the Template tabs to it. While a session is editing the picker is
-        /// disabled, so the edited Template can't change underneath it.</summary>
+        /// <summary>Binds the Template tabs to a fresh edit session on the selected Template.</summary>
         void BindTemplateTabs()
         {
-            m_session?.Discard();
-
-            m_session = m_currentTemplate != null ? new TemplateEditSession(m_currentTemplate, template => m_templateRegistry.MarkDirty((WallTemplate)template)) : null;
-            if (m_session != null)
-            {
-                m_session.StateChanged += () => m_templateCombo.SetEnabled(!m_session.IsEditing);
-                m_session.Applied += () => m_templateCombo.Refresh();
-            }
-
-            m_templateCombo.SetEnabled(true);
-
-            string usageText = BuildUsageText();
-            foreach (var tab in m_templateTabs)
-            {
-                tab.SetStep(CurrentLinearStep);
-                tab.Bind(m_session, usageText);
-            }
-        }
-
-        /// <summary>"used by N segments": the Segments in the map resolving to the selected Template. The open
-        /// Segment is counted too, even if it only gets this Template when its window is confirmed. Without
-        /// a count table only a general sharing note can be shown.</summary>
-        string BuildUsageText()
-        {
-            if (m_currentTemplate == null)
-                return string.Empty;
-
-            if (m_countByName == null)
-                return $"shared by every {UsageNoun} using this Template";
-
-            int count = m_templateResolver.CountUsers(m_countByName, m_currentTemplate);
-            if (!m_templateResolver.Matches(OriginalTarget.Name, m_currentTemplate))
-                count++;
-
-            return count == 1 ? $"used by 1 {UsageNoun}" : $"used by {count} {UsageNoun}s";
+            m_templateTabs.Bind(m_currentTemplate, OriginalTarget.Name, m_countByName, CurrentLinearStep);
         }
 
         /// <summary>Stores the Segment name usage table for the usage text shown on the Template tabs.</summary>
@@ -154,6 +118,8 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             m_templateCombo.RegisterValueChangedCallback(OnTemplateComboValueChanged);
             m_templateCombo.AddToClassList("manip-picker-dropdown");
             section.Add(m_templateCombo);
+            section.RegisterCallback<AttachToPanelEvent>(_ => m_templateRegistry.ListChanged += m_templateCombo.Refresh);
+            section.RegisterCallback<DetachFromPanelEvent>(_ => m_templateRegistry.ListChanged -= m_templateCombo.Refresh);
 
             // "manip-content-container" is the base window's own content root (see
             // ManipulatorWindowBase), queried by name rather than through a SegmentManipulator field
@@ -236,7 +202,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
                 return;
 
             SelectTemplate(m_templateRegistry.Clone(m_currentTemplate, null));
-            m_session?.BeginEdit();
+            m_templateTabs.BeginEdit();
         }
 
         protected override void LoadValues(Segment copy)
@@ -267,7 +233,7 @@ namespace uWED.Acknex.Runtime.UI.Manipulator
             if (m_templateCombo.value != null)
                 target.Name = m_templateCombo.value.Name; // Name is derived from the selected Template, overriding whatever base just set
 
-            m_session?.Apply(); // confirming the window also applies pending Template edits
+            m_templateTabs.Apply(); // confirming the window also applies pending Template edits
         }
 
         /// <summary>Shows the resolved Template's Texture (if any) in the base texture slot, in place of
